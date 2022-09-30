@@ -1223,7 +1223,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 				DataBase.setex('user.alertBlocked:{}'.format(user_id), 120, "True")
 				await sendText(chat_id, 0, 1, langU['u_are_blocked'])
 			return False
-		if DataBase.get('who_conneted:{}'.format(user_id)):
+		if DataBase.get('who_conneted:{}'.format(user_id)) and not '/start' in msg.text:
 			which_user = DataBase.get('who_conneted:{}'.format(user_id))
 			DataBase.delete('who_conneted:{}'.format(user_id))
 			if not msg.text:
@@ -1249,7 +1249,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 						msg_ = await copyMessage(which_user, chat_id, msg_id, caption = msg.caption,\
 						caption_entities = msg.caption_entities, reply_msg = None,\
 						 reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
-					else:
+					elif not '/start' in msg.text:
 						msg_ = await copyMessage(which_user, chat_id, msg_id, reply_msg = None,
 						reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
 					await sendText(chat_id, msg, 1, langU['your_msg_sent'], 'md', anonymous_back_keys(user_id))
