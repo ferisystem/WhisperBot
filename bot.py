@@ -1272,6 +1272,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd, speed=None):
 					await sendText(chat_id, msg, 1, langU['rules_cus_name_anon'], 'md')
 				else:
 					DataBase.set('name_anon:{}'.format(user_id), msg.text)
+					DataBase.delete('ready_to_change_name:{}'.format(user_id))
 					await bot.delete_message(chat_id, DataBase.get('pre_msgbot:{}'.format(user_id)))
 					await sendText(chat_id, msg, 1, langU['changed_name_anon'], 'md', anonymous_cus_name_keys(user_id))
 			if DataBase.get('ready_to_enter_id:{}'.format(user_id)) and not '/start' in input:
