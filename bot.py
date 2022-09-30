@@ -1492,24 +1492,33 @@ def anonymous_keys(UserID):
 	hash = ':@{}'.format(UserID)
 	langU = lang[user_steps[UserID]['lang']]
 	buttuns = langU['buttuns']
+	if DataBase.get('dont_receive_anon:{}'.format(UserID)):
+		status_receive = '❌'
+	else:
+		status_receive = '✅'
+	blocks_number = DataBase.scard('blocks:{}'.format(UserID))
+	# if blocks_number == 0:
+		# blocks_number = buttuns['empty']
 	inlineKeys = iMarkup()
+	if status_receive == '✅':
+		inlineKeys.add(
+			iButtun(buttuns['link_my_anon'], callback_data = 'anon:link{}'.format(hash)),
+			iButtun(buttuns['help_my_anon'], callback_data = 'anon:help{}'.format(hash))
+			)
+		inlineKeys.add(
+			iButtun(buttuns['stats_my_anon'], callback_data = 'anon:stats{}'.format(hash)),
+			iButtun(buttuns['name_my_anon'], callback_data = 'anon:name{}'.format(hash))
+			)
+		inlineKeys.add(
+			iButtun(buttuns['send_persion_anon'], callback_data = 'anon:send{}'.format(hash)),
+			)
 	inlineKeys.add(
-		iButtun(buttuns['link_my_anon'], callback_data = 'anon:link{}'.format(hash)),
-		iButtun(buttuns['help_my_anon'], callback_data = 'anon:help{}'.format(hash))
+		iButtun(buttuns['receive_my_anon'].format(status_receive), callback_data = 'anon:receive{}'.format(hash)),
 		)
-	inlineKeys.add(
-		iButtun(buttuns['stats_my_anon'], callback_data = 'anon:stats{}'.format(hash)),
-		iButtun(buttuns['name_my_anon'], callback_data = 'anon:name{}'.format(hash))
-		)
-	inlineKeys.add(
-		iButtun(buttuns['send_persion_anon'], callback_data = 'anon:send{}'.format(hash)),
-		)
-	inlineKeys.add(
-		iButtun(buttuns['receive_my_anon'], callback_data = 'anon:receive{}'.format(hash)),
-		)
-	inlineKeys.add(
-		iButtun(buttuns['blocks_my_anon'], callback_data = 'anon:myblock{}'.format(hash)),
-		)
+	if status_receive == '✅':
+		inlineKeys.add(
+			iButtun(buttuns['blocks_my_anon'].format(blocks_number), callback_data = 'anon:myblock{}'.format(hash)),
+			)
 	inlineKeys.add(
 		iButtun(buttuns['back'], callback_data = 'backstart{}'.format(hash))
 		)
@@ -2026,6 +2035,16 @@ async def callback_query_process(msg: types.CallbackQuery):
 		if re.match(r"^anon:rep:(\d+):(\d+):@(\d+)$", input):
 			ap = re_matches(r"^anon:rep:(\d+):(\d+):@(\d+)$", input)
 			await answerCallbackQuery(msg, langU['help_reply_anon'], show_alert = True, cache_time = 3600)
+		if re.match(r"^anon:receive:@(\d+)$", input):
+			ap = re_matches(r"^anon:receive:@(\d+)$", input)
+			if DataBase.get('dont_receive_anon:{}'.format(user_id)):
+				DataBase.delete('dont_receive_anon:{}'.format(user_id))
+				text = langU['receive_anon_active']
+			else:
+				DataBase.set('dont_receive_anon:{}'.format(user_id), 'True')
+				text = langU['receive_anon_deactive']
+			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
+			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = anonymous_keys(user_id))
 
 
 async def channel_post_process(msg: types.Message):
