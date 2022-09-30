@@ -1,406 +1,0 @@
-{
-'set_fa': "زبان ربات فارسی شد",
-'set_en': "bot language set on english",
-'set_ar': "تغيرت لغة الروبوت إلى اللغة العربية",
-'en':
-{
-'set_qmusic': "Musics send on {}Kbps",
-'settings': "Your private settings",
-'ban_flood': "User <i>{}</i> [<code>{}</code>] you banned for 1 day from bot because you spammed❌⛔️\n\n▫️support: <a href='https://t.me/{}?start=support'>Connect</a>\n▫️Creator: @{}",
-'join_channel': "You must first join in sponser channel!\nlink channel: @{}",
-'start': "Hello, Wellcome",
-'disconnect': "Your support group connection has been disconnected💤",
-'not_connect': "There is not any connection with support group!😑",
-'need_phone': "We need your phone number for connect to our support group.\nSend your phone number via keyboard\n\nwhy we request your phone number?\ncause many users connect to our support group and send violance/porn content! so, for ensure, we need your phone number. thank you❤️",
-'connected_support': "User {} connectet to support now👀",
-'support': "you connected to support group successfully",
-'not_result': "Nothing found😢",
-'let_me': "let me search in another sources...",
-'look_finds': "Here's what I found for you. Choose to send you❤️\nPage {} of {}",
-'error_search_voice': "Please send a voice that duration is between 2-60 seconds",
-'error_search_video': "Please send a video that duration is between 2-60 seconds",
-'error_search_videonote': "Please send a video note that duration is between 2-60 seconds",
-'error_search_audio': "Please send a audio that duration is between 2-60 seconds",
-'not_register': "not registered",
-'single_track': "Single Track",
-'search_result': "🎼<b>Title</b>: {}\n🎤<b>Singer</b>: {}\n💽<b>Album</b>: {}\n📅<b>Release date</b>: {}\n• @{}",
-'download_result': "👤<b>Singer</b>: {}\n🎧<b>Song</b>: {}\n💽<b>Album</b>: {}\n📅<b>Release date</b>: {}",
-'download_result2': "🎧<b>Music</b>: {}",
-'isNot4u': "don't touch. this is not for you!😡",
-'uNotJoined': "you not joined in @{} channel!",
-'you_accepted': "you joined✅",
-'send_voice': "send me or forward a voice/video/video note/audio from that song you want to find it\nor text me title music/artist/album for find it",
-'try_request': "request again. sorry :(",
-'try_again': "try again\nyour request have an error",
-'big_file': "Error! file size is over than 20MB.",
-'big_file2': "Error! file size is over than 50MB.",
-'notice_change_file': "for receive other results, Send the file with a different duration time",
-'try_request': "request again :(",
-'not_found': "not found any results",
-'downloading': "sending for you...",
-'keep_license': "Unfortunately this song in unavalible for dowload :(\ntry another",
-'send_text4video': "Send a text that you search on videos",
-'video_result': "🎥Video Title: {} | <a href='{}'>View Online</a>\n📤Video uploader: {} | <a href='{}'>View</a>\n📅Upload date: {}\n👁View count: {}\n👍🏻Like count: {}\n👎🏻Dislike count: {}",
-'uploading': "wait a few second for uploading on telegram...",
-'error_upload_video': "too many request! try again after 10 minutes",
-'send_correct_yt': "You sent a wrong link! send correct URL from youtube",
-'ytRestrcit': "You can download just 3 video from youtube",
-'file_size': "Downloading {}...\nSize: {}MB",
-'you_now_dl': "You are currently downloading a file",
-'file_dled': "file downloaded! uploading for you...",
-'send_url_from_file': "Send a direct link from file",
-'send_file_url': "Error! send a direct link from file.",
-'what_do': "well, now what i do with that?",
-'tg_50mb': "telegram-bots can't send files with size bigger than 50BM. soory :(",
-'u_are_blocked': "You are already blocked from this bot for some minutes beacause you blocked by admin or spamming...",
-'usunblocked': "user has been unblocked✅",
-'usunblock': "⚠️Error! user not blocked",
-'usblock': "user has been blocked🚫",
-'usblocked': "⚠️Error! user is blocked",
-'dont_fwd': "don't forward from other users. just type text and send it",
-'just_text': "just send texts",
-'sent_wait': "sent✅\nwait a moment for reply",
-'wait_moment': "wait 1 minute please.",
-'list_block': "User blocked list:\n\n",
-'wait': "wait...",
-'blocklist_sent': "block list file has been sent\nfor unblock users use this command:\n/unblock user_id",
-'caption_sc': "{}\n📅{}\n👍🏻 {}\n@{} | @{}",
-'send_to_all': "sending for {} users...",
-'sent_to_all': "sent {} successfully of {} users",
-'fwd_to_all': "forwarding for {} users...",
-'fwdd_to_all': "forwarded {} successfully of {} users",
-'just_reply': "reply on a message",
-'send_ig_url': "send a url from instagram for download story/profile/post",
-'ig_caption_pic': "👤<a href='https://instagram.com/{}'>View Profile</a> | 📍<a href='https://instagram.com/p/{}'>View Post</a>\n✍️Caption:\n{}\n\n{}👍🏻 | {}💬\nDownload by <a href='tg://user?id={}'>{}</a> from Instagram",
-'ig_caption_video': "👤<a href='https://instagram.com/{}'>View Profile</a> | 📍<a href='https://instagram.com/p/{}'>View Post</a>\n✍️Caption:\n{}\n\n{}👁 | {}👍🏻 | {}💬\nDownload by <a href='tg://user?id={}'>{}</a> from Instagram",
-'ig_is_private': "this link is from private account. is impossible to download it. sorry :(",
-'ig_caption_spic': "👤<a href='https://instagram.com/{}'>View Profile</a> | 📍<a href='https://instagram.com/stories/{}/{}'>View Story</a>\nDownload by <a href='tg://user?id={}'>{}</a> from Instagram",
-'ig_caption_svideo': "👤<a href='https://instagram.com/{}'>View Profile</a> | 📍<a href='https://instagram.com/stories/{}/{}'>View Story</a>\nDownload by <a href='tg://user?id={}'>{}</a> from Instagram",
-'ig_not_story': "This story no longer exists",
-'ig_not_any_story': "This account not have any story",
-'maybe_spammer': "Whuuuuaat? you received that in few minutes ago!",
-'find_story_count': "A total of {} Story were found for Uploading for you from <a href='https://instagram.com/{}'>{}</a> Instagram account...",
-'stats': "Bot stats [Download count]:\n\nInstagram's post: {}\nInstagram's story: {}\nMusic search: {}\nMusic download: {}\nYoutube search: {}\nYoutube download: {}\nFile download: {}\nBot Users Count: {}",
-'force_join': "for use bot you must to join us channel!\n\n🔺channel: @{0}\n@{0}",
-'language': "میتوانید زبان ربات را تغییر دهید\nyou can change bot language",
-'anon': "change this text later. anon section",
-'my_link_anon': "change this text later. my_link_anon section",
-'customize_link_anon': "change this text later. my_link_anon_cus section\nyour link:\n",
-'insta_link_anon': "change this text late. insta link anon",
-'telg_link_anon': "change this text late. telg link anon",
-'rules_cus_link_anon': "error. your text must be 3-12 character and only from alphabet and numbers",
-'rules_cus_link_anon2': "error. this link used before by a user",
-'help_anon': "change this text late. help anon",
-'help1_anon': "change this text late. help1 anon",
-'help2_anon': "change this text late. help2 anon",
-'help3_anon': "change this text late. help3 anon",
-'help4_anon': "change this text late. help4 anon",
-'stats_anon': "change this text later. stats anon\nyour stats: {:,}",
-'buttuns':
-{
-'najva_section': "Najva Section",
-'anon_section': "Anonymous Section",
-'language': "زبان/language",
-'adsfree': "Free Ads",
-'link_my_anon': "my anon link",
-'help_my_anon': "help anon",
-'stats_my_anon': "stats of my anon",
-'name_my_anon': "my anon name",
-'send_persion_anon': "send to person",
-'receive_my_anon': "receive anon message",
-'blocks_my_anon': "my block list",
-'customize_link_anon': "customize link",
-'share_link_anon': "share link",
-'insta_link_anon': "link for instagram bio",
-'telg_link_anon': "link for telegram bio",
-'back_anon': "back to anonymous section",
-'default_link_anon': "change link randomly",
-'back_link_anon': "back to link anonymous",
-'help1_anon': "help1 anon",
-'help2_anon': "help2 anon",
-'help3_anon': "help3 anon",
-'help4_anon': "help4 anon",
-'back_help_anon': "back to help anon",
-'join': "join🔰",
-'joined': "joined✅",
-'bot_ch': "bot channel",
-'send_phone': "send phone number⬆️",
-'back_menu': "preview menu",
-'disconnect': "❌disconnect❌",
-'next_page': "▶️next page",
-'preview_page': "preview page◀️",
-'download': "download📥",
-'back': "back",
-'search_music': "Search Music🎵",
-'search_video': "Search Video🎬",
-'download_instagram': "Download Instagram📷",
-'download_file': "Download File💾",
-'settings': "Settings🔧",
-'channel': "Channel📢",
-'support': "Support💭",
-'creator': "Bot Creator",
-'quality': "Musics Quality⬇️",
-'send_wait': "Send Waiting Message📮",
-'notice': "Notice",
-'start_again': "Start bot again",
-'menu': "Menu",
-'list_block': "Block List",
-'stats': "Stats",
-},
-},
-'fa':
-{
-'set_qmusic': "موزیکها با کیفیت {} ارسال خواهد شد",
-'settings': "تنظیمات شخصی شما",
-'ban_flood': "کاربر <i>{}</i> [<code>{}</code>] شما بدلیل ارسال هرزنامه به پیوی {} از پیوی به مدت 1 روز #محروم شدید! ❌⛔️\n\n▫️پشتیبانی: <a href='https://t.me/{}?start=support'>ارتباط</a>\n▫️سازنده: @{}",
-'join_channel': "برای استفاده ابتدا در کانال عضو شوید!\nکانال ربات: @{}",
-'start': "سلام خوش آمدید",
-'disconnect': "ارتباطتان قطع شد و دیگر پیامی از سمت شما به پشتیبانی ارسال نمیشود💤",
-'not_connect': "ارتباطی وجود نداشت که بخواهید قطع کنید!😑",
-'need_phone': "برای ارتباط به پشتیبانی ما نیاز به شماره شما داریم.\nبرای ارسال شماره از دکمه کیبورد استفاده کنید\n\nچرا شماره شما رو میخوایم؟🤔\nروزانه افراد زیادی جهت توهین به پشتیبانی مراجعه میکنند و به این صورت فقط افرادی که صرفا فقط با پشتیبانی کار داشته باشند ارتباط برقرار خواهند کرد و از این رو ما بهتر میتوانیم محترم بشماریم شما عزیزان رو. تشکر❤️",
-'connected_support': "کاربر {} هم اکنون به پشتیبانی متصل شد👀",
-'support': "به پشتیبانی متصل شدید. پیام خود را بفرستید.",
-'not_result': "هیچی پیدا نشد😢",
-'let_me': "اجازه بده در منابع دیگه جستجو کنم...",
-'look_finds': "مواردی که پیدا کردم برات، ایناست. انتخاب کن برات بفرستم❤️\nصفحه {} از {}",
-'error_search_voice': "لطفا ویس ارسالی کمتر از 2 ثانیه و بیشتر از 60 ثانیه نباشد.",
-'error_search_video': "لطفا فیلم ارسالی کمتر از 2 ثانیه و بیشتر از 60 ثانیه نباشد.",
-'error_search_videonote': "لطفا فیلم ارسالی کمتر از 2 ثانیه و بیشتر از 60 ثانیه نباشد.",
-'error_search_audio': "لطفا آهنگ ارسالی کمتر از 2 ثانیه و بیشتر از 60 ثانیه نباشد.",
-'not_register': "ثبت نشده",
-'single_track': "تک موزیک",
-'search_result': "🎼<b>نام موزیک</b>: {}\n🎤<b>خواننده</b>: {}\n💽<b>نام آلبوم</b>: {}\n📅<b>تاریخ انتشار</b>: {}\n• @{}",
-'download_result': "👤<b>خواننده</b>: {}\n🎧<b>موزیک</b>: {}\n💽<b>آلبوم</b>: {}\n📅<b>تاریخ انتشار</b>: {}",
-'download_result2': "🎧<b>موزیک</b>: {}",
-'isNot4u': "عه نزن. چون ماله تو نیست، نمیتونی!😡",
-'uNotJoined': "شما در کانال @{} عضو نیستید!",
-'you_accepted': "عضویت شما تایید شد✅",
-'send_voice': "یه ویس/فیلم/ویدیونت/صدا از موزیکی که میخوای پیدا کنی بفرست یا فوروارد بده\nیا اسم موزیک/خواننده/آلبوم رو برام بنویس و بفرست",
-'try_request': "دوباره درخواست دهید",
-'try_again': "درخواست دریافت موزیک پیدا شده ی شما با خطا مواجه شد\nدوباره سعی کنید",
-'big_file': "خطا! حجم فایل ارسالی بیش از 20 مگابایت است.",
-'big_file2': "خطا! حجم فایل ارسالی بیش از 50 مگابایت است.",
-'notice_change_file': "برای گرفتن نتایج متفاوت، فایل را با مدت زمان متفاوت بفرستید.",
-'try_request': "لطفا دوباره درخواست کنید :(",
-'not_found': "نتیجه ای یافت نشد",
-'downloading': "در حال ارسال برای شما...",
-'keep_license': "متاسفانه آهنگ موردنظر قابل دانلود نمیباشد :(\nمورد دیگر را برای دانلود انتخاب کنید",
-'send_text4video': "برای جستجو در فیلمها متن خود را بفرستید",
-'video_result': "🎥عنوان فیلم: {} | <a href='{}'>مشاهده آنلاین</a>\n📤بارگذاری شده توسط: {} | <a href='{}'>مشاهده</a>\n📅تاریخ بارگزاری: {}\n👁تعداد مشاهده: {}\n👍🏻تعداد لایک: {}\n👎🏻تعداد دیسلایک: {}",
-'uploading': "چند ثانیه برای آپلود در تلگرام صبر کنید...",
-'error_upload_video': "درخواستهایی زیادی انجام شده، چند دقیقه بعد امتحان کنید :(",
-'send_correct_yt': "شما لینک اشتباه فرستادید! لینک سالم از youtube بفرستید.",
-'ytRestrcit': "شما در روز میتوانید فقط 3 بار فیلم جدید از یوتیوب دانلود کنید",
-'file_size': "شروع دانلود برای {}...\nاندازه: {}مگابایت",
-'you_now_dl': "شما در حال حاضر در حال دانلود فایلی هستید",
-'file_dled': "فایل دانلود شد. در حال ارسال برای شما...",
-'send_url_from_file': "یک لینک مستقیم از فایل بفرستید",
-'send_file_url': "خطا! لینک ارسالی باید لینک مستقیم فایل باشد.",
-'what_do': "خب، حالا با این چیکار کنم؟",
-'tg_50mb': "از آنجایی که تلگرام برای رباتهای تلگرام، محدودیت در ارسال فایل تنظیم کرده و امکان ارسال فایلهایی با حجمِ بیشتر از 50مگابایت میسر نمیباشد، فیلم موردنظر هم را نمیتوان ارسال کرد. شرمنده :(",
-'u_are_blocked': "در حال حاضر شما برای دقایقی از این ربات محروم هستید به خاطر بلاک شدن توسط ادمین یا اسپم کردن...",
-'usunblocked': "کاربر از ربات آنبلاک شد✅",
-'usunblock': "⚠️خطا! کاربر بلاک نبود",
-'usblock': "کاربر از ربات بلاک شد🚫",
-'usblocked': "⚠️خطا! کاربر بلاک بود",
-'dont_fwd': "پیام فوروارد ندهید. پیام بنویسید و بفرستید",
-'just_text': "فقط پیام متنی بفرستید",
-'sent_wait': "به پشتیبانی ارسال شد✅\nصبور باشید تا جواب شما را بدهیم",
-'wait_moment': "لطفا یک دقیقه صبر کنید.",
-'list_block': "لیست کاربران بلاک شده از ربات:\n\n",
-'wait': "منتظر بمانید...",
-'blocklist_sent': "لیست کاربران بلاک شده ارسال شد\nبرای آنبلاک کردن از دستور زیر استفاده کنید:\n/unblock user_id",
-'caption_sc': "{}\n📅{}\n👍🏻 {}\n@{} | @{}",
-'send_to_all': "در حال ارسال برای {} کاربر...",
-'sent_to_all': "از مجموع {} کاربر به {} با موفقیت ارسال شد.",
-'fwd_to_all': "در حال فوروارد برای {} کاربر...",
-'fwdd_to_all': "از مجموع {} کاربر به {} با موفقیت فوروارد شد.",
-'just_reply': "روی یک پیام ریپلای کنید",
-'send_ig_url': "یک لینک از اینستاگرام بفرستید برای دانلود استوری/پروفایل/پست",
-'ig_caption_pic': "👤<a href='https://instagram.com/{}'>مشاهده پروفایل</a> | 📍<a href='https://instagram.com/p/{}'>مشاهده پست</a>\n✍️کپشن:\n{}\n\n{}👍🏻 | {}💬\nدانلود شده توسط <a href='tg://user?id={}'>{}</a> از اینستاگرام",
-'ig_caption_video': "👤<a href='https://instagram.com/{}'>مشاهده پروفایل</a> | 📍<a href='https://instagram.com/p/{}'>مشاهده پست</a>\n✍️کپشن:\n{}\n\n{}👁 | {}👍🏻 | {}💬\nدانلود شده توسط <a href='tg://user?id={}'>{}</a> از اینستاگرام",
-'ig_is_private': "لینک ارسالی از یک حساب شخصی ارسال شده و این کار میسر نمیباشد متاسفانه :(",
-'ig_caption_spic': "👤<a href='https://instagram.com/{}'>مشاهده پروفایل</a> | 📍<a href='https://instagram.com/stories/{}/{}'>مشاهده استوری</a>\nدانلود شده توسط <a href='tg://user?id={}'>{}</a> از اینستاگرام",
-'ig_caption_svideo': "👤<a href='https://instagram.com/{}'>مشاهده پروفایل</a> | 📍<a href='https://instagram.com/stories/{}/{}'>مشاهده استوری</a>\nدانلود شده توسط <a href='tg://user?id={}'>{}</a> از اینستاگرام",
-'ig_not_story': "این استوری دیگر وجود ندارد",
-'ig_not_any_story': "این حساب استوری ندارد",
-'maybe_spammer': "چــــــــــی؟ شما همین چند دقیقه پیش این رو دریافت کردید!!",
-'find_story_count': "در مجموع {} استوری از حساب کاربری <a href='https://instagram.com/{}'>{}</a> در حال آماده سازی برای ارسال به شما...",
-'stats': "آمار کامل ربات\n\nدانلود پست از اینستاگرام: {}\nدانلود استوری از اینستاگرام: {}\nجستجوی موزیک: {}\nدانلود موزیک: {}\nجستجوی یوتیوب: {}\nدانلود یوتیوب: {}\nدانلود فایل: {}\nتعداد کل کاربران: {}",
-'force_join': "استفاده از ربات فقط در صورت عضویت در کانال ربات امکان پذیر است!\n\n🔺کانال: @{0}\n@{0}",
-'language': "میتوانید زبان ربات را تغییر دهید\nyou can change bot language",
-'anon': "این متن را بعدا تغییر دهید. بخش ناشناس",
-'my_link_anon': "این متن را بعدا تغییر دهید. بخش لینک ناشناس",
-'customize_link_anon': "این متن را بعدا تغییر دهید. بخش شخصی سازی لینک ناشناس\nلینک فعلی:\n",
-'insta_link_anon': "این متن را بعدا تغییر دهید. بخش لینک اینستاگرام ناشناس.",
-'telg_link_anon': "این متن را بعدا تغییر دهید. بخش لینک تلگرام ناشناس.",
-'rules_cus_link_anon': "خطا. کاراکتر شما باید شامل حروف معمولی و اعداد باشد و بین 3 الی 12 کاراکتر باشد.",
-'rules_cus_link_anon2': "خطا. این لینک توسط یک کاربر دیگه استفاده شده.",
-'help_anon': "این متن را بعدا تغییر دهید. راهنمای ناشناس",
-'help1_anon': "این متن را بعدا تغییر دهید. راهنمای اول ناشناس",
-'help2_anon': "این متن را بعدا تغییر دهید. راهنمای دوم ناشناس",
-'help3_anon': "این متن را بعدا تغییر دهید. راهنمای سوم ناشناس",
-'help4_anon': "این متن را بعدا تغییر دهید. راهنمای چهارم ناشناس",
-'stats_anon': "این متن را بعدا تغییر دهید.\nآمار شما: {:,}",
-'buttuns':
-{
-'najva_section': "بخش نجوا",
-'anon_section': "بخش ناشناس",
-'language': "زبان/language",
-'adsfree': "Free Ads",
-'link_my_anon': "لینک من",
-'help_my_anon': "راهنمای ناشناس",
-'stats_my_anon': "آمار ناشناس من",
-'name_my_anon': "نام نمایشی من",
-'send_persion_anon': "ارسال به شخص دلخواه",
-'receive_my_anon': "دریافت پیام ناشناس",
-'blocks_my_anon': "لیست بلاک من",
-'customize_link_anon': "شخصی سازی لینک",
-'share_link_anon': "اشتراک گذاری",
-'insta_link_anon': "لینک برای اینستاگرام",
-'telg_link_anon': "لینک برای تلگرام",
-'back_anon': "بازگشت به بخش ناشناس",
-'default_link_anon': "تغییر لینک به صورت تصادفی",
-'back_link_anon': "بازگشت به لینک ناشناس",
-'help1_anon': "راهنمای اول ناشناس",
-'help2_anon': "راهنمای دوم ناشناس",
-'help3_anon': "راهنمای سوم ناشناس",
-'help4_anon': "راهنمای چهارم ناشناس",
-'back_help_anon': "بازگشت به راهنمای ناشناس",
-'join': "عضویت🔰",
-'joined': "عضو شدم✅",
-'bot_ch': "کانال ربات",
-'send_phone': "ارسال شماره⬆️",
-'back_menu': "منوی قبل",
-'disconnect': "❌قطع ارتباط❌",
-'next_page': "▶️صفحه بعد",
-'preview_page': "صفحه قبل◀️",
-'download': "دریافت📥",
-'back': "بازگشت",
-'search_music': "جستجوی موزیک🎵",
-'search_video': "جستجوی فیلم🎬",
-'download_instagram': "دانلود از اینستاگرام📷",
-'download_file': "دانلود فایل💾",
-'settings': "تنظیمات🔧",
-'channel': "کانال📢",
-'support': "پشتیبانی💭",
-'creator': "سازنده ربات",
-'quality': "کیفیت موزیک⬇️",
-'send_wait': "ارسال انتظار📮",
-'notice': "نکته",
-'start_again': "شروع دوباره ربات",
-'menu': "منو",
-'list_block': "لیست بلاک",
-'stats': "آمار",
-},
-},
-'ar':
-{
-'set_qmusic': "الموسيقي بجودة {} سأقوم بأرسالها",
-'settings': "إعداداتك الشخصيه",
-'ban_flood': "العضو <i>{}</i> [<code>{}</code>] بسبب ارسال الاسبام ورسايل المتكرره بلخاص {} لقد تم منعك لمدة 1 يوم من خاص البوت! ❌⛔️\n\n▫️الدعم: <a href='https://t.me/{}?start=support'>مراسله</a>\n▫️المطور: @{}",
-'join_channel': "لأستخدام البوت عليك الاشتراك بلقناه!\nقناه البوت: @{}",
-'start': "مرحبا اهلا بك",
-'disconnect': "تم فصل اتصالك لاتستطيع ارسال رسالتك الي الدعم 💤",
-'not_connect': "لايوجد إتصال اذا تحب اقطع الاتصال!😑",
-'need_phone': "للإتصال بالدعم نحتاج إلي رقمك.\nإستخدم زر ارسال الرقم لإرسال الرقم\n\nلماذا نريد رقمك؟🤔\nلاتقلق سيكون رقمك محمي وبأمان يوميا الكثير من الناس اتجاه إهانة الدعم يأتون ولهذه السبب فقط الاشخاص الي لديهم عمل مع الدعم  يستم الاجابه عليهم، ان كنت تريد مراسله الدعم قم بارسال رقمك و شكرا لك❤️",
-'connected_support': "العضو {} الان متصل بالدعم👀",
-'support': "تم الإتصال بالدعم. ارسل رسالتك.",
-'not_result': "لم استطيع ايجاد شئ😢",
-'let_me': "ثواني ابحث عن طلبك في الموقع الثاني...",
-'look_finds': "هذه هي الاشياء التي وجدتها لك اختر وأرسله اليك❤️\nصفحه {} من {}",
-'error_search_voice': "رجاء البصمه لازم يكون اكثر من 2 ثانيه و اقل من 60 ثانيه.",
-'error_search_video': "رجاء الفيديو لازم يكون اكثر من 2 ثانيه و اقل من 60 ثانيه.",
-'error_search_videonote': "رجاء الفيديو لازم يكون اكثر من 2 ثانيه و اقل من 60 ثانيه.",
-'error_search_audio': "رجاء الاغنيه لازم تكون اكثر من 2 ثانيه و اقل من 60 ثانيه.",
-'not_register': "غير مسجل",
-'single_track': "موسيقي مفردة",
-'search_result': "🎼<b>الاغنيه</b>: {}\n🎤<b>المطرب</b>: {}\n💽<b>الإلبوم</b>: {}\n📅<b>تاريخ النشر</b>: {}\n• @{}",
-'download_result': "👤<b>المطرب</b>: {}\n🎧<b>الاغنيه</b>: {}\n💽<b>الإلبوم</b>: {}\n📅<b>تاريخ النشر</b>: {}",
-'download_result2': "🎧<b>موزیک</b>: {}",
-'isNot4u': "لا تضغط.  انت لا تستطيع هذي ليست لك!😡",
-'uNotJoined': "انت لست مشترك بلقناة @{} اشترك بها اولا!",
-'you_accepted': "تم تأكيد الانضمام للقناه✅",
-'send_voice': "أرسل بصمه/فيديو/تسجيل مرئي/صوت من الموسيقي التي تريد إيجادها يمكنك ايضا ارسال بالتوجيه\nارسل اسم الاغنيه/المطرب/اكتب الإلبوم وارسله",
-'try_request': "اطلب مرة أخري",
-'try_again': "طلب الموسيقى الذي وجدته لك واجهته أخطأ \nحاول مرة أخري",
-'big_file': "خطأ! ملف الإرسال أكثر من 20 ميغابايت.",
-'big_file2': "خطأ! ملف الإرسال أكثر من 50 ميغابايت.",
-'notice_change_file': "للحصول على نتائج مختلفة ارسل البصمه او الفيديو بشكل مختلف.",
-'try_request': "رجاء اطلب مرة ثانيه :(",
-'not_found': "لا توجد نتائج",
-'downloading': "جاري ارسال طلبك...",
-'keep_license': "للاسف الموسيقي المطلوبه لايمكن تحميلها :(\nقوم بأختيار امـر ثاني للتحميل",
-'send_text4video': "لتحميل الفيديو ارسل لي اسم المقطع ...",
-'video_result': "🎥اسم الفيديو : {} | <a href='{}'>تابع علي الهوا</a>\n📤تم تحميل بواسطة: {} | <a href='{}'>المشاهدة</a>\n📅تاريخ التحميل: {}\n👁عدد المشاهدين: {}\n👍🏻الموافقين: {}\n👎🏻 المخالفين : {}",
-'uploading': "انتظر جاري الرفع على خوادم التليكرام...",
-'error_upload_video': "تم سحب الكثير من الفيديوات اليوم حاول مرة اخري بعد بضع دقايق :(",
-'send_correct_yt': "لقد أرسلت رابط خاطئ! أضف رابط صحيح من Youtube.",
-'ytRestrcit': "يمكنك فقط تنزيل 3 مرات مقاطع من YouTube  في اليوم",
-'file_size': "ابدأ التنزيل لـ {}...\n الحجم: {} ميغابايت",
-'you_now_dl': "أنت تقوم حاليًا بتنزيل ملف",
-'file_dled': "تم تنزيل الملف. جارٍ الإرسال إليك...",
-'send_url_from_file': "أرسل رابط مباشر من الملف",
-'send_file_url': "خطأ! يجب أن يكون تحميل ملف بالرابط . هو رابط الملف المباشر.",
-'what_do': "جيد، ماذا سأفعل الان؟",
-'tg_50mb': "عذرا نظرًا لأن بوتات التلي مقيدة لتحميل الملفات ولا يمكن تحميل الملفات التي يزيد حجمها عن 50 ميغابايت ، ولا يمكن إرسال الفيديو المطلوب :(",
-'u_are_blocked': "أنت محروم حاليًا من هذا البوت لبضع دقائق بسبب الحظر أو القصف...",
-'usunblocked': "العضو تم فتح الحظر عنه✅",
-'usunblock': "⚠️خطاء! العضو ليس محظور",
-'usblock': "تم حظر العضو من البوت🚫",
-'usblocked': "⚠️خطاء! العضو محظور حاليا",
-'dont_fwd': "لا ترسل رسالتك بالتوجيه. اكتب رسالتك وارسلها",
-'just_text': "فقط اكتب رسالتك كامله",
-'sent_wait': "تم ارسال رسالتك الي الدعم✅\n انتظر سيتم الرد عليك بأسرع وقت ممكن",
-'wait_moment': "انتظر دقيقة واحدة من فضلك.",
-'list_block': "قائمه الاعضاء المحظورين:\n\n",
-'wait': "انتظر من فضلك...",
-'blocklist_sent': "تم ارسال قائمه المحظورين\nلفتح الحظر استخدم الامر التالي:\n/unblock user_id",
-'caption_sc': "{}\n📅{}\n👍🏻 {}\n@{} | @{}",
-'send_to_all': "جاري ارسال الرساله الي {} عضو...",
-'sent_to_all': "من مجموعه {} عضو الي {} تم الارسال بنجاح.",
-'fwd_to_all': "جاري ارسال رساله بالتوجيه الي {} عضو...",
-'fwdd_to_all': "من مجموع {} العضو الي {} تم ارسال رساله بالتوجيه بنجاح.",
-'just_reply': "سوي رد علي رساله",
-'send_ig_url': "انشر رابطً من الانستا لتنزيل ستوري/بروفايل/المنشور",
-'ig_caption_pic': "👤<a href='https://instagram.com/{}'>متابعة البروفايل</a> | 📍<a href='https://instagram.com/p/{}'>متابعة المنشور</a>\n✍️النشر:\n{}\n\n{}👍🏻 | {}💬\nتم التحميل بواسطة <a href='tg://user?id={}'>{}</a> من الانستا",
-'ig_caption_video': "👤<a href='https://instagram.com/{}'>متابعة البروفايل</a> | 📍<a href='https://instagram.com/p/{}'>متابعه المنشور</a>\n✍️النشر:\n{}\n\n{}👁 | {}👍🏻 | {}💬\nتم التحميل بواسطة <a href='tg://user?id={}'>{}</a> من الانستا",
-'ig_is_private': "تم إرسال الرابط من حساب شخصي و للأسف هذه غير ممكن :(",
-'ig_caption_spic': "👤<a href='https://instagram.com/{}'>متابعة البروفايل</a> | 📍<a href='https://instagram.com/stories/{}/{}'>متابعة المنشور</a>\nتم التحميل بواسطة <a href='tg://user?id={}'>{}</a> من الانستا",
-'ig_caption_svideo': "👤<a href='https://instagram.com/{}'>متابعة البروفايل</a> | 📍<a href='https://instagram.com/stories/{}/{}'>متابعه المنشور</a>\nتم التحميل بواسطة <a href='tg://user?id={}'>{}</a> من الانستا",
-'ig_not_story': "هذه الاستوري ليس موجود",
-'ig_not_any_story': "هذه الحساب لايوجد في استوري",
-'maybe_spammer': "مــاذا؟ لقد تلقيت للتوهذا قبل بضع دقائق!!",
-'find_story_count': "من مجموع {} استوري من الحساب <a href='https://instagram.com/{}'>{}</a> جاري البحث علي طلبك للأرسال اليك...",
-'stats': "كل الاحصائيات\n\nتحميل منشور الانستا: {}\nتحميل استوري: {}\nبحث الاغاني: {}\nتحميل الاغاني: {}\nبحث بل يوتيوب: {}\nتحميل من اليوتيوب: {}\nتحميل الملفات: {}\nعدد كل الاعضاء: {}",
-'force_join': "لأستخدام البوت فقط عليك الاشتراك بالقناة!\n\n🔺القناة: @{0}\n@{0}",
-'buttuns':
-{
-'join': "الانضمام🔰",
-'joined': "لقد انضممت✅",
-'bot_ch': "قناه البوت",
-'send_phone': "ارسال الرقم⬆️",
-'back_menu': "القائمه",
-'disconnect': "❌قطع الإتصال❌",
-'next_page': "▶️التالي",
-'preview_page': "السابقه◀️",
-'download': "تحميل📥",
-'back': "عودة",
-'search_music': "تحميل موسيقي 🎧",
-'search_video': "تحميل فيديو 🎬",
-'download_instagram': "تحميل انستا 📷",
-'download_file': "تحميل الملفات 💾",
-'settings': "الاعدادات 🔧",
-'channel': "القناة 📢",
-'support': "الدعم 💭",
-'creator': "المطور",
-'quality': "جودة الموسيقي⬇️",
-'send_wait': "في انتظار الإرسال📮",
-'notice': "معلومه",
-'start_again': "بدء من جديد",
-'menu': "القائمه",
-'list_block': "قائمه الحظر",
-'stats': "الاحصائيات",
-},
-},
-}
