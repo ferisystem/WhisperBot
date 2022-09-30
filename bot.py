@@ -1171,7 +1171,7 @@ async def newUser(msg):
 	await sendText(gv().sudoID, 0, 1, '#NewUser\n{} > `{}`\nType: {}\nStatus: Active✅'.format(menMD(msg), msg.from_user.id, msg.text), 'md', blockKeys(msg.from_user.id))
 
 
-async def memberCommands(msg, input, gp_id, is_super, is_fwd, speed=None):
+async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 	# print(msg)
 	# text:
 	# {"message_id": 33036,
@@ -1757,7 +1757,7 @@ async def message_process(msg: types.Message):
 			pass
 	if isPv(msg):
 		setupUserSteps(msg, user_id)
-		await memberCommands(msg, "input", chat_id, False, False)
+		await memberCommands(msg, "input", chat_id, False)
 	if isSuper(msg):
 		if chat_id == gv().supchat:
 			if isSudo(user_id):
