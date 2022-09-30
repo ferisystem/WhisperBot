@@ -1242,6 +1242,9 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 				if 'anon:blo' in input_:
 					ap = re_matches(r'^anon:blo:(\d+):(\d+):@(\d+)$', input_)
 					which_user = int(ap[1])
+					if DataBase.sismember('blocks:{}'.format(which_user), user_id):
+						await sendText(chat_id, msg, 1, langU['yare_blocked_anon'], 'md', anonymous_back_keys(user_id))
+						return False
 					if not msg.text:
 						msg_ = await copyMessage(which_user, chat_id, msg_id, caption = msg.caption,\
 						caption_entities = msg.caption_entities, reply_msg = None,\
@@ -1287,6 +1290,8 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 						if int(ap[1]) == int(user_id):
 							await sendText(chat_id, msg, 1, "{}\n{}".format(langU['cant_send_self'],
 							langU['enter_id_for_send']), 'md', anonymous_back_keys(user_id))
+						elif DataBase.sismember('blocks:{}'.format(ap[1]), user_id):
+							await sendText(chat_id, msg, 1, langU['yare_blocked_anon'], 'md', anonymous_back_keys(user_id))
 						else:
 							hash = ':@{}'.format(user_id)
 							langU = lang[user_steps[user_id]['lang']]
