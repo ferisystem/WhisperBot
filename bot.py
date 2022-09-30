@@ -879,6 +879,88 @@ async def sendMediaGroup(chat_id, reply_msg, dis_notif, media):
 		pass
 
 
+async def copyMessage(chat_id, from_chat_id, message_id, caption = None,\
+	parse_mode = None, caption_entities = None, dis_notif = None,\
+	protect_content = True, reply_msg = None,\
+	allow_sending_without_reply = True, reply_markup = None):
+	dis_notif = str(dis_notif)
+	dis_notif = dis_notif.replace("1", "True")
+	dis_notif = dis_notif.replace("0", "False")
+	dis_notif = bool(dis_notif)
+	if reply_msg is 0:
+		reply_msgs = None
+	elif reply_msg and 'message_id' in reply_msg:
+		reply_msgs = reply_msg.message_id
+	else:
+		reply_msgs = None
+	if parse_mode:
+		parse_mode = parse_mode.replace('md', 'Markdown')
+		parse_mode = parse_mode.replace('html', 'HTML')
+	if type(reply_markup) is tuple:
+		if len(reply_markup)>0:
+			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
+			for row in reply_markup:
+				markup.row(*row)
+		else:
+			markup = ReplyKeyboardRemove()
+	else:
+		markup = reply_markup
+	try:
+		result = await bot.copy_message(chat_id, from_chat_id, message_id, caption,\
+		parse_mode = parse_mode, caption_entities = caption_entities,\
+		disable_notification = dis_notif, protect_content = protect_content,\
+		reply_to_message_id = reply_msg,\
+		allow_sending_without_reply = allow_sending_without_reply,
+		reply_markup = reply_markup)
+		return True, result
+	except expts.ChatNotFound as a:
+		return a.args
+	except expts.BotBlocked as a:
+		#log.error(f"Target [ID:{chat_id}]: blocked by user")
+		return a.args
+	except expts.RetryAfter as a:
+		# log.error(f"Target [ID:{chat_id}]: Flood limit is exceeded. Sleep {e.timeout} seconds.")
+		await asyncio.sleep(a.timeout)
+		return await copyMessage(chat_id, from_chat_id, message_id, caption, parse_mode,\
+		caption_entities, disable_notification, protect_content, reply_to_message_id,\
+		allow_sending_without_reply, reply_markup)
+	except expts.UserDeactivated as a:
+		#log.error(f"Target [ID:{chat_id}]: user is deactivated")
+		return a.args
+	except expts.TelegramAPIError as a:
+		if a.args[0] == "Reply message not found":
+			try:
+				return True, await copyMessage(chat_id, from_chat_id, message_id, caption, parse_mode,\
+				caption_entities, disable_notification, protect_content, 0,\
+				allow_sending_without_reply, reply_markup)
+			except:
+				return a.args
+		else:
+			#log.error(f"Target [ID:{chat_id}]: failed")
+			return a.args
+	except expts.CantInitiateConversation as a:
+		#log.error(f"Target [ID:{chat_id}]: user not started the bot")
+		return a.args
+	except expts.Unauthorized as a:
+		#log.error(f"Target [ID:{chat_id}]: Unauthorized > {a}")
+		return a.args
+	except expts.BadRequest as a:
+		if a.args[0] == "Reply message not found":
+			try:
+				return True, await copyMessage(chat_id, from_chat_id, message_id, caption, parse_mode,\
+				caption_entities, disable_notification, protect_content, 0,\
+				allow_sending_without_reply, reply_markup)
+			except:
+				return a.args
+		else:
+			#log.error(f"Target [ID:{chat_id}]: BadRequest > {a}")
+			return a.args
+	except Exception as e:
+		print(e)
+		return False, False
+		pass
+
+
 async def editText(chat_id, msg_id, inline_msg_id, text, parse_mode = None, reply_markup = None, entities = None):
 	if msg_id>0 and inline_msg_id>0:
 		print("Error in editText")
@@ -1090,6 +1172,35 @@ async def newUser(msg):
 
 
 async def memberCommands(msg, input, gp_id, is_super, is_fwd, speed=None):
+	# print(msg)
+	# text:
+	# {"message_id": 33036,
+	# "from": {"id": 139946685, "is_bot": false, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "language_code": "de"},
+	# "chat": {"id": 139946685, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "type": "private"},
+	# "date": 1664547137, "text": "a"}
+	# photo:
+	# {"message_id": 33037,
+	# "from": {"id": 139946685, "is_bot": false, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "language_code": "de"},
+	# "chat": {"id": 139946685, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "type": "private"},
+	# "date": 1664547180, "photo": [
+	# {"file_id": "AgACAgQAAxkBAAKBDWM2-WwAAVBy_Xa7Ooord4Qsc5n2IgAC_LkxGwABsrlRx_tiUXUM5yIBAAMCAANzAAMqBA",
+	# "file_unique_id": "AQAD_LkxGwABsrlReA",
+	# "file_size": 1349, "width": 90, "height": 90},
+	# {"file_id": "AgACAgQAAxkBAAKBDWM2-WwAAVBy_Xa7Ooord4Qsc5n2IgAC_LkxGwABsrlRx_tiUXUM5yIBAAMCAANtAAMqBA",
+	# "file_unique_id": "AQAD_LkxGwABsrlRcg", "file_size": 11346, "width": 320, "height": 320}]
+	# }
+	# photo with caption:
+	# {"message_id": 33038,
+	# "from": {"id": 139946685, "is_bot": false, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "language_code": "de"},
+	# "chat": {"id": 139946685, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "type": "private"},
+	# "date": 1664547261, "photo": [
+	# {"file_id": "AgACAgQAAxkBAAKBDmM2-b0OxEokHFWTT8XgywHZ9dzHAAL8uTEbAAGyuVHH-2JRdQznIgEAAwIAA3MAAyoE",
+	# "file_unique_id": "AQAD_LkxGwABsrlReA", "file_size": 1349, "width": 90, "height": 90},
+	# {"file_id": "AgACAgQAAxkBAAKBDmM2-b0OxEokHFWTT8XgywHZ9dzHAAL8uTEbAAGyuVHH-2JRdQznIgEAAwIAA20AAyoE",
+	# "file_unique_id": "AQAD_LkxGwABsrlRcg", "file_size": 11346, "width": 320, "height": 320}],
+	# "caption": "a\nb\nc", "caption_entities": [{"type": "bold", "offset": 2, "length": 2},
+	# {"type": "text_link", "offset": 4, "length": 1, "url": "https://google.com/"}]
+	# }
 	_ = CheckMsg(msg)
 	user_id = msg.from_user.id
 	user_name = msg.from_user.first_name
@@ -1112,6 +1223,33 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd, speed=None):
 				DataBase.setex('user.alertBlocked:{}'.format(user_id), 120, "True")
 				await sendText(chat_id, 0, 1, langU['u_are_blocked'])
 			return False
+		if DataBase.get('who_conneted:{}'.format(user_id)):
+			which_user = DataBase.get('who_conneted:{}'.format(user_id))
+			DataBase.delete('who_conneted:{}'.format(user_id))
+			if not msg.text:
+				msg_ = await copyMessage(which_user, chat_id, msg_id, caption = msg.caption,\
+				caption_entities = msg.caption_entities, reply_msg = None,\
+				 reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
+			else:
+				msg_ = await copyMessage(which_user, chat_id, msg_id, reply_msg = None, reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
+			await sendText(chat_id, msg, 1, langU['your_msg_sent'], 'md', anonymous_back_keys(user_id))
+			DataBase.setex('msg_from:{}'.format(msg_id), 86400*30, user_id)
+			await sendText(which_user, msg_[1], 1, langU['new_message'].format(msg_id))
+		if reply_msg:
+			if 'reply_markup' in reply_msg:
+				input_ = reply_msg.reply_markup.inline_keyboard[0][0].callback_data
+				if 'anon:blo' in input_:
+					ap = re_matches(r'^anon:blo:(\d+):(\d+):@(\d+)$', input_)
+					which_user = int(ap[1])
+					if not msg.text:
+						msg_ = await copyMessage(which_user, chat_id, msg_id, caption = msg.caption,\
+						caption_entities = msg.caption_entities, reply_msg = None,\
+						 reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
+					else:
+						msg_ = await copyMessage(which_user, chat_id, msg_id, reply_msg = None, reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
+					await sendText(chat_id, msg, 1, langU['your_msg_sent'], 'md', anonymous_back_keys(user_id))
+					DataBase.setex('msg_from:{}'.format(msg_id), 86400*30, user_id)
+					await sendText(which_user, msg_[1], 1, langU['new_message'].format(msg_id))
 		if 'text' in msg:
 			input = msg.text.lower()
 			if DataBase.get('ready_to_change_link:{}'.format(user_id)) and not '/start' in input:
@@ -1136,6 +1274,26 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd, speed=None):
 					DataBase.set('name_anon:{}'.format(user_id), msg.text)
 					await bot.delete_message(chat_id, DataBase.get('pre_msgbot:{}'.format(user_id)))
 					await sendText(chat_id, msg, 1, langU['changed_name_anon'], 'md', anonymous_cus_name_keys(user_id))
+			if DataBase.get('ready_to_enter_id:{}'.format(user_id)) and not '/start' in input:
+				if re.match(r'^(\d+)$', input):
+					ap = re_matches(r'^(\d+)$', input)
+					DataBase.delete('ready_to_enter_id:{}'.format(user_id))
+					await bot.delete_message(chat_id, DataBase.get('pre_msgbot:{}'.format(user_id)))
+					if DataBase.sismember('allUsers', ap[1]):
+						if int(ap[1]) == int(user_id):
+							await sendText(chat_id, msg, 1, "{}\n{}".format(langU['cant_send_self'], langU['enter_id_for_send']), 'md', anonymous_back_keys(user_id))
+						else:
+							hash = ':@{}'.format(user_id)
+							langU = lang[user_steps[user_id]['lang']]
+							buttuns = langU['buttuns']
+							inlineKeys = iMarkup()
+							inlineKeys.add(
+								iButtun(buttuns['cancel'], callback_data = 'anon{}'.format(hash))
+								)
+							DataBase.set('who_conneted:{}'.format(user_id), ap[1])
+							await sendText(chat_id, msg, 1, langU['user_connect_4send'].format(DataBase.get('name_anon2:{}'.format(ap[1]))), 'md', inlineKeys)
+					else:
+						await sendText(chat_id, msg, 1, langU['user_404_4send'], 'md', anonymous_back_keys(user_id))
 			if re.match(r"^ping$", input):
 				await sendText(chat_id, msg, 1, "*PONG*", 'md')
 			if not re.search(r"^/start p(\d+)$", input):
@@ -1421,6 +1579,17 @@ def anonymous_help_keys(UserID):
 	return inlineKeys
 
 
+def anonymous_back_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['back_anon'], callback_data = 'anon{}'.format(hash))
+		)
+	return inlineKeys
+
+
 def anonymous_name_keys(UserID):
 	hash = ':@{}'.format(UserID)
 	langU = lang[user_steps[UserID]['lang']]
@@ -1449,6 +1618,25 @@ def anonymous_cus_name_keys(UserID):
 	return inlineKeys
 
 
+def anonymous_new_message_keys(UserID, TO_USER, MSG_ID):
+	hash = ':{}:{}:@{}'.format(TO_USER, MSG_ID, UserID)
+	try:
+		langU = lang[user_steps[UserID]['lang']]
+	except:
+		langU = lang['fa']
+	buttuns = langU['buttuns']
+	if DataBase.sismember('blocks:{}'.format(UserID), TO_USER):
+		buttun1 = buttuns['unblock']
+	else:
+		buttun1 = buttuns['block']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttun1, callback_data = 'anon:blo{}'.format(hash)),
+		iButtun(buttuns['reply'], callback_data = 'anon:rep{}'.format(hash))
+		)
+	return inlineKeys
+
+
 def isUserSteps(user_id):
 	if user_id in user_steps and 'action' in user_steps[user_id]:
 		return True
@@ -1467,6 +1655,8 @@ def setupUserSteps(msg, user_id):
 					DataBase.sadd('links_anon', text)
 					break
 				text = generate_link()
+		if not DataBase.get('name_anon2:{}'.format(user_id)):
+			DataBase.set('name_anon2:{}'.format(user_id), msg.from_user.first_name)
 		user_steps[user_id].update({
 		"lang": (DataBase.get('user.lang:{}'.format(user_id)) or echoLangCode(msg.from_user)),
 		})
@@ -1756,6 +1946,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 		if re.match(r"^anon:@(\d+)$", input):
 			DataBase.delete('ready_to_change_link:{}'.format(user_id))
 			DataBase.delete('ready_to_change_name:{}'.format(user_id))
+			DataBase.delete('ready_to_enter_id:{}'.format(user_id))
+			DataBase.delete('who_conneted:{}'.format(user_id))
 			await editText(chat_id, msg_id, 0, langU['anon'], None, anonymous_keys(user_id))
 		if re.match(r"^anon:link:@(\d+)$", input):
 			DataBase.delete('ready_to_change_link:{}'.format(user_id))
@@ -1811,6 +2003,23 @@ async def callback_query_process(msg: types.CallbackQuery):
 			DataBase.delete('name_anon:{}'.format(user_id))
 			await answerCallbackQuery(msg, langU['changed_name_anon'], show_alert = True, cache_time = 90)
 			await editText(chat_id, msg_id, 0, langU['name_anon'].format(DataBase.get('name_anon:{}'.format(user_id)) or msg.from_user.first_name), None, anonymous_name_keys(user_id))
+		if re.match(r"^anon:send:@(\d+)$", input):
+			DataBase.setex('ready_to_enter_id:{}'.format(user_id), 3600, 'True')
+			DataBase.set('pre_msgbot:{}'.format(user_id), msg.message.message_id)
+			await editText(chat_id, msg_id, 0, langU['enter_id_for_send'], None, anonymous_back_keys(user_id))
+		if re.match(r"^anon:blo:(\d+):(\d+):@(\d+)$", input):
+			ap = re_matches(r"^anon:blo:(\d+):(\d+):@(\d+)$", input)
+			if DataBase.sismember('blocks:{}'.format(user_id), ap[1]):
+				DataBase.srem('blocks:{}'.format(user_id), ap[1])
+				text = langU['user_unblocked']
+			else:
+				DataBase.sadd('blocks:{}'.format(user_id), ap[1])
+				text = langU['user_blocked']
+			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
+			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = anonymous_new_message_keys(user_id, ap[1], ap[2]))
+		if re.match(r"^anon:rep:(\d+):(\d+):@(\d+)$", input):
+			ap = re_matches(r"^anon:rep:(\d+):(\d+):@(\d+)$", input)
+			await answerCallbackQuery(msg, langU['help_reply_anon'], show_alert = True, cache_time = 3600)
 
 
 async def channel_post_process(msg: types.Message):
