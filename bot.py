@@ -1325,6 +1325,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 							iButtun(buttuns['cancel'], callback_data = 'anon{}'.format(hash))
 							)
 						DataBase.set('who_conneted:{}'.format(user_id), we_have)
+						DataBase.incr('user.stats_anon:{}'.format(we_have))
 						await sendText(chat_id, msg, 1,
 						langU['user_connect_4send'].format(DataBase.get('name_anon2:{}'.format(we_have))), 'md', inlineKeys)
 				else:
@@ -2057,7 +2058,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 				)
 			await editText(chat_id, msg_id, 0, langU['help{}_anon'.format(ap[1])], None, inlineKeys)
 		if re.match(r"^anon:stats:@(\d+)$", input):
-			await answerCallbackQuery(msg, langU['stats_anon'].format(DataBase.get('user.stats_anon:{}'.format(user_id)) or 0), show_alert = True, cache_time = 90)
+			await answerCallbackQuery(msg, langU['stats_anon'].format(int(DataBase.get('user.stats_anon:{}'.format(user_id))) or 0), show_alert = True, cache_time = 90)
 		if re.match(r"^anon:name:@(\d+)$", input):
 			DataBase.delete('ready_to_change_name:{}'.format(user_id))
 			await editText(chat_id, msg_id, 0, langU['name_anon'].format(DataBase.get('name_anon:{}'.format(user_id)) or msg.from_user.first_name), None, anonymous_name_keys(user_id))
