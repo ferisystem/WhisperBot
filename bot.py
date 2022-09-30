@@ -1537,7 +1537,12 @@ def anonymous_my_link_keys(UserID):
 	inlineKeys = iMarkup()
 	inlineKeys.add(
 		iButtun(buttuns['customize_link_anon'], callback_data = 'anon:cus{}'.format(hash)),
-		iButtun(buttuns['share_link_anon'], url = 'https://t.me/share/url?text=asdad&url=google.com')#.format(hash))
+		iButtun(buttuns['share_link_anon'],
+		url = 'https://t.me/share/url?text={}&url=t.me/{}?start={}'.format(
+			langU['share_text_anon'],
+			redis.hget(db, 'user'),
+			DataBase.get('link_anon:{}'.format(UserID))
+			))
 		)
 	inlineKeys.add(
 		iButtun(buttuns['insta_link_anon'], callback_data = 'anon:insta{}'.format(hash))
