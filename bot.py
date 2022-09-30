@@ -1652,6 +1652,21 @@ def anonymous_new_message_keys(UserID, TO_USER, MSG_ID):
 	return inlineKeys
 
 
+def anonymous_delete_blocks_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['yes'], callback_data = 'anon:delblocks{}'.format(hash)),
+		iButtun(buttuns['no'], callback_data = 'anon{}'.format(hash))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_anon'], callback_data = 'anon{}'.format(hash))
+		)
+	return inlineKeys
+
+
 def isUserSteps(user_id):
 	if user_id in user_steps and 'action' in user_steps[user_id]:
 		return True
@@ -2045,7 +2060,15 @@ async def callback_query_process(msg: types.CallbackQuery):
 				text = langU['receive_anon_deactive']
 			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
 			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = anonymous_keys(user_id))
-
+		if re.match(r"^anon:myblock:@(\d+)$", input):
+			if DataBase.scard('blocks:{}'.format(user_id)) > 0:
+				await editText(chat_id, msg_id, 0, langU['besure_del_all_blocks'], None, anonymous_delete_blocks_keys(user_id))
+			else:
+				await answerCallbackQuery(msg, langU['blocks_empty_anon'], show_alert = True, cache_time = 10)
+		if re.match(r"^anon:delblocks:@(\d+)$", input):
+			DataBase.delete('blocks:{}'.format(user_id))
+			await answerCallbackQuery(msg, langU['blocks_clear_anon'], show_alert = True, cache_time = 2)
+			await editText(chat_id, msg_id, 0, langU['anon'], None, anonymous_keys(user_id))
 
 async def channel_post_process(msg: types.Message):
 	if (msg.chat.username or '') != IDs_datas['chUsername']:
