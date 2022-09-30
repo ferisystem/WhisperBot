@@ -1307,6 +1307,28 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 						await sendText(chat_id, msg, 1, langU['user_404_4send'], 'md', anonymous_back_keys(user_id))
 			if re.match(r"^ping$", input):
 				await sendText(chat_id, msg, 1, "*PONG*", 'md')
+			if re.search(r"^/start (.*)$", input):
+				ap = re_matches(r"^/start (.*)$", msg.text)
+				we_have = DataBase.get('link_anon:{}'.format(ap[1]))
+				if we_have:
+					if int(we_have) == int(user_id):
+						await sendText(chat_id, msg, 1, "{}\n{}".format(langU['cant_send_self'],
+						langU['enter_id_for_send']), 'md', anonymous_back_keys(user_id))
+					elif DataBase.sismember('blocks:{}'.format(we_have), user_id):
+						await sendText(chat_id, msg, 1, langU['yare_blocked_anon'], 'md', anonymous_back_keys(user_id))
+					else:
+						hash = ':@{}'.format(user_id)
+						langU = lang[user_steps[user_id]['lang']]
+						buttuns = langU['buttuns']
+						inlineKeys = iMarkup()
+						inlineKeys.add(
+							iButtun(buttuns['cancel'], callback_data = 'anon{}'.format(hash))
+							)
+						DataBase.set('who_conneted:{}'.format(user_id), we_have)
+						await sendText(chat_id, msg, 1,
+						langU['user_connect_4send'].format(DataBase.get('name_anon2:{}'.format(we_have))), 'md', inlineKeys)
+				else:
+					await sendText(chat_id, msg, 1, langU['link_expire_anon'], 'md')
 			if not re.search(r"^/start p(\d+)$", input):
 				if not DataBase.sismember('allUsers', user_id):
 					await newUser(msg)
