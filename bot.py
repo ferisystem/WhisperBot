@@ -1757,7 +1757,7 @@ async def message_process(msg: types.Message):
 			pass
 	if isPv(msg):
 		setupUserSteps(msg, user_id)
-		await memberCommands(msg, "input", chat_id, False)
+		await memberCommands(msg, "input", chat_id, False, False)
 	if isSuper(msg):
 		if chat_id == gv().supchat:
 			if isSudo(user_id):
