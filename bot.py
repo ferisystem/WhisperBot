@@ -1127,7 +1127,15 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd, speed=None):
 					DataBase.set('link_anon:{}'.format(msg.text), user_id)
 					DataBase.sadd('links_anon', msg.text)
 					DataBase.delete('ready_to_change_link:{}'.format(user_id))
+					await bot.delete_message(chat_id, DataBase.get('pre_msgbot:{}'.format(user_id)))
 					await sendText(chat_id, msg, 1, "{}\nt.me/{}?start={}".format(langU['customize_link_anon'], redis.hget(db, 'user'), DataBase.get('link_anon:{}'.format(user_id))), 'md', anonymous_cus_link_keys(user_id))
+			if DataBase.get('ready_to_change_name:{}'.format(user_id)) and not '/start' in input:
+				if 21 < len(msg.text):
+					await sendText(chat_id, msg, 1, langU['rules_cus_name_anon'], 'md')
+				else:
+					DataBase.set('name_anon:{}'.format(user_id), msg.text)
+					await bot.delete_message(chat_id, DataBase.get('pre_msgbot:{}'.format(user_id)))
+					await sendText(chat_id, msg, 1, langU['changed_name_anon'], 'md', anonymous_cus_name_keys(user_id))
 			if re.match(r"^ping$", input):
 				await sendText(chat_id, msg, 1, "*PONG*", 'md')
 			if not re.search(r"^/start p(\d+)$", input):
@@ -1413,6 +1421,34 @@ def anonymous_help_keys(UserID):
 	return inlineKeys
 
 
+def anonymous_name_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['cus_name_anon'], callback_data = 'anon:cus_name{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['default_name_anon'], callback_data = 'anon:default_name{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_anon'], callback_data = 'anon{}'.format(hash))
+		)
+	return inlineKeys
+
+
+def anonymous_cus_name_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['back_name_anon'], callback_data = 'anon:name{}'.format(hash))
+		)
+	return inlineKeys
+
+
 def isUserSteps(user_id):
 	if user_id in user_steps and 'action' in user_steps[user_id]:
 		return True
@@ -1544,6 +1580,25 @@ async def message_process(msg: types.Message):
 
 
 async def callback_query_process(msg: types.CallbackQuery):
+	# {"id": "601066438631931931",
+	# "from": {"id": 139946685, "is_bot": false, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "language_code": "de"},
+	# "message": {"message_id": 33021, "from": {"id": 238204510, "is_bot": true, "first_name": "TeleSeed", "username": "TeleSeedBot"},
+	# "chat": {"id": 139946685, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "type": "private"},
+	# "date": 1664543136, "edit_date": 1664543182,
+	# "reply_to_message": {"message_id": 33019,
+	# "from": {"id": 139946685, "is_bot": false, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "language_code": "de"},
+	# "chat": {"id": 139946685, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "type": "private"},
+	# "date": 1664543135, "text": "/start", "entities": [{"type": "bot_command", "offset": 0, "length": 6}]},
+	# "text": "این متن را بعدا تغییر دهید. بخش لینک ناشناس",
+	# "reply_markup": {"inline_keyboard":
+	# [
+	# [
+	# {"text": "شخصی سازی لینک", "callback_data": "anon:cus:@139946685"},
+	# {"text": "اشتراک گذاری", "url": "https://t.me/share/url?text=asdad&url=google.com"}],
+	# [{"text": "لینک برای اینستاگرام", "callback_data": "anon:insta:@139946685"}],
+	# [{"text": "لینک برای تلگرام", "callback_data": "anon:telg:@139946685"}],
+	# [{"text": "بازگشت به بخش ناشناس", "callback_data": "anon:@139946685"}]]}},
+	# "chat_instance": "1169386402171875241", "data": "anon:@139946685"}
 	saveUsername(msg, mode = "callback")
 	user_id = msg.from_user.id
 	input = msg.data.lower()
@@ -1699,12 +1754,15 @@ async def callback_query_process(msg: types.CallbackQuery):
 				all_users,
 				).replace('None', '0'), 'html', inlineKeys)
 		if re.match(r"^anon:@(\d+)$", input):
+			DataBase.delete('ready_to_change_link:{}'.format(user_id))
+			DataBase.delete('ready_to_change_name:{}'.format(user_id))
 			await editText(chat_id, msg_id, 0, langU['anon'], None, anonymous_keys(user_id))
 		if re.match(r"^anon:link:@(\d+)$", input):
 			DataBase.delete('ready_to_change_link:{}'.format(user_id))
 			await editText(chat_id, msg_id, 0, langU['my_link_anon'], None, anonymous_my_link_keys(user_id))
 		if re.match(r"^anon:cus:@(\d+)$", input):
 			DataBase.setex('ready_to_change_link:{}'.format(user_id), 3600, 'True')
+			DataBase.set('pre_msgbot:{}'.format(user_id), msg.message.message_id)
 			await editText(chat_id, msg_id, 0, "{}t.me/{}?start={}".format(langU['customize_link_anon'], redis.hget(db, 'user'), DataBase.get('link_anon:{}'.format(user_id))), None, anonymous_cus_link_keys(user_id))
 		if re.match(r"^anon:change:@(\d+)$", input):
 			link_previous = DataBase.get('link_anon:{}'.format(user_id))
@@ -1742,6 +1800,17 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await editText(chat_id, msg_id, 0, langU['help{}_anon'.format(ap[1])], None, inlineKeys)
 		if re.match(r"^anon:stats:@(\d+)$", input):
 			await answerCallbackQuery(msg, langU['stats_anon'].format(DataBase.get('user.stats_anon:{}'.format(user_id)) or 0), show_alert = True, cache_time = 90)
+		if re.match(r"^anon:name:@(\d+)$", input):
+			DataBase.delete('ready_to_change_name:{}'.format(user_id))
+			await editText(chat_id, msg_id, 0, langU['name_anon'].format(DataBase.get('name_anon:{}'.format(user_id)) or msg.from_user.first_name), None, anonymous_name_keys(user_id))
+		if re.match(r"^anon:cus_name:@(\d+)$", input):
+			DataBase.setex('ready_to_change_name:{}'.format(user_id), 3600, 'True')
+			DataBase.set('pre_msgbot:{}'.format(user_id), msg.message.message_id)
+			await editText(chat_id, msg_id, 0, langU['help_cus_name_anon'], None, anonymous_cus_name_keys(user_id))
+		if re.match(r"^anon:default_name:@(\d+)$", input):
+			DataBase.delete('name_anon:{}'.format(user_id))
+			await answerCallbackQuery(msg, langU['changed_name_anon'], show_alert = True, cache_time = 90)
+			await editText(chat_id, msg_id, 0, langU['name_anon'].format(DataBase.get('name_anon:{}'.format(user_id)) or msg.from_user.first_name), None, anonymous_name_keys(user_id))
 
 
 async def channel_post_process(msg: types.Message):
