@@ -1231,7 +1231,8 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd, speed=None):
 				caption_entities = msg.caption_entities, reply_msg = None,\
 				 reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
 			else:
-				msg_ = await copyMessage(which_user, chat_id, msg_id, reply_msg = None, reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
+				msg_ = await copyMessage(which_user, chat_id, msg_id, reply_msg = None,
+				reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
 			await sendText(chat_id, msg, 1, langU['your_msg_sent'], 'md', anonymous_back_keys(user_id))
 			DataBase.setex('msg_from:{}'.format(msg_id), 86400*30, user_id)
 			await sendText(which_user, msg_[1], 1, langU['new_message'].format(msg_id))
@@ -1246,7 +1247,8 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd, speed=None):
 						caption_entities = msg.caption_entities, reply_msg = None,\
 						 reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
 					else:
-						msg_ = await copyMessage(which_user, chat_id, msg_id, reply_msg = None, reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
+						msg_ = await copyMessage(which_user, chat_id, msg_id, reply_msg = None,
+						reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
 					await sendText(chat_id, msg, 1, langU['your_msg_sent'], 'md', anonymous_back_keys(user_id))
 					DataBase.setex('msg_from:{}'.format(msg_id), 86400*30, user_id)
 					await sendText(which_user, msg_[1], 1, langU['new_message'].format(msg_id))
@@ -1266,7 +1268,8 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd, speed=None):
 					DataBase.sadd('links_anon', msg.text)
 					DataBase.delete('ready_to_change_link:{}'.format(user_id))
 					await bot.delete_message(chat_id, DataBase.get('pre_msgbot:{}'.format(user_id)))
-					await sendText(chat_id, msg, 1, "{}\nt.me/{}?start={}".format(langU['customize_link_anon'], redis.hget(db, 'user'), DataBase.get('link_anon:{}'.format(user_id))), 'md', anonymous_cus_link_keys(user_id))
+					await sendText(chat_id, msg, 1, "{}\nt.me/{}?start={}".format(langU['customize_link_anon'],
+					redis.hget(db, 'user'), DataBase.get('link_anon:{}'.format(user_id))), 'md', anonymous_cus_link_keys(user_id))
 			if DataBase.get('ready_to_change_name:{}'.format(user_id)) and not '/start' in input:
 				if 21 < len(msg.text):
 					await sendText(chat_id, msg, 1, langU['rules_cus_name_anon'], 'md')
@@ -1282,7 +1285,8 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd, speed=None):
 					await bot.delete_message(chat_id, DataBase.get('pre_msgbot:{}'.format(user_id)))
 					if DataBase.sismember('allUsers', ap[1]):
 						if int(ap[1]) == int(user_id):
-							await sendText(chat_id, msg, 1, "{}\n{}".format(langU['cant_send_self'], langU['enter_id_for_send']), 'md', anonymous_back_keys(user_id))
+							await sendText(chat_id, msg, 1, "{}\n{}".format(langU['cant_send_self'],
+							langU['enter_id_for_send']), 'md', anonymous_back_keys(user_id))
 						else:
 							hash = ':@{}'.format(user_id)
 							langU = lang[user_steps[user_id]['lang']]
@@ -1292,7 +1296,8 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd, speed=None):
 								iButtun(buttuns['cancel'], callback_data = 'anon{}'.format(hash))
 								)
 							DataBase.set('who_conneted:{}'.format(user_id), ap[1])
-							await sendText(chat_id, msg, 1, langU['user_connect_4send'].format(DataBase.get('name_anon2:{}'.format(ap[1]))), 'md', inlineKeys)
+							await sendText(chat_id, msg, 1,
+							langU['user_connect_4send'].format(DataBase.get('name_anon2:{}'.format(ap[1]))), 'md', inlineKeys)
 					else:
 						await sendText(chat_id, msg, 1, langU['user_404_4send'], 'md', anonymous_back_keys(user_id))
 			if re.match(r"^ping$", input):
