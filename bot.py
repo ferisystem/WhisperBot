@@ -1717,8 +1717,12 @@ def setupUserSteps(msg, user_id):
 					DataBase.sadd('links_anon', text)
 					break
 				text = generate_link()
-		if not DataBase.get('name_anon2:{}'.format(user_id)):
-			DataBase.set('name_anon2:{}'.format(user_id), msg.from_user.first_name)
+		name_anon2 = DataBase.get('name_anon2:{}'.format(user_id))
+		user_name = msg.from_user.first_name
+		if not name_anon2:
+			DataBase.set('name_anon2:{}'.format(user_id), user_name)
+		elif name_anon2 != user_name:
+			DataBase.set('name_anon2:{}'.format(user_id), user_name)
 		user_steps[user_id].update({
 		"lang": (DataBase.get('user.lang:{}'.format(user_id)) or echoLangCode(msg.from_user)),
 		})
