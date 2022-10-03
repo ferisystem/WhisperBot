@@ -2107,6 +2107,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await answerCallbackQuery(msg, langU['blocks_clear_anon'], show_alert = True, cache_time = 2)
 			await editText(chat_id, msg_id, 0, langU['anon'], None, anonymous_keys(user_id))
 
+
 async def channel_post_process(msg: types.Message):
 	if (msg.chat.username or '') != IDs_datas['chUsername']:
 		await bot.leave_chat(msg.chat.id)
