@@ -371,6 +371,8 @@ async def sendText(chat_id, reply_msg, dis_webpage, text, \
 	dis_webpage = dis_webpage.replace("0", "False")
 	if reply_msg is 0:
 		reply_msgs = None
+	elif reply_msg and str(reply_msg).isdigit():
+		reply_msgs = reply_msg
 	elif reply_msg and 'message_id' in reply_msg:
 		reply_msgs = reply_msg.message_id
 	else:
@@ -889,6 +891,8 @@ async def copyMessage(chat_id, from_chat_id, message_id, caption = None,\
 	dis_notif = bool(dis_notif)
 	if reply_msg is 0:
 		reply_msgs = None
+	elif reply_msg and str(reply_msg).isdigit():
+		reply_msgs = reply_msg
 	elif reply_msg and 'message_id' in reply_msg:
 		reply_msgs = reply_msg.message_id
 	else:
@@ -1226,16 +1230,19 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 		if DataBase.get('who_conneted:{}'.format(user_id)) and not '/start' in msg.text:
 			which_user = DataBase.get('who_conneted:{}'.format(user_id))
 			DataBase.delete('who_conneted:{}'.format(user_id))
-			if not msg.text:
-				msg_ = await copyMessage(which_user, chat_id, msg_id, caption = msg.caption,\
-				caption_entities = msg.caption_entities, reply_msg = None,\
-				 reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
-			else:
-				msg_ = await copyMessage(which_user, chat_id, msg_id, reply_msg = None,
-				reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
+			# if not msg.text:
+				# msg_ = await copyMessage(which_user, chat_id, msg_id, caption = msg.caption,\
+				# caption_entities = msg.caption_entities, reply_msg = None,\
+				 # reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
+			# else:
+				# msg_ = await copyMessage(which_user, chat_id, msg_id, reply_msg = None,
+				# reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
+			msg_ = await msg.forward(gv().supchat)
 			await sendText(chat_id, msg, 1, langU['your_msg_sent'], 'md', anonymous_back_keys(user_id))
-			DataBase.setex('msg_from:{}'.format(msg_id), 86400*30, user_id)
-			await sendText(which_user, msg_[1], 1, langU['new_message'].format(msg_id))
+			# DataBase.setex('msg_from:{}'.format(msg_id), 86400*30, user_id)
+			DataBase.sadd('inbox_user:{}'.format(which_user), f"{msg_.message_id}:{user_id}:{msg_id}:0:{int(time())}:no")
+			DataBase.setex('is_stater:{}'.format(user_id), 86400*7, 'True')
+			await sendText(which_user, 0, 1, langU['new_message'].format(msg_.message_id))
 		if reply_msg:
 			if 'reply_markup' in reply_msg:
 				input_ = reply_msg.reply_markup.inline_keyboard[0][0].callback_data
@@ -1246,15 +1253,21 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 						await sendText(chat_id, msg, 1, langU['yare_blocked_anon'], 'md', anonymous_back_keys(user_id))
 						return False
 					if not msg.text:
-						msg_ = await copyMessage(which_user, chat_id, msg_id, caption = msg.caption,\
-						caption_entities = msg.caption_entities, reply_msg = None,\
-						 reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
+						# msg_ = await copyMessage(which_user, chat_id, msg_id, caption = msg.caption,\
+						# caption_entities = msg.caption_entities, reply_msg = None,\
+						 # reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
+						msg_ = await msg.forward(gv().supchat)
 					elif not '/start' in msg.text:
-						msg_ = await copyMessage(which_user, chat_id, msg_id, reply_msg = None,
-						reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
+						# msg_ = await copyMessage(which_user, chat_id, msg_id, reply_msg = None,
+						# reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
+						msg_ = await msg.forward(gv().supchat)
 					await sendText(chat_id, msg, 1, langU['your_msg_sent'], 'md', anonymous_back_keys(user_id))
-					DataBase.setex('msg_from:{}'.format(msg_id), 86400*30, user_id)
-					await sendText(which_user, msg_[1], 1, langU['new_message'].format(msg_id))
+					# DataBase.setex('msg_from:{}'.format(msg_id), 86400*30, user_id)
+					if DataBase.get('is_stater:{}'.format(which_user)):
+						DataBase.sadd('inbox_user:{}'.format(which_user), f"{msg_.message_id}:{user_id}:{msg_id}:{ap[2]}:{int(time())}:yes")
+					else:
+						DataBase.sadd('inbox_user:{}'.format(which_user), f"{msg_.message_id}:{user_id}:{msg_id}:{ap[2]}:{int(time())}:no")
+					await sendText(which_user, 0, 1, langU['new_message'].format(msg_.message_id))
 		if 'text' in msg:
 			input = msg.text.lower()
 			if DataBase.get('ready_to_change_link:{}'.format(user_id)) and not '/start' in input:
@@ -1305,6 +1318,24 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 							langU['user_connect_4send'].format(DataBase.get('name_anon2:{}'.format(ap[1]))), 'md', inlineKeys)
 					else:
 						await sendText(chat_id, msg, 1, langU['user_404_4send'], 'md', anonymous_back_keys(user_id))
+			if re.match(r"/inbox$", input):
+				your_messages = DataBase.smembers('inbox_user:{}'.format(user_id))
+				for i in your_messages:
+					ap = re_matches(r"^(\d+):(\d+):(\d+):(\d+):(\d+):(yes|no)$", i)
+					if ap[6] == 'yes':
+						show_sender = int(ap[2])
+					else:
+						show_sender = None
+					await asyncio.sleep(0.5)
+					await copyMessage(user_id, gv().supchat, int(ap[1]), reply_msg = int(ap[4]),
+					reply_markup = anonymous_new_message_keys(user_id, ap[2], ap[3], show_sender))
+					if DataBase.get('is_stater:{}'.format(ap[2])):
+						DataBase.setex('is_stater:{}'.format(ap[2]), 86400*7, 'True')
+						user_name = DataBase.get('name_anon2:{}'.format(user_id))
+					else:
+						user_name = langU['anonymous']
+					await sendText(ap[2], ap[3], 1, langU['your_msg_seen'].format(user_name))
+					DataBase.srem('inbox_user:{}'.format(user_id), i)
 			if re.match(r"^ping$", input):
 				await sendText(chat_id, msg, 1, "*PONG*", 'md')
 			if re.search(r"^/start (.*)$", input):
@@ -1666,7 +1697,7 @@ def anonymous_cus_name_keys(UserID):
 	return inlineKeys
 
 
-def anonymous_new_message_keys(UserID, TO_USER, MSG_ID):
+def anonymous_new_message_keys(UserID, TO_USER, MSG_ID, SHOW_SENDER):
 	hash = ':{}:{}:@{}'.format(TO_USER, MSG_ID, UserID)
 	try:
 		langU = lang[user_steps[UserID]['lang']]
@@ -1681,6 +1712,14 @@ def anonymous_new_message_keys(UserID, TO_USER, MSG_ID):
 	inlineKeys.add(
 		iButtun(buttun1, callback_data = 'anon:blo{}'.format(hash)),
 		iButtun(buttuns['reply'], callback_data = 'anon:rep{}'.format(hash))
+		)
+	if SHOW_SENDER:
+		inlineKeys.add(
+			iButtun("{} {}".format(buttuns['from_who'], DataBase.get('name_anon2:{}'.format(SHOW_SENDER))), callback_data = 'none')
+		)
+	else:
+		inlineKeys.add(
+			iButtun(buttuns['from_who2'], callback_data = 'none')
 		)
 	return inlineKeys
 
@@ -1788,7 +1827,8 @@ async def message_process(msg: types.Message):
 	setupUserSteps(msg, user_id)
 	langU = lang[user_steps[user_id]['lang']]
 	print(colored("Message:", "yellow"),
-	colored("ID: {} | Type: {}".format(msg.from_user.id, content), "white"))
+	colored("ID: {} | Type: {}".format(msg.from_user.id, content), "white"),
+	colored("MSG_ID:", "yellow"), colored(msg_id, "white"))
 	if 'reply_to_message' in msg:
 		reply_msg = msg.reply_to_message
 		reply_id = reply_msg.message_id
@@ -2109,7 +2149,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 
 
 async def channel_post_process(msg: types.Message):
-	if (msg.chat.username or '') != IDs_datas['chUsername']:
+	if (msg.chat.username or '') != IDs_datas['chUsername'] and int(msg.chat.id) != int(redis.hget(db, 'supchat')):
 		await bot.leave_chat(msg.chat.id)
 
 
