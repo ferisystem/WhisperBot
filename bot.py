@@ -1328,7 +1328,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 						show_sender = None
 					await asyncio.sleep(0.5)
 					await copyMessage(user_id, gv().supchat, int(ap[1]), reply_msg = int(ap[4]),
-					reply_markup = anonymous_new_message_keys(user_id, ap[2], ap[3], show_sender))
+					reply_markup = anonymous_new_message_keys(user_id, ap[2], ap[3], show_sender, ap[5]))
 					if DataBase.get('is_stater:{}'.format(ap[2])):
 						DataBase.setex('is_stater:{}'.format(ap[2]), 86400*7, 'True')
 						user_name = DataBase.get('name_anon2:{}'.format(user_id))
@@ -1697,8 +1697,8 @@ def anonymous_cus_name_keys(UserID):
 	return inlineKeys
 
 
-def anonymous_new_message_keys(UserID, TO_USER, MSG_ID, SHOW_SENDER):
-	hash = ':{}:{}:@{}'.format(TO_USER, MSG_ID, UserID)
+def anonymous_new_message_keys(UserID, TO_USER, MSG_ID, SHOW_SENDER, SENT_TIME):
+	hash = ':{}:{}:{}:@{}'.format(TO_USER, MSG_ID, SENT_TIME, UserID)
 	try:
 		langU = lang[user_steps[UserID]['lang']]
 	except:
@@ -1720,6 +1720,9 @@ def anonymous_new_message_keys(UserID, TO_USER, MSG_ID, SHOW_SENDER):
 	else:
 		inlineKeys.add(
 			iButtun(buttuns['from_who2'], callback_data = 'none')
+		)
+	inlineKeys.add(
+		iButtun(buttuns['sent_time'], callback_data = 'anon:stime{}'.format(hash))
 		)
 	return inlineKeys
 
@@ -2114,8 +2117,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 			DataBase.setex('ready_to_enter_id:{}'.format(user_id), 3600, 'True')
 			DataBase.set('pre_msgbot:{}'.format(user_id), msg.message.message_id)
 			await editText(chat_id, msg_id, 0, langU['enter_id_for_send'], None, anonymous_back_keys(user_id))
-		if re.match(r"^anon:blo:(\d+):(\d+):@(\d+)$", input):
-			ap = re_matches(r"^anon:blo:(\d+):(\d+):@(\d+)$", input)
+		if re.match(r"^anon:blo:(\d+):(\d+):(\d+):@(\d+)$", input):
+			ap = re_matches(r"^anon:blo:(\d+):(\d+):(\d+):@(\d+)$", input)
 			if DataBase.sismember('blocks:{}'.format(user_id), ap[1]):
 				DataBase.srem('blocks:{}'.format(user_id), ap[1])
 				text = langU['user_unblocked']
@@ -2123,10 +2126,25 @@ async def callback_query_process(msg: types.CallbackQuery):
 				DataBase.sadd('blocks:{}'.format(user_id), ap[1])
 				text = langU['user_blocked']
 			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
-			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = anonymous_new_message_keys(user_id, ap[1], ap[2]))
-		if re.match(r"^anon:rep:(\d+):(\d+):@(\d+)$", input):
-			ap = re_matches(r"^anon:rep:(\d+):(\d+):@(\d+)$", input)
+			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = anonymous_new_message_keys(user_id, ap[1], ap[2], ap[3]))
+		if re.match(r"^anon:rep:(\d+):(\d+):(\d+):@(\d+)$", input):
+			ap = re_matches(r"^anon:rep:(\d+):(\d+):(\d+):@(\d+)$", input)
 			await answerCallbackQuery(msg, langU['help_reply_anon'], show_alert = True, cache_time = 3600)
+		if re.match(r"^anon:stime:(\d+):(\d+):(\d+):@(\d+)$", input):
+			ap = re_matches(r"^anon:stime:(\d+):(\d+):(\d+):@(\d+)$", input)
+			ti_me = datetime.fromtimestamp(int(ap[3]))
+			ti_me = ti_me.strftime('%Y-%m-%d %H:%M:%S')
+			ti_me = re_matches(r'(\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+)', ti_me)
+			if user_steps[user_id]['lang'] == 'fa':
+				ti_me2 = gregorian_to_jalali(int(ti_me[1]), int(ti_me[2]), int(ti_me[3]))
+				sent_time = "{:04d}/{}/{:02d} - {:02d}:{:02d}:{:02d}".format(
+				ti_me2[0], echoMonth(ti_me2[1], True), ti_me2[2],
+				int(ti_me[4]), int(ti_me[5]), int(ti_me[6]))
+			else:
+				sent_time = "{:04d}/{}/{:02d} - {:02d}:{:02d}:{:02d}".format(
+				int(ti_me[1]), echoMonth(ti_me[2], False), int(ti_me[3]),
+				int(ti_me[4]), int(ti_me[5]), int(ti_me[6]))
+			await answerCallbackQuery(msg, sent_time, show_alert = True, cache_time = 180)
 		if re.match(r"^anon:receive:@(\d+)$", input):
 			ap = re_matches(r"^anon:receive:@(\d+)$", input)
 			if DataBase.get('dont_receive_anon:{}'.format(user_id)):
