@@ -1319,23 +1319,26 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 					else:
 						await sendText(chat_id, msg, 1, langU['user_404_4send'], 'md', anonymous_back_keys(user_id))
 			if re.match(r"/inbox$", input):
-				your_messages = DataBase.smembers('inbox_user:{}'.format(user_id))
-				for i in your_messages:
-					ap = re_matches(r"^(\d+):(\d+):(\d+):(\d+):(\d+):(yes|no)$", i)
-					if ap[6] == 'yes':
-						show_sender = int(ap[2])
-					else:
-						show_sender = None
-					await asyncio.sleep(0.5)
-					await copyMessage(user_id, gv().supchat, int(ap[1]), reply_msg = int(ap[4]),
-					reply_markup = anonymous_new_message_keys(user_id, ap[2], ap[3], show_sender, ap[5]))
-					if DataBase.get('is_stater:{}'.format(ap[2])):
-						DataBase.setex('is_stater:{}'.format(ap[2]), 86400*7, 'True')
-						user_name = DataBase.get('name_anon2:{}'.format(user_id))
-					else:
-						user_name = langU['anonymous']
-					await sendText(ap[2], ap[3], 1, langU['your_msg_seen'].format(user_name))
-					DataBase.srem('inbox_user:{}'.format(user_id), i)
+				if DataBase.scard('inbox_user:{}'.format(user_id)) > 0:
+					your_messages = DataBase.smembers('inbox_user:{}'.format(user_id))
+					for i in your_messages:
+						ap = re_matches(r"^(\d+):(\d+):(\d+):(\d+):(\d+):(yes|no)$", i)
+						if ap[6] == 'yes':
+							show_sender = int(ap[2])
+						else:
+							show_sender = None
+						await asyncio.sleep(0.5)
+						await copyMessage(user_id, gv().supchat, int(ap[1]), reply_msg = int(ap[4]),
+						reply_markup = anonymous_new_message_keys(user_id, ap[2], ap[3], show_sender, ap[5]))
+						if DataBase.get('is_stater:{}'.format(ap[2])):
+							DataBase.setex('is_stater:{}'.format(ap[2]), 86400*7, 'True')
+							user_name = DataBase.get('name_anon2:{}'.format(user_id))
+						else:
+							user_name = langU['anonymous']
+						await sendText(ap[2], ap[3], 1, langU['your_msg_seen'].format(user_name))
+						DataBase.srem('inbox_user:{}'.format(user_id), i)
+				else:
+					await sendText(chat_id, msg, 1, langU['inbox_empty'])
 			if re.match(r"^ping$", input):
 				await sendText(chat_id, msg, 1, "*PONG*", 'md')
 			if re.search(r"^/start (.*)$", input):
