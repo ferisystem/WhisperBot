@@ -1766,7 +1766,8 @@ def najva_settings_keys(UserID):
 	buttuns = langU['buttuns']
 	inlineKeys = iMarkup()
 	inlineKeys.add(
-		iButtun(buttuns['najva_settings_recents'].format(DataBase.scard(f'recent_najva:{UserID}')),
+		iButtun(buttuns['najva_settings_recents'].
+		format(DataBase.scard(f'recent_najva:{UserID}')),
 		callback_data = 'najva:settings:recents{}'.format(hash)),
 		)
 	inlineKeys.add(
@@ -1809,7 +1810,8 @@ def najva_settings_keys(UserID):
 		callback_data = 'najva:settings:delall{}'.format(hash)),
 		)
 	inlineKeys.add(
-		iButtun(buttuns['back_najva'], callback_data = 'najva{}'.format(hash))
+		iButtun(buttuns['back_najva'],
+		callback_data = 'najva{}'.format(hash))
 		)
 	return inlineKeys
 
@@ -1852,7 +1854,8 @@ def najva_help_keys(UserID):
 		callback_data = 'najva:help:examp{}'.format(hash)),
 		)
 	inlineKeys.add(
-		iButtun(buttuns['back_najva'], callback_data = 'najva{}'.format(hash))
+		iButtun(buttuns['back_najva'],
+		callback_data = 'najva{}'.format(hash))
 		)
 	return inlineKeys
 
