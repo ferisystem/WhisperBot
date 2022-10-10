@@ -436,6 +436,8 @@ async def sendText(chat_id, reply_msg, dis_webpage, text, \
 async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg = None, protect_content = False, allow_no_reply = True):
 	if reply_msg is 0:
 		reply_msgs = None
+	elif reply_msg and str(reply_msg).isdigit():
+		reply_msgs = reply_msg
 	elif reply_msg and 'message_id' in reply_msg:
 		reply_msgs = reply_msg.message_id
 	else:
