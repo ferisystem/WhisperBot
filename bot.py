@@ -2505,6 +2505,12 @@ async def callback_query_process(msg: types.CallbackQuery):
 					await sendVideo(chat_id, _.reply_to_message, file, langU['najva_help_prob'], 'html', supports_streaming = True, reply_markup = najva_help7_keys(user_id))
 			elif ap[1] == 'examp':
 				await sendText(chat_id, _.reply_to_message, 1, langU['najva_help_examp'], 'html', najva_help8_keys(user_id))
+		if re.match(r"^najva:vid:(\d+):@(\d+)$", input):
+			ap = re_matches(r"^najva:vid:(\d+):@(\d+)$", input)
+			await _.delete()
+			file = f'Files/helps/vid-{ap[1]}.mp4'
+			with open(file, 'rb') as file:
+				await sendVideo(chat_id, _.reply_to_message, file, langU[f'najva_vid-{ap[1]}'], 'html', supports_streaming = True, reply_markup = najva_help7_keys(user_id))
 
 
 async def channel_post_process(msg: types.Message):
