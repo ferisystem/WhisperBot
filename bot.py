@@ -128,10 +128,6 @@ class DataBase:
 		return redis.hset(hash, value, field)
 
 
-	def hmset(hash, *hash2):
-		return redis.hmset(hash, *hash2)
-
-
 	def hdel(hash, value, field):
 		hash = "{}.{}".format(db, hash)
 		return redis.hdel(hash, value, field)
@@ -1963,12 +1959,10 @@ async def message_process(msg: types.Message):
 	if not DataBase.get('checkBotInfo'):
 		try:
 			b = await bot.get_me()
-			DataBase.hmset(db, {
-			'user':b.username, 
-			'id':b.id, 
-			'name':b.first_name, 
-			'token':telegram_datas['botToken']
-			})
+			DataBase.hmset(db, 'user', b.username)
+			DataBase.hset(db, 'id', b.id)
+			DataBase.hset(db, 'name', b.first_name)
+			DataBase.hset(db, 'token', telegram_datas['botToken'])
 			getC = await bot.get_chat(sudo_id)
 			DataBase.hset('sudo', 'user', getC.id)
 			if getC.username:
@@ -2398,12 +2392,10 @@ async def bot_run(app):
 	pW+ee+colored(text, "yellow")+ee+" "+pW2, \
 	pW+zz+colored("#by aiogram[2.4]", "magenta")+zz+"=\n"+pW1
 	)
-	redis.hmset(db, {
-	'id':bt.id, 
-	'name':name, 
-	'user':bt.username, 
-	'token':telegram_datas['botToken']
-	})
+	redis.hset(db, 'id', bt.id)
+	redis.hset(db, 'name', name)
+	redis.hset(db, 'user', bt.username)
+	redis.hset(db, 'token', telegram_datas['botToken'])	
 	try:
 		bt1 = await bot.get_chat(sudo_id)
 		DataBase.hset('sudo', 'user', bt1.username)
