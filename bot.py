@@ -671,13 +671,16 @@ async def sendVoice(chat_id, reply_msg, voice, caption = None, parse_mode = None
 
 async def sendVideo(chat_id, reply_msg, video, caption = None, parse_mode = None,\
 					duration = None, thumb = None, width = None, height = None,\
-					supports_streaming = True, dis_notif = 1, reply_markup = None):
+					supports_streaming = True, dis_notif = 1, reply_markup = None,\
+					protect_content = False, allow_no_reply = True):
 	dis_notif = str(dis_notif)
 	dis_notif = dis_notif.replace("1", "True")
 	dis_notif = dis_notif.replace("0", "False")
 	dis_notif = bool(dis_notif)
 	if reply_msg is 0:
 		reply_msgs = None
+	elif reply_msg and str(reply_msg).isdigit():
+		reply_msgs = reply_msg
 	elif reply_msg and 'message_id' in reply_msg:
 		reply_msgs = reply_msg.message_id
 	else:
@@ -704,8 +707,13 @@ async def sendVideo(chat_id, reply_msg, video, caption = None, parse_mode = None
 		if DataBase.get('typing'):
 			await bot.send_chat_action(chat_id, 'upload_video')	
 		result = await bot.send_video(chat_id, video, duration,\
-		width, height, thumb, caption, parse_mode, supports_streaming,\
-		dis_notif, reply_msgs, reply_markup)
+		width, height, thumb, caption, parse_mode,\
+		supports_streaming = supports_streaming,\
+		disable_notification = dis_notif,\
+		protect_content = protect_content,\
+		reply_to_message_id  = reply_msgs,\
+		allow_sending_without_reply = allow_no_reply,\
+		reply_markup = reply_markup)
 		# print(result)
 		return True, result
 	except expts.ChatNotFound as a:
@@ -716,9 +724,10 @@ async def sendVideo(chat_id, reply_msg, video, caption = None, parse_mode = None
 	except expts.RetryAfter as a:
 		# log.error(f"Target [ID:{chat_id}]: Flood limit is exceeded. Sleep {e.timeout} seconds.")
 		await asyncio.sleep(a.timeout)
-		return await sendVideo(chat_id, reply_msgs, video, caption, parse_mode,\
-				duration, thumb, width, height,\
-				supports_streaming, dis_notif, reply_markup)
+		return await sendVideo(chat_id, reply_msg, video, caption, parse_mode,\
+					duration, thumb, width, height,\
+					supports_streaming, dis_notif, reply_markup,\
+					protect_content, allow_no_reply)
 	except expts.UserDeactivated as a:
 		#log.error(f"Target [ID:{chat_id}]: user is deactivated")
 		return a.args
@@ -726,8 +735,9 @@ async def sendVideo(chat_id, reply_msg, video, caption = None, parse_mode = None
 		if a.args[0] == "Reply message not found":
 			try:
 				return True, await sendVideo(chat_id, 0, video, caption, parse_mode,\
-				duration, thumb, width, height,\
-				supports_streaming, dis_notif, reply_markup)
+					duration, thumb, width, height,\
+					supports_streaming, dis_notif, reply_markup,\
+					protect_content, True)
 			except:
 				return a.args
 		else:
@@ -742,9 +752,10 @@ async def sendVideo(chat_id, reply_msg, video, caption = None, parse_mode = None
 	except expts.BadRequest as a:
 		if a.args[0] == "Reply message not found":
 			try:
-				return True, await sendVideo(chat_id, 0, video, caption, parse_mode,\
-				duration, thumb, width, height,\
-				supports_streaming, dis_notif, reply_markup)
+				return True, await sendVideo((chat_id, 0, video, caption, parse_mode,\
+					duration, thumb, width, height,\
+					supports_streaming, dis_notif, reply_markup,\
+					protect_content, True)
 			except:
 				return a.args
 		else:
@@ -2313,13 +2324,20 @@ async def callback_query_process(msg: types.CallbackQuery):
 			if ap[1] == 'send':
 			
 			elif ap[1] == 'media':
-			elif ap[1] == 'group':
-			elif ap[1] == 'bd':
-			elif ap[1] == 'noid':
-			elif ap[1] == 'shset':
-			elif ap[1] == 'prob':
-			elif ap[1] == 'examp':
 			
+			elif ap[1] == 'group':
+			
+			elif ap[1] == 'bd':
+			
+			elif ap[1] == 'noid':
+			
+			elif ap[1] == 'shset':
+			
+			elif ap[1] == 'prob':
+			
+			elif ap[1] == 'examp':
+
+
 
 async def channel_post_process(msg: types.Message):
 	if (msg.chat.username or '') != IDs_datas['chUsername'] and int(msg.chat.id) != int(redis.hget(db, 'supchat')):
