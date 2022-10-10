@@ -2288,7 +2288,6 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await editText(chat_id, msg_id, 0, langU['najva_help'], None, najva_help_keys(user_id))
 		if re.match(r"^najva:settings1:(.*):@(\d+)$", input):
 			ap = re_matches(r"^najva:settings1:(.*):@(\d+)$", input)
-			print(ap)
 			if DataBase.hget('setting_najva:{}'.format(user_id), ap[1]):
 				DataBase.hdel('setting_najva:{}'.format(user_id), ap[1])
 				text = langU['najva_setoff_{}'.format(ap[1])]
@@ -2297,6 +2296,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 				text = langU['najva_seton_{}'.format(ap[1])]
 			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
 			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = najva_settings_keys(user_id))
+
 
 async def channel_post_process(msg: types.Message):
 	if (msg.chat.username or '') != IDs_datas['chUsername'] and int(msg.chat.id) != int(redis.hget(db, 'supchat')):
