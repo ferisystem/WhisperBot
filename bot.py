@@ -1881,6 +1881,29 @@ def najva_help_keys(UserID):
 		)
 	return inlineKeys
 
+def najva_help1_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_help_noid'],
+		callback_data = 'najva:help:noid{}'.format(hash))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['example'],
+		switch_inline_query = '{} {}'.format(UserID, buttuns['example']))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	return inlineKeys
+
 
 def isUserSteps(user_id):
 	if user_id in user_steps and 'action' in user_steps[user_id]:
