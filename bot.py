@@ -128,9 +128,9 @@ class DataBase:
 		return redis.hset(hash, value, field)
 
 
-	def hdel(hash, value, field):
+	def hdel(hash, value):
 		hash = "{}.{}".format(db, hash)
-		return redis.hdel(hash, value, field)
+		return redis.hdel(hash, value)
 
 
 	def sadd(hash, member):
@@ -1754,8 +1754,12 @@ def najva_keys(UserID):
 		iButtun(buttuns['back'], callback_data = 'backstart{}'.format(hash))
 		)
 	return inlineKeys
-   
- 
+
+
+def rplac_tick(text):
+	return str(text).replace('None', '❌').replace('True', '✅').replace('1', '✅')
+
+
 def najva_settings_keys(UserID):
 	hash = ':@{}'.format(UserID)
 	langU = lang[user_steps[UserID]['lang']]
@@ -1768,33 +1772,33 @@ def najva_settings_keys(UserID):
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_notif_seen'].
-		format(DataBase.get(f'notif_seen_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
-		callback_data = 'najva:settings:seen{}'.format(hash)),
+		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'seen'))),
+		callback_data = 'najva:settings1:seen{}'.format(hash)),
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_notif_recv'].
-		format(DataBase.get(f'notif_recv_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
-		callback_data = 'najva:settings:recv{}'.format(hash)),
+		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'recv'))),
+		callback_data = 'najva:settings1:recv{}'.format(hash)),
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_encrypt'].
-		format(DataBase.get(f'encrypt_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
-		callback_data = 'najva:settings:encrypt{}'.format(hash)),
+		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'encrypt'))),
+		callback_data = 'najva:settings1:encrypt{}'.format(hash)),
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_no_name'].
-		format(DataBase.get(f'noname_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
-		callback_data = 'najva:settings:noname{}'.format(hash)),
+		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'noname'))),
+		callback_data = 'najva:settings1:noname{}'.format(hash)),
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_disposable'].
-		format(DataBase.get(f'dispos_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
-		callback_data = 'najva:settings:dispo{}'.format(hash)),
+		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'dispo'))),
+		callback_data = 'najva:settings1:dispo{}'.format(hash)),
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_auto_del'].
-		format(DataBase.get(f'autodel_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
-		callback_data = 'najva:settings:autodel{}'.format(hash)),
+		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'autodel'))),
+		callback_data = 'najva:settings1:autodel{}'.format(hash)),
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_block'].
@@ -2282,7 +2286,17 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
 		if re.match(r"^najva:help:@(\d+)$", input):
 			await editText(chat_id, msg_id, 0, langU['najva_help'], None, najva_help_keys(user_id))
-
+		if re.match(r"^najva:settings1:(.*):@(\d+)$", input):
+			ap = re_matches(r"^najva:settings1:(.*):@(\d+)$", input)
+			print(ap)
+			if DataBase.hget('setting_najva:{}'.format(user_id), ap[1]):
+				DataBase.hdel('setting_najva:{}'.format(user_id), ap[1])
+				text = langU['najva_setoff_{}'.format(ap[1])]
+			else:
+				DataBase.hset('setting_najva:{}'.format(user_id), ap[1], 1)
+				text = langU['najva_seton_{}'.format(ap[1])]
+			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
+			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = najva_settings_keys(user_id))
 
 async def channel_post_process(msg: types.Message):
 	if (msg.chat.username or '') != IDs_datas['chUsername'] and int(msg.chat.id) != int(redis.hget(db, 'supchat')):
