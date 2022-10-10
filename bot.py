@@ -1015,6 +1015,33 @@ async def editText(chat_id, msg_id, inline_msg_id, text, parse_mode = None, repl
 		print(e)
 
 
+async def editMessageMedia(chat_id, media, message_id = None, inline_message_id = None, reply_markup = None):
+	if type(reply_markup) is tuple:
+		if len(reply_markup) > 0:
+			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
+			for row in reply_markup:
+				markup.row(*row)
+		else:
+			markup = ReplyKeyboardRemove()
+	else:
+		markup = reply_markup
+	try:
+		if inline_message_id>0:
+			result = await bot.edit_message_media(chat_id = None, message_id = None,
+			inline_message_id = inline_message_id,
+			media = media, reply_markup = reply_markup)
+			return True, result
+		elif message_id>0:
+			result = await bot.edit_message_media(chat_id, message_id,
+			inline_message_id = None, media = media, reply_markup = reply_markup)
+			return True, result
+	except expts.BadRequest as a:
+		await bot.send_message(chat_id = gv().sudoID, text = 'Chat ID: {}\nError: {}'.format(chat_id, a.args))
+		return a.args
+	except Exception as e:
+		print(e)
+
+
 async def answerCallbackQuery(query_id, text, show_alert = False, cache_time = 0, url_web = None):
 	try:
 		return await bot.answer_callback_query(query_id.id, text, show_alert, url_web, cache_time)
