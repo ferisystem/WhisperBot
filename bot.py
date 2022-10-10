@@ -377,7 +377,7 @@ async def sendText(chat_id, reply_msg, dis_webpage, text, \
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
@@ -446,7 +446,7 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
@@ -463,7 +463,8 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	try:
 		if DataBase.get('typing'):
 			await bot.send_chat_action(chat_id, 'upload_photo')
-		result = await bot.send_photo(chat_id, photo, caption, parse_mode = parse_mode, reply_to_message_id = reply_msgs, protect_content = protect_content, allow_sending_without_reply = allow_no_reply)
+		result = await bot.send_photo(chat_id, photo, caption, parse_mode = parse_mode, reply_to_message_id = reply_msgs,\
+		protect_content = protect_content, allow_sending_without_reply = allow_no_reply, reply_markup = reply_markup)
 		return True, result
 	except expts.ChatNotFound as a:
 		return a.args
@@ -473,14 +474,14 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	except expts.RetryAfter as a:
 		# log.error(f"Target [ID:{chat_id}]: Flood limit is exceeded. Sleep {e.timeout} seconds.")
 		await asyncio.sleep(a.timeout)
-		return await sendPhoto(chat_id, photo, caption, parse_mode, reply_msg)
+		return await sendPhoto(chat_id, photo, caption, parse_mode, reply_msg, protect_content, allow_no_reply, reply_markup)
 	except expts.UserDeactivated as a:
 		#log.error(f"Target [ID:{chat_id}]: user is deactivated")
 		return a.args
 	except expts.TelegramAPIError as a:
 		if a.args[0] == "Reply message not found":
 			try:
-				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, allow_no_reply = True)
+				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, protect_content, True, reply_markup)
 			except:
 				return a.args
 		else:
@@ -495,7 +496,7 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	except expts.BadRequest as a:
 		if a.args[0] == "Reply message not found":
 			try:
-				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, allow_no_reply = True)
+				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, protect_content, True, reply_markup)
 			except:
 				return a.args
 		else:
@@ -524,7 +525,7 @@ async def sendAudio(chat_id, reply_msg, audio, caption = None, parse_mode = None
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
@@ -610,7 +611,7 @@ async def sendVoice(chat_id, reply_msg, voice, caption = None, parse_mode = None
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
@@ -695,7 +696,7 @@ async def sendVideo(chat_id, reply_msg, video, caption = None, parse_mode = None
 			formol = formol - 1024
 			caption = caption[formol:]
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
@@ -783,7 +784,7 @@ async def sendDocument(chat_id, document, caption = None, parse_mode = None,\
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
@@ -919,7 +920,7 @@ async def copyMessage(chat_id, from_chat_id, message_id, caption = None,\
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
@@ -991,7 +992,7 @@ async def editText(chat_id, msg_id, inline_msg_id, text, parse_mode = None, repl
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
@@ -1887,16 +1888,145 @@ def najva_help1_keys(UserID):
 	buttuns = langU['buttuns']
 	inlineKeys = iMarkup()
 	inlineKeys.add(
-		iButtun(buttuns['back_help_najva'],
+		iButtun(buttuns['najva_help_noid'],
 		callback_data = 'najva:help{}'.format(hash))
 		)
 	inlineKeys.add(
-		iButtun(buttuns['najva_help_noid'],
-		callback_data = 'najva:help:noid{}'.format(hash))
+		iButtun(buttuns['helper_video'],
+		callback_data = 'najva:vid:1{}'.format(hash))
 		)
 	inlineKeys.add(
 		iButtun(buttuns['example'],
 		switch_inline_query = '{} {}'.format(UserID, buttuns['example']))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	return inlineKeys
+
+
+def najva_help2_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['helper_video'],
+		callback_data = 'najva:vid:2{}'.format(hash))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['example'],
+		switch_inline_query = '{}'.format(UserID)
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	return inlineKeys
+
+
+
+def najva_help3_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['example'],
+		switch_inline_query = '{} @user1 @user2 {}'.format(UserID, buttuns['example']))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	return inlineKeys
+
+
+def najva_help4_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['example'],
+		switch_inline_query = '@All {}'.format(UserID, buttuns['example']))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	return inlineKeys
+
+
+def najva_help5_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['helper_reply'],
+		callback_data = 'najva:vid:5{}'.format(hash))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	return inlineKeys
+
+
+def najva_help6_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['example'],
+		switch_inline_query = 'set')
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	return inlineKeys
+
+
+def najva_help7_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	return inlineKeys
+
+
+def najva_help8_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['example_najva'],
+		switch_inline_query = '{} {}'.format(UserID, buttuns['example']))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['example_group'],
+		switch_inline_query = '{} @user1 @user2 {}'.format(UserID, buttuns['example']))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['example_speacial'],
+		switch_inline_query = UserID)
+		)
+	inlineKeys.add(
+		iButtun(buttuns['example_myid'],
+		switch_inline_query = 'me')
+		)
+	inlineKeys.add(
+		iButtun(buttuns['example_set_shcut'],
+		switch_inline_query = 'set')
 		)
 	inlineKeys.add(
 		iButtun(buttuns['back_help_najva'],
@@ -2330,7 +2460,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 		if re.match(r"^najva:settings:@(\d+)$", input):
 			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
 		if re.match(r"^najva:help:@(\d+)$", input):
-			await editText(chat_id, msg_id, 0, langU['najva_help'], None, najva_help_keys(user_id))
+			await _.delete()
+			await sendText(chat_id, _.reply_to_message, 1, langU['najva_help'], None, najva_help_keys(user_id))
 		if re.match(r"^najva:settings1:(.*):@(\d+)$", input):
 			ap = re_matches(r"^najva:settings1:(.*):@(\d+)$", input)
 			if DataBase.hget('setting_najva:{}'.format(user_id), ap[1]):
@@ -2345,19 +2476,33 @@ async def callback_query_process(msg: types.CallbackQuery):
 			ap = re_matches(r"^najva:help:(.*):@(\d+)$", input)
 			await _.delete()
 			if ap[1] == 'send':
-				await sendPhoto(chat_id, 'Files/helps/help_send.jpg', langU['najva_help_send'], 'html', _.reply_to_message, reply_markup = najva_help1_keys(user_id))
+				file = 'Files/helps/help_media.jpg'
+				with open(file, 'rb') as file:
+					await sendPhoto(chat_id, file, langU['najva_help_send'], 'html', _.reply_to_message, reply_markup = najva_help1_keys(user_id))
 			elif ap[1] == 'media':
-				await sendPhoto(chat_id, 'Files/helps/help_media.jpg', langU['najva_help_media'], 'html', _.reply_to_message, reply_markup = najva_help2_keys(user_id))
+				file = 'Files/helps/help_media.jpg'
+				with open(file, 'rb') as file:
+					await sendPhoto(chat_id, file, langU['najva_help_media'], 'html', _.reply_to_message, reply_markup = najva_help2_keys(user_id))
 			elif ap[1] == 'group':
-				await sendPhoto(chat_id, 'Files/helps/help_group.jpg', langU['najva_help_group'], 'html', _.reply_to_message, reply_markup = najva_help3_keys(user_id))
+				file = 'Files/helps/help_group.jpg'
+				with open(file, 'rb') as file:
+					await sendPhoto(chat_id, file, langU['najva_help_group'], 'html', _.reply_to_message, reply_markup = najva_help3_keys(user_id))
 			elif ap[1] == 'bd':
-				await sendPhoto(chat_id, 'Files/helps/help_bd.jpg', langU['najva_help_bd'], 'html', _.reply_to_message, reply_markup = najva_help4_keys(user_id))
+				file = 'Files/helps/help_bd.jpg'
+				with open(file, 'rb') as file:
+					await sendPhoto(chat_id, file, langU['najva_help_bd'], 'html', _.reply_to_message, reply_markup = najva_help4_keys(user_id))
 			elif ap[1] == 'noid':
-				await sendVideo(chat_id, _.reply_to_message, 'Files/helps/help_noid.mp4', langU['najva_help_noid'], 'html', supports_streaming = True, reply_markup = najva_help5_keys(user_id))
+				file = 'Files/helps/help_noid.mp4'
+				with open(file, 'rb') as file:
+					await sendVideo(chat_id, _.reply_to_message, file, langU['najva_help_noid'], 'html', supports_streaming = True, reply_markup = najva_help5_keys(user_id))
 			elif ap[1] == 'shset':
-				await sendPhoto(chat_id, 'Files/helps/help_shset.jpg', langU['najva_help_shset'], 'html', _.reply_to_message, reply_markup = najva_help6_keys(user_id))
+				file = 'Files/helps/help_shset.jpg'
+				with open(file, 'rb') as file:
+					await sendPhoto(chat_id, file, langU['najva_help_shset'], 'html', _.reply_to_message, reply_markup = najva_help6_keys(user_id))
 			elif ap[1] == 'prob':
-				await sendVideo(chat_id, _.reply_to_message, 'Files/helps/help_prob.mp4', langU['najva_help_prob'], 'html', supports_streaming = True, reply_markup = najva_help7_keys(user_id))
+				file = 'Files/helps/help_prob.mp4'
+				with open(file, 'rb') as file:
+					await sendVideo(chat_id, _.reply_to_message, file, langU['najva_help_prob'], 'html', supports_streaming = True, reply_markup = najva_help7_keys(user_id))
 			elif ap[1] == 'examp':
 				await sendText(chat_id, _.reply_to_message, 1, langU['najva_help_examp'], 'html', najva_help8_keys(user_id))
 
