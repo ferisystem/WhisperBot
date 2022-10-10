@@ -1890,7 +1890,7 @@ def najva_help1_keys(UserID):
 	inlineKeys = iMarkup()
 	inlineKeys.add(
 		iButtun(buttuns['najva_help_noid'],
-		callback_data = 'najva:help{}'.format(hash))
+		callback_data = 'najva:help:noid{}'.format(hash))
 		)
 	inlineKeys.add(
 		iButtun(buttuns['helper_video'],
