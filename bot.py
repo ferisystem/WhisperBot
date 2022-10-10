@@ -433,7 +433,7 @@ async def sendText(chat_id, reply_msg, dis_webpage, text, \
 		pass
 
 
-async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg = None):
+async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg = None, protect_content = False, allow_no_reply = True):
 	if reply_msg is 0:
 		reply_msgs = None
 	elif reply_msg and 'message_id' in reply_msg:
@@ -452,7 +452,7 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	try:
 		if DataBase.get('typing'):
 			await bot.send_chat_action(chat_id, 'upload_photo')
-		result = await bot.send_photo(chat_id, photo, caption, parse_mode = parse_mode, reply_to_message_id = reply_msgs)
+		result = await bot.send_photo(chat_id, photo, caption, parse_mode = parse_mode, reply_to_message_id = reply_msgs, protect_content = protect_content, allow_sending_without_reply = allow_no_reply)
 		return True, result
 	except expts.ChatNotFound as a:
 		return a.args
@@ -469,7 +469,7 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	except expts.TelegramAPIError as a:
 		if a.args[0] == "Reply message not found":
 			try:
-				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0)
+				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, allow_no_reply = True)
 			except:
 				return a.args
 		else:
@@ -484,7 +484,7 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	except expts.BadRequest as a:
 		if a.args[0] == "Reply message not found":
 			try:
-				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0)
+				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, allow_no_reply = True)
 			except:
 				return a.args
 		else:
@@ -2296,7 +2296,19 @@ async def callback_query_process(msg: types.CallbackQuery):
 				text = langU['najva_seton_{}'.format(ap[1])]
 			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
 			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = najva_settings_keys(user_id))
-
+		if re.match(r"^najva:help:(.*):@(\d+)$", input):
+			ap = re_matches(r"^najva:help:(.*):@(\d+)$", input)
+			await _.delete()
+			if ap[1] == 'send':
+				
+			elif ap[1] == 'media':
+			elif ap[1] == 'group':
+			elif ap[1] == 'bd':
+			elif ap[1] == 'noid':
+			elif ap[1] == 'shset':
+			elif ap[1] == 'prob':
+			elif ap[1] == 'examp':
+			
 
 async def channel_post_process(msg: types.Message):
 	if (msg.chat.username or '') != IDs_datas['chUsername'] and int(msg.chat.id) != int(redis.hget(db, 'supchat')):
