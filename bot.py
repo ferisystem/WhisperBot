@@ -985,7 +985,7 @@ async def copyMessage(chat_id, from_chat_id, message_id, caption = None,\
 
 
 async def editText(chat_id, msg_id, inline_msg_id, text, parse_mode = None, reply_markup = None, entities = None):
-	if msg_id>0 and inline_msg_id>0:
+	if msg_id > 0 and inline_msg_id > 0:
 		print("Error in editText")
 		return False
 	if parse_mode:
@@ -1002,10 +1002,10 @@ async def editText(chat_id, msg_id, inline_msg_id, text, parse_mode = None, repl
 		markup = reply_markup
 	try:
 		DataBase.incr('amarBot.editbybot')
-		if inline_msg_id>0:
+		if inline_msg_id > 0:
 			result = await bot.edit_message_text(text = text, parse_mode = (parse_mode or None), inline_message_id = msg_id, reply_markup = markup, entities = entities)#, disable_web_page_preview = False)
 			return True, result
-		elif msg_id>0:
+		elif msg_id > 0:
 			result = await bot.edit_message_text(chat_id = chat_id, text = text, parse_mode = (parse_mode or None), disable_web_page_preview = True, message_id = msg_id, reply_markup = markup)
 			return True, result
 	except expts.BadRequest as a:
