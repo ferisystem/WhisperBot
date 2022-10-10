@@ -3,4 +3,4 @@ config_bot.py
 :memory:.session
 .cache
 __pycache__
-Files/language.json
+Files/*
