@@ -377,7 +377,7 @@ async def sendText(chat_id, reply_msg, dis_webpage, text, \
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
@@ -446,7 +446,7 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
@@ -524,7 +524,7 @@ async def sendAudio(chat_id, reply_msg, audio, caption = None, parse_mode = None
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
@@ -610,7 +610,7 @@ async def sendVoice(chat_id, reply_msg, voice, caption = None, parse_mode = None
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
@@ -695,7 +695,7 @@ async def sendVideo(chat_id, reply_msg, video, caption = None, parse_mode = None
 			formol = formol - 1024
 			caption = caption[formol:]
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
@@ -783,7 +783,7 @@ async def sendDocument(chat_id, document, caption = None, parse_mode = None,\
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
@@ -919,7 +919,7 @@ async def copyMessage(chat_id, from_chat_id, message_id, caption = None,\
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
@@ -991,7 +991,7 @@ async def editText(chat_id, msg_id, inline_msg_id, text, parse_mode = None, repl
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
 	if type(reply_markup) is tuple:
-		if len(reply_markup)>0:
+		if len(reply_markup) > 0:
 			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
 			for row in reply_markup:
 				markup.row(*row)
