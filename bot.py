@@ -433,7 +433,7 @@ async def sendText(chat_id, reply_msg, dis_webpage, text, \
 		pass
 
 
-async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg = None, protect_content = False, allow_no_reply = True):
+async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg = None, protect_content = False, allow_no_reply = True, reply_markup = None):
 	if reply_msg is 0:
 		reply_msgs = None
 	elif reply_msg and str(reply_msg).isdigit():
@@ -445,6 +445,15 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	if parse_mode:
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
+	if type(reply_markup) is tuple:
+		if len(reply_markup)>0:
+			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
+			for row in reply_markup:
+				markup.row(*row)
+		else:
+			markup = ReplyKeyboardRemove()
+	else:
+		markup = reply_markup
 	if type(caption) is str and len(caption) > 1000:
 		# caption = make_short_caption(caption)
 		if len(caption) > 1000:
@@ -2302,7 +2311,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			ap = re_matches(r"^najva:help:(.*):@(\d+)$", input)
 			await _.delete()
 			if ap[1] == 'send':
-				
+			
 			elif ap[1] == 'media':
 			elif ap[1] == 'group':
 			elif ap[1] == 'bd':
