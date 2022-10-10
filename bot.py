@@ -2460,7 +2460,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 		if re.match(r"^najva:settings:@(\d+)$", input):
 			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
 		if re.match(r"^najva:help:@(\d+)$", input):
-			await editText(chat_id, msg_id, 0, langU['najva_help'], None, najva_help_keys(user_id))
+			await _.delete()
+			await sendText(chat_id, _.reply_to_message, 1, langU['najva_help'], None, najva_help_keys(user_id))
 		if re.match(r"^najva:settings1:(.*):@(\d+)$", input):
 			ap = re_matches(r"^najva:settings1:(.*):@(\d+)$", input)
 			if DataBase.hget('setting_najva:{}'.format(user_id), ap[1]):
