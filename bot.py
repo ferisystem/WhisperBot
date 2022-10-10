@@ -481,7 +481,7 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	except expts.TelegramAPIError as a:
 		if a.args[0] == "Reply message not found":
 			try:
-				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, allow_no_reply = True, reply_markup)
+				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, protect_content, True, reply_markup)
 			except:
 				return a.args
 		else:
@@ -496,7 +496,7 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	except expts.BadRequest as a:
 		if a.args[0] == "Reply message not found":
 			try:
-				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, allow_no_reply = True, reply_markup)
+				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, protect_content, True, reply_markup)
 			except:
 				return a.args
 		else:
