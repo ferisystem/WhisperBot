@@ -1882,6 +1882,7 @@ def najva_help_keys(UserID):
 		)
 	return inlineKeys
 
+
 def najva_help1_keys(UserID):
 	hash = ':@{}'.format(UserID)
 	langU = lang[user_steps[UserID]['lang']]
@@ -1924,7 +1925,6 @@ def najva_help2_keys(UserID):
 		callback_data = 'najva:help{}'.format(hash))
 		)
 	return inlineKeys
-
 
 
 def najva_help3_keys(UserID):
