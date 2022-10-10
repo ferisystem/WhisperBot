@@ -1887,16 +1887,85 @@ def najva_help1_keys(UserID):
 	buttuns = langU['buttuns']
 	inlineKeys = iMarkup()
 	inlineKeys.add(
-		iButtun(buttuns['back_help_najva'],
+		iButtun(buttuns['najva_help_noid'],
 		callback_data = 'najva:help{}'.format(hash))
 		)
 	inlineKeys.add(
-		iButtun(buttuns['najva_help_noid'],
-		callback_data = 'najva:help:noid{}'.format(hash))
+		iButtun(buttuns['helper_video'],
+		callback_data = 'najva:vid:1{}'.format(hash))
 		)
 	inlineKeys.add(
 		iButtun(buttuns['example'],
 		switch_inline_query = '{} {}'.format(UserID, buttuns['example']))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	return inlineKeys
+
+
+def najva_help2_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['helper_video'],
+		callback_data = 'najva:vid:2{}'.format(hash))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['example'],
+		switch_inline_query = '{} {}'.format(UserID, buttuns['example']))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	return inlineKeys
+
+
+
+def najva_help3_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['example'],
+		switch_inline_query = '{} @user1 @user2 {}'.format(UserID, buttuns['example']))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	return inlineKeys
+
+
+def najva_help4_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['example'],
+		switch_inline_query = '@All {}'.format(UserID, buttuns['example']))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	return inlineKeys
+
+
+def najva_help5_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['helper_reply'],
+		callback_data = 'najva:vid:5{}'.format(hash))
 		)
 	inlineKeys.add(
 		iButtun(buttuns['back_help_najva'],
