@@ -985,7 +985,7 @@ async def copyMessage(chat_id, from_chat_id, message_id, caption = None,\
 
 
 async def editText(chat_id, msg_id, inline_msg_id, text, parse_mode = None, reply_markup = None, entities = None):
-	if msg_id>0 and inline_msg_id>0:
+	if msg_id > 0 and inline_msg_id > 0:
 		print("Error in editText")
 		return False
 	if parse_mode:
@@ -1002,11 +1002,38 @@ async def editText(chat_id, msg_id, inline_msg_id, text, parse_mode = None, repl
 		markup = reply_markup
 	try:
 		DataBase.incr('amarBot.editbybot')
-		if inline_msg_id>0:
+		if inline_msg_id > 0:
 			result = await bot.edit_message_text(text = text, parse_mode = (parse_mode or None), inline_message_id = msg_id, reply_markup = markup, entities = entities)#, disable_web_page_preview = False)
 			return True, result
-		elif msg_id>0:
+		elif msg_id > 0:
 			result = await bot.edit_message_text(chat_id = chat_id, text = text, parse_mode = (parse_mode or None), disable_web_page_preview = True, message_id = msg_id, reply_markup = markup)
+			return True, result
+	except expts.BadRequest as a:
+		await bot.send_message(chat_id = gv().sudoID, text = 'Chat ID: {}\nError: {}'.format(chat_id, a.args))
+		return a.args
+	except Exception as e:
+		print(e)
+
+
+async def editMessageMedia(chat_id, media, message_id = None, inline_message_id = None, reply_markup = None):
+	if type(reply_markup) is tuple:
+		if len(reply_markup) > 0:
+			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
+			for row in reply_markup:
+				markup.row(*row)
+		else:
+			markup = ReplyKeyboardRemove()
+	else:
+		markup = reply_markup
+	try:
+		if inline_message_id>0:
+			result = await bot.edit_message_media(chat_id = None, message_id = None,
+			inline_message_id = inline_message_id,
+			media = media, reply_markup = reply_markup)
+			return True, result
+		elif message_id>0:
+			result = await bot.edit_message_media(chat_id, message_id,
+			inline_message_id = None, media = media, reply_markup = reply_markup)
 			return True, result
 	except expts.BadRequest as a:
 		await bot.send_message(chat_id = gv().sudoID, text = 'Chat ID: {}\nError: {}'.format(chat_id, a.args))
@@ -1882,6 +1909,7 @@ def najva_help_keys(UserID):
 		)
 	return inlineKeys
 
+
 def najva_help1_keys(UserID):
 	hash = ':@{}'.format(UserID)
 	langU = lang[user_steps[UserID]['lang']]
@@ -1889,7 +1917,7 @@ def najva_help1_keys(UserID):
 	inlineKeys = iMarkup()
 	inlineKeys.add(
 		iButtun(buttuns['najva_help_noid'],
-		callback_data = 'najva:help{}'.format(hash))
+		callback_data = 'najva:help:noid{}'.format(hash))
 		)
 	inlineKeys.add(
 		iButtun(buttuns['helper_video'],
@@ -1917,14 +1945,13 @@ def najva_help2_keys(UserID):
 		)
 	inlineKeys.add(
 		iButtun(buttuns['example'],
-		switch_inline_query = '{}'.format(UserID)
+		switch_inline_query = '{}'.format(UserID))
 		)
 	inlineKeys.add(
 		iButtun(buttuns['back_help_najva'],
 		callback_data = 'najva:help{}'.format(hash))
 		)
 	return inlineKeys
-
 
 
 def najva_help3_keys(UserID):
@@ -2027,6 +2054,22 @@ def najva_help8_keys(UserID):
 	inlineKeys.add(
 		iButtun(buttuns['example_set_shcut'],
 		switch_inline_query = 'set')
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	return inlineKeys
+
+
+def najva_help9_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['helper_install'],
+		callback_data = 'najva:vid:6{}'.format(hash))
 		)
 	inlineKeys.add(
 		iButtun(buttuns['back_help_najva'],
@@ -2505,6 +2548,17 @@ async def callback_query_process(msg: types.CallbackQuery):
 					await sendVideo(chat_id, _.reply_to_message, file, langU['najva_help_prob'], 'html', supports_streaming = True, reply_markup = najva_help7_keys(user_id))
 			elif ap[1] == 'examp':
 				await sendText(chat_id, _.reply_to_message, 1, langU['najva_help_examp'], 'html', najva_help8_keys(user_id))
+		if re.match(r"^najva:vid:(\d+):@(\d+)$", input):
+			ap = re_matches(r"^najva:vid:(\d+):@(\d+)$", input)
+			await _.delete()
+			keyboard = najva_help7_keys(user_id)
+			if ap[1] == '5':
+				keyboard = najva_help9_keys(user_id)
+			elif ap[1] == '6':
+				keyboard = najva_help5_keys(user_id)
+			file = f'Files/helps/vid-{ap[1]}.mp4'
+			with open(file, 'rb') as file:
+				await sendVideo(chat_id, _.reply_to_message, file, langU[f'najva_vid-{ap[1]}'], 'html', supports_streaming = True, reply_markup = keyboard)
 
 
 async def channel_post_process(msg: types.Message):
