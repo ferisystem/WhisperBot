@@ -2035,6 +2035,22 @@ def najva_help8_keys(UserID):
 	return inlineKeys
 
 
+def najva_help9_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['helper_install'],
+		callback_data = 'najva:vid:6{}'.format(hash))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	return inlineKeys
+
+
 def isUserSteps(user_id):
 	if user_id in user_steps and 'action' in user_steps[user_id]:
 		return True
@@ -2508,9 +2524,14 @@ async def callback_query_process(msg: types.CallbackQuery):
 		if re.match(r"^najva:vid:(\d+):@(\d+)$", input):
 			ap = re_matches(r"^najva:vid:(\d+):@(\d+)$", input)
 			await _.delete()
+			keyboard = najva_help7_keys(user_id)
+			if ap[1] == '5':
+				keyboard = najva_help9_keys(user_id)
+			elif ap[1] == '6':
+				keyboard = najva_help5_keys(user_id)
 			file = f'Files/helps/vid-{ap[1]}.mp4'
 			with open(file, 'rb') as file:
-				await sendVideo(chat_id, _.reply_to_message, file, langU[f'najva_vid-{ap[1]}'], 'html', supports_streaming = True, reply_markup = najva_help7_keys(user_id))
+				await sendVideo(chat_id, _.reply_to_message, file, langU[f'najva_vid-{ap[1]}'], 'html', supports_streaming = True, reply_markup = keyboard)
 
 
 async def channel_post_process(msg: types.Message):
