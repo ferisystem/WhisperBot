@@ -752,7 +752,7 @@ async def sendVideo(chat_id, reply_msg, video, caption = None, parse_mode = None
 	except expts.BadRequest as a:
 		if a.args[0] == "Reply message not found":
 			try:
-				return True, await sendVideo((chat_id, 0, video, caption, parse_mode,\
+				return True, await sendVideo(chat_id, 0, video, caption, parse_mode,\
 					duration, thumb, width, height,\
 					supports_streaming, dis_notif, reply_markup,\
 					protect_content, True)
@@ -2322,21 +2322,21 @@ async def callback_query_process(msg: types.CallbackQuery):
 			ap = re_matches(r"^najva:help:(.*):@(\d+)$", input)
 			await _.delete()
 			if ap[1] == 'send':
-				await sendPhoto(chat_id, 'Files/helps/help_send.jpg', langU['najva_help_send'], 'html', _.reply_to_message, reply_markup = najva_help1_keys(user_id))
+			
 			elif ap[1] == 'media':
-				await sendPhoto(chat_id, 'Files/helps/help_media.jpg', langU['najva_help_media'], 'html', _.reply_to_message, reply_markup = najva_help2_keys(user_id))
+			
 			elif ap[1] == 'group':
-				await sendPhoto(chat_id, 'Files/helps/help_group.jpg', langU['najva_help_group'], 'html', _.reply_to_message, reply_markup = najva_help3_keys(user_id))
+			
 			elif ap[1] == 'bd':
-				await sendPhoto(chat_id, 'Files/helps/help_bd.jpg', langU['najva_help_bd'], 'html', _.reply_to_message, reply_markup = najva_help4_keys(user_id))
+			
 			elif ap[1] == 'noid':
-				await sendVideo(chat_id, _.reply_to_message, 'Files/helps/help_noid.mp4', langU['najva_help_noid'], 'html', supports_streaming = True, reply_markup = najva_help5_keys(user_id))
+			
 			elif ap[1] == 'shset':
-				await sendPhoto(chat_id, 'Files/helps/help_shset.jpg', langU['najva_help_shset'], 'html', _.reply_to_message, reply_markup = najva_help6_keys(user_id))
+			
 			elif ap[1] == 'prob':
-				await sendVideo(chat_id, _.reply_to_message, 'Files/helps/help_prob.mp4', langU['najva_help_prob'], 'html', supports_streaming = True, reply_markup = najva_help7_keys(user_id))
+			
 			elif ap[1] == 'examp':
-				await sendText(chat_id, _.reply_to_message, 1, langU['najva_help_examp'], 'html', najva_help8_keys(user_id))
+			
 
 
 async def channel_post_process(msg: types.Message):
