@@ -128,10 +128,6 @@ class DataBase:
 		return redis.hset(hash, value, field)
 
 
-	def hmset(hash, *hash2):
-		return redis.hmset(hash, *hash2)
-
-
 	def hdel(hash, value, field):
 		hash = "{}.{}".format(db, hash)
 		return redis.hdel(hash, value, field)
@@ -1745,6 +1741,121 @@ def anonymous_delete_blocks_keys(UserID):
 	return inlineKeys
 
 
+def najva_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['settings'], callback_data = 'najva:settings{}'.format(hash)),
+		iButtun(buttuns['help'], callback_data = 'najva:help{}'.format(hash))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back'], callback_data = 'backstart{}'.format(hash))
+		)
+	return inlineKeys
+   
+ 
+def najva_settings_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['najva_settings_recents'].
+		format(DataBase.scard(f'recent_najva:{UserID}')),
+		callback_data = 'najva:settings:recents{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_settings_notif_seen'].
+		format(DataBase.get(f'notif_seen_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
+		callback_data = 'najva:settings:seen{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_settings_notif_recv'].
+		format(DataBase.get(f'notif_recv_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
+		callback_data = 'najva:settings:recv{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_settings_encrypt'].
+		format(DataBase.get(f'encrypt_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
+		callback_data = 'najva:settings:encrypt{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_settings_no_name'].
+		format(DataBase.get(f'noname_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
+		callback_data = 'najva:settings:noname{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_settings_disposable'].
+		format(DataBase.get(f'dispos_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
+		callback_data = 'najva:settings:dispo{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_settings_auto_del'].
+		format(DataBase.get(f'autodel_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
+		callback_data = 'najva:settings:autodel{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_settings_block'].
+		format(DataBase.scard(f'blocks_najva:{UserID}')),
+		callback_data = 'najva:settings:blocks{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_settings_del_all'],
+		callback_data = 'najva:settings:delall{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_najva'],
+		callback_data = 'najva{}'.format(hash))
+		)
+	return inlineKeys
+
+
+def najva_help_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['najva_help_send'],
+		callback_data = 'najva:help:send{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_help_media'],
+		callback_data = 'najva:help:media{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_help_group'],
+		callback_data = 'najva:help:group{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_help_broadcast'],
+		callback_data = 'najva:help:bd{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_help_noid'],
+		callback_data = 'najva:help:noid{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_help_short_set'],
+		callback_data = 'najva:help:shset{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_help_prob'],
+		callback_data = 'najva:help:prob{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_help_examp'],
+		callback_data = 'najva:help:examp{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_najva'],
+		callback_data = 'najva{}'.format(hash))
+		)
+	return inlineKeys
+
+
 def isUserSteps(user_id):
 	if user_id in user_steps and 'action' in user_steps[user_id]:
 		return True
@@ -1848,12 +1959,10 @@ async def message_process(msg: types.Message):
 	if not DataBase.get('checkBotInfo'):
 		try:
 			b = await bot.get_me()
-			DataBase.hmset(db, {
-			'user':b.username, 
-			'id':b.id, 
-			'name':b.first_name, 
-			'token':telegram_datas['botToken']
-			})
+			DataBase.hmset(db, 'user', b.username)
+			DataBase.hset(db, 'id', b.id)
+			DataBase.hset(db, 'name', b.first_name)
+			DataBase.hset(db, 'token', telegram_datas['botToken'])
 			getC = await bot.get_chat(sudo_id)
 			DataBase.hset('sudo', 'user', getC.id)
 			if getC.username:
@@ -2167,6 +2276,12 @@ async def callback_query_process(msg: types.CallbackQuery):
 			DataBase.delete('blocks:{}'.format(user_id))
 			await answerCallbackQuery(msg, langU['blocks_clear_anon'], show_alert = True, cache_time = 2)
 			await editText(chat_id, msg_id, 0, langU['anon'], None, anonymous_keys(user_id))
+		if re.match(r"^najva:@(\d+)$", input):
+			await editText(chat_id, msg_id, 0, langU['najva'], None, najva_keys(user_id))
+		if re.match(r"^najva:settings:@(\d+)$", input):
+			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
+		if re.match(r"^najva:help:@(\d+)$", input):
+			await editText(chat_id, msg_id, 0, langU['najva_help'], None, najva_help_keys(user_id))
 
 
 async def channel_post_process(msg: types.Message):
@@ -2277,12 +2392,10 @@ async def bot_run(app):
 	pW+ee+colored(text, "yellow")+ee+" "+pW2, \
 	pW+zz+colored("#by aiogram[2.4]", "magenta")+zz+"=\n"+pW1
 	)
-	redis.hmset(db, {
-	'id':bt.id, 
-	'name':name, 
-	'user':bt.username, 
-	'token':telegram_datas['botToken']
-	})
+	redis.hset(db, 'id', bt.id)
+	redis.hset(db, 'name', name)
+	redis.hset(db, 'user', bt.username)
+	redis.hset(db, 'token', telegram_datas['botToken'])	
 	try:
 		bt1 = await bot.get_chat(sudo_id)
 		DataBase.hset('sudo', 'user', bt1.username)
