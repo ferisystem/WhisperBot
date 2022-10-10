@@ -128,9 +128,9 @@ class DataBase:
 		return redis.hset(hash, value, field)
 
 
-	def hdel(hash, value, field):
+	def hdel(hash, value):
 		hash = "{}.{}".format(db, hash)
-		return redis.hdel(hash, value, field)
+		return redis.hdel(hash, value)
 
 
 	def sadd(hash, member):
@@ -433,9 +433,11 @@ async def sendText(chat_id, reply_msg, dis_webpage, text, \
 		pass
 
 
-async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg = None):
+async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg = None, protect_content = False, allow_no_reply = True, reply_markup = None):
 	if reply_msg is 0:
 		reply_msgs = None
+	elif reply_msg and str(reply_msg).isdigit():
+		reply_msgs = reply_msg
 	elif reply_msg and 'message_id' in reply_msg:
 		reply_msgs = reply_msg.message_id
 	else:
@@ -443,6 +445,15 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	if parse_mode:
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
+	if type(reply_markup) is tuple:
+		if len(reply_markup)>0:
+			markup = ReplyKeyboardMarkup(resize_keyboard = True, selective = True)
+			for row in reply_markup:
+				markup.row(*row)
+		else:
+			markup = ReplyKeyboardRemove()
+	else:
+		markup = reply_markup
 	if type(caption) is str and len(caption) > 1000:
 		# caption = make_short_caption(caption)
 		if len(caption) > 1000:
@@ -452,7 +463,7 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	try:
 		if DataBase.get('typing'):
 			await bot.send_chat_action(chat_id, 'upload_photo')
-		result = await bot.send_photo(chat_id, photo, caption, parse_mode = parse_mode, reply_to_message_id = reply_msgs)
+		result = await bot.send_photo(chat_id, photo, caption, parse_mode = parse_mode, reply_to_message_id = reply_msgs, protect_content = protect_content, allow_sending_without_reply = allow_no_reply)
 		return True, result
 	except expts.ChatNotFound as a:
 		return a.args
@@ -469,7 +480,7 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	except expts.TelegramAPIError as a:
 		if a.args[0] == "Reply message not found":
 			try:
-				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0)
+				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, allow_no_reply = True)
 			except:
 				return a.args
 		else:
@@ -484,7 +495,7 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	except expts.BadRequest as a:
 		if a.args[0] == "Reply message not found":
 			try:
-				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0)
+				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, allow_no_reply = True)
 			except:
 				return a.args
 		else:
@@ -660,13 +671,16 @@ async def sendVoice(chat_id, reply_msg, voice, caption = None, parse_mode = None
 
 async def sendVideo(chat_id, reply_msg, video, caption = None, parse_mode = None,\
 					duration = None, thumb = None, width = None, height = None,\
-					supports_streaming = True, dis_notif = 1, reply_markup = None):
+					supports_streaming = True, dis_notif = 1, reply_markup = None,\
+					protect_content = False, allow_no_reply = True):
 	dis_notif = str(dis_notif)
 	dis_notif = dis_notif.replace("1", "True")
 	dis_notif = dis_notif.replace("0", "False")
 	dis_notif = bool(dis_notif)
 	if reply_msg is 0:
 		reply_msgs = None
+	elif reply_msg and str(reply_msg).isdigit():
+		reply_msgs = reply_msg
 	elif reply_msg and 'message_id' in reply_msg:
 		reply_msgs = reply_msg.message_id
 	else:
@@ -693,8 +707,13 @@ async def sendVideo(chat_id, reply_msg, video, caption = None, parse_mode = None
 		if DataBase.get('typing'):
 			await bot.send_chat_action(chat_id, 'upload_video')	
 		result = await bot.send_video(chat_id, video, duration,\
-		width, height, thumb, caption, parse_mode, supports_streaming,\
-		dis_notif, reply_msgs, reply_markup)
+		width, height, thumb, caption, parse_mode,\
+		supports_streaming = supports_streaming,\
+		disable_notification = dis_notif,\
+		protect_content = protect_content,\
+		reply_to_message_id  = reply_msgs,\
+		allow_sending_without_reply = allow_no_reply,\
+		reply_markup = reply_markup)
 		# print(result)
 		return True, result
 	except expts.ChatNotFound as a:
@@ -705,9 +724,10 @@ async def sendVideo(chat_id, reply_msg, video, caption = None, parse_mode = None
 	except expts.RetryAfter as a:
 		# log.error(f"Target [ID:{chat_id}]: Flood limit is exceeded. Sleep {e.timeout} seconds.")
 		await asyncio.sleep(a.timeout)
-		return await sendVideo(chat_id, reply_msgs, video, caption, parse_mode,\
-				duration, thumb, width, height,\
-				supports_streaming, dis_notif, reply_markup)
+		return await sendVideo(chat_id, reply_msg, video, caption, parse_mode,\
+					duration, thumb, width, height,\
+					supports_streaming, dis_notif, reply_markup,\
+					protect_content, allow_no_reply)
 	except expts.UserDeactivated as a:
 		#log.error(f"Target [ID:{chat_id}]: user is deactivated")
 		return a.args
@@ -715,8 +735,9 @@ async def sendVideo(chat_id, reply_msg, video, caption = None, parse_mode = None
 		if a.args[0] == "Reply message not found":
 			try:
 				return True, await sendVideo(chat_id, 0, video, caption, parse_mode,\
-				duration, thumb, width, height,\
-				supports_streaming, dis_notif, reply_markup)
+					duration, thumb, width, height,\
+					supports_streaming, dis_notif, reply_markup,\
+					protect_content, True)
 			except:
 				return a.args
 		else:
@@ -732,8 +753,9 @@ async def sendVideo(chat_id, reply_msg, video, caption = None, parse_mode = None
 		if a.args[0] == "Reply message not found":
 			try:
 				return True, await sendVideo(chat_id, 0, video, caption, parse_mode,\
-				duration, thumb, width, height,\
-				supports_streaming, dis_notif, reply_markup)
+					duration, thumb, width, height,\
+					supports_streaming, dis_notif, reply_markup,\
+					protect_content, True)
 			except:
 				return a.args
 		else:
@@ -1754,8 +1776,12 @@ def najva_keys(UserID):
 		iButtun(buttuns['back'], callback_data = 'backstart{}'.format(hash))
 		)
 	return inlineKeys
-   
- 
+
+
+def rplac_tick(text):
+	return str(text).replace('None', '❌').replace('True', '✅').replace('1', '✅')
+
+
 def najva_settings_keys(UserID):
 	hash = ':@{}'.format(UserID)
 	langU = lang[user_steps[UserID]['lang']]
@@ -1768,33 +1794,33 @@ def najva_settings_keys(UserID):
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_notif_seen'].
-		format(DataBase.get(f'notif_seen_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
-		callback_data = 'najva:settings:seen{}'.format(hash)),
+		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'seen'))),
+		callback_data = 'najva:settings1:seen{}'.format(hash)),
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_notif_recv'].
-		format(DataBase.get(f'notif_recv_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
-		callback_data = 'najva:settings:recv{}'.format(hash)),
+		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'recv'))),
+		callback_data = 'najva:settings1:recv{}'.format(hash)),
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_encrypt'].
-		format(DataBase.get(f'encrypt_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
-		callback_data = 'najva:settings:encrypt{}'.format(hash)),
+		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'encrypt'))),
+		callback_data = 'najva:settings1:encrypt{}'.format(hash)),
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_no_name'].
-		format(DataBase.get(f'noname_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
-		callback_data = 'najva:settings:noname{}'.format(hash)),
+		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'noname'))),
+		callback_data = 'najva:settings1:noname{}'.format(hash)),
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_disposable'].
-		format(DataBase.get(f'dispos_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
-		callback_data = 'najva:settings:dispo{}'.format(hash)),
+		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'dispo'))),
+		callback_data = 'najva:settings1:dispo{}'.format(hash)),
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_auto_del'].
-		format(DataBase.get(f'autodel_najva:{UserID}')).replace('None', '❌').replace('True', '✅'),
-		callback_data = 'najva:settings:autodel{}'.format(hash)),
+		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'autodel'))),
+		callback_data = 'najva:settings1:autodel{}'.format(hash)),
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_block'].
@@ -1852,6 +1878,29 @@ def najva_help_keys(UserID):
 	inlineKeys.add(
 		iButtun(buttuns['back_najva'],
 		callback_data = 'najva{}'.format(hash))
+		)
+	return inlineKeys
+
+def najva_help1_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['najva_help_noid'],
+		callback_data = 'najva:help:noid{}'.format(hash))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['example'],
+		switch_inline_query = '{} {}'.format(UserID, buttuns['example']))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_help_najva'],
+		callback_data = 'najva:help{}'.format(hash))
 		)
 	return inlineKeys
 
@@ -2282,6 +2331,35 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
 		if re.match(r"^najva:help:@(\d+)$", input):
 			await editText(chat_id, msg_id, 0, langU['najva_help'], None, najva_help_keys(user_id))
+		if re.match(r"^najva:settings1:(.*):@(\d+)$", input):
+			ap = re_matches(r"^najva:settings1:(.*):@(\d+)$", input)
+			if DataBase.hget('setting_najva:{}'.format(user_id), ap[1]):
+				DataBase.hdel('setting_najva:{}'.format(user_id), ap[1])
+				text = langU['najva_setoff_{}'.format(ap[1])]
+			else:
+				DataBase.hset('setting_najva:{}'.format(user_id), ap[1], 1)
+				text = langU['najva_seton_{}'.format(ap[1])]
+			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
+			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = najva_settings_keys(user_id))
+		if re.match(r"^najva:help:(.*):@(\d+)$", input):
+			ap = re_matches(r"^najva:help:(.*):@(\d+)$", input)
+			await _.delete()
+			if ap[1] == 'send':
+				await sendPhoto(chat_id, 'Files/helps/help_send.jpg', langU['najva_help_send'], 'html', _.reply_to_message, reply_markup = najva_help1_keys(user_id))
+			elif ap[1] == 'media':
+				await sendPhoto(chat_id, 'Files/helps/help_media.jpg', langU['najva_help_media'], 'html', _.reply_to_message, reply_markup = najva_help2_keys(user_id))
+			elif ap[1] == 'group':
+				await sendPhoto(chat_id, 'Files/helps/help_group.jpg', langU['najva_help_group'], 'html', _.reply_to_message, reply_markup = najva_help3_keys(user_id))
+			elif ap[1] == 'bd':
+				await sendPhoto(chat_id, 'Files/helps/help_bd.jpg', langU['najva_help_bd'], 'html', _.reply_to_message, reply_markup = najva_help4_keys(user_id))
+			elif ap[1] == 'noid':
+				await sendVideo(chat_id, _.reply_to_message, 'Files/helps/help_noid.mp4', langU['najva_help_noid'], 'html', supports_streaming = True, reply_markup = najva_help5_keys(user_id))
+			elif ap[1] == 'shset':
+				await sendPhoto(chat_id, 'Files/helps/help_shset.jpg', langU['najva_help_shset'], 'html', _.reply_to_message, reply_markup = najva_help6_keys(user_id))
+			elif ap[1] == 'prob':
+				await sendVideo(chat_id, _.reply_to_message, 'Files/helps/help_prob.mp4', langU['najva_help_prob'], 'html', supports_streaming = True, reply_markup = najva_help7_keys(user_id))
+			elif ap[1] == 'examp':
+				await sendText(chat_id, _.reply_to_message, 1, langU['najva_help_examp'], 'html', najva_help8_keys(user_id))
 
 
 async def channel_post_process(msg: types.Message):
