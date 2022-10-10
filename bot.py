@@ -1917,7 +1917,7 @@ def najva_help2_keys(UserID):
 		)
 	inlineKeys.add(
 		iButtun(buttuns['example'],
-		switch_inline_query = '{}'.format(UserID)
+		switch_inline_query = '{}'.format(UserID))
 		)
 	inlineKeys.add(
 		iButtun(buttuns['back_help_najva'],
