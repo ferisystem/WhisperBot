@@ -463,7 +463,8 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	try:
 		if DataBase.get('typing'):
 			await bot.send_chat_action(chat_id, 'upload_photo')
-		result = await bot.send_photo(chat_id, photo, caption, parse_mode = parse_mode, reply_to_message_id = reply_msgs, protect_content = protect_content, allow_sending_without_reply = allow_no_reply)
+		result = await bot.send_photo(chat_id, photo, caption, parse_mode = parse_mode, reply_to_message_id = reply_msgs,\
+		protect_content = protect_content, allow_sending_without_reply = allow_no_reply, reply_markup = reply_markup)
 		return True, result
 	except expts.ChatNotFound as a:
 		return a.args
@@ -473,14 +474,14 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	except expts.RetryAfter as a:
 		# log.error(f"Target [ID:{chat_id}]: Flood limit is exceeded. Sleep {e.timeout} seconds.")
 		await asyncio.sleep(a.timeout)
-		return await sendPhoto(chat_id, photo, caption, parse_mode, reply_msg)
+		return await sendPhoto(chat_id, photo, caption, parse_mode, reply_msg, protect_content, allow_no_reply, reply_markup)
 	except expts.UserDeactivated as a:
 		#log.error(f"Target [ID:{chat_id}]: user is deactivated")
 		return a.args
 	except expts.TelegramAPIError as a:
 		if a.args[0] == "Reply message not found":
 			try:
-				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, allow_no_reply = True)
+				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, allow_no_reply = True, reply_markup)
 			except:
 				return a.args
 		else:
@@ -495,7 +496,7 @@ async def sendPhoto(chat_id, photo, caption = None, parse_mode = None, reply_msg
 	except expts.BadRequest as a:
 		if a.args[0] == "Reply message not found":
 			try:
-				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, allow_no_reply = True)
+				return True, await sendPhoto(chat_id, photo, caption, parse_mode, 0, allow_no_reply = True, reply_markup)
 			except:
 				return a.args
 		else:
