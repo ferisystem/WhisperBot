@@ -2563,6 +2563,14 @@ async def callback_query_process(msg: types.CallbackQuery):
 				await sendVideo(chat_id, _.reply_to_message, file, langU[f'najva_vid-{ap[1]}'], 'html', supports_streaming = True, reply_markup = keyboard)
 
 
+async def inline_query_process(msg: types.InlineQuery):
+	print(msg)
+
+
+async def chosen_inline_process(msg: types.ChosenInlineResult):
+	print(msg)
+
+
 async def channel_post_process(msg: types.Message):
 	if (msg.chat.username or '') != IDs_datas['chUsername'] and int(msg.chat.id) != int(redis.hget(db, 'supchat')):
 		await bot.leave_chat(msg.chat.id)
