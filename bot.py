@@ -1026,12 +1026,12 @@ async def editMessageMedia(chat_id, media, message_id = None, inline_message_id 
 	else:
 		markup = reply_markup
 	try:
-		if inline_message_id>0:
+		if inline_message_id > 0:
 			result = await bot.edit_message_media(chat_id = None, message_id = None,
 			inline_message_id = inline_message_id,
 			media = media, reply_markup = reply_markup)
 			return True, result
-		elif message_id>0:
+		elif message_id > 0:
 			result = await bot.edit_message_media(chat_id, message_id,
 			inline_message_id = None, media = media, reply_markup = reply_markup)
 			return True, result
@@ -1045,6 +1045,20 @@ async def editMessageMedia(chat_id, media, message_id = None, inline_message_id 
 async def answerCallbackQuery(query_id, text, show_alert = False, cache_time = 0, url_web = None):
 	try:
 		return await bot.answer_callback_query(query_id.id, text, show_alert, url_web, cache_time)
+	except Exception as e:
+		print(e)
+		return False
+
+
+async def answerInlineQuery(inline_msg_id, results, cache_time = 1, \
+	switch_pm_text = None, switch_pm_parameter = None,\
+	is_personal = False, next_offset = None):
+	try:
+		result = await bot.answer_inline_query(
+		inline_msg_id, results, cache_time, \
+		is_personal, next_offset, switch_pm_text,
+		switch_pm_parameter)
+		return True, result
 	except Exception as e:
 		print(e)
 		return False
@@ -1517,17 +1531,6 @@ def saveUsername(msg, mode = "message"):
 		if us and int(redis.hget("UsernamesIds", us.lower()) or "0") != int(uid):
 			redis.hset("UsernamesIds", us.lower(), uid)
 			cPrint("@{} [{}] Saved".format(us, uid), 2, None, "magenta")
-
-
-async def answerInlineQuery(inline_msg_id, results, cache_time = 0, \
-	switch_pm_text = None, switch_pm_parameter = None, is_personal = False, next_offset = None):
-	try:
-		a = await bot.answer_inline_query(inline_msg_id, results, cache_time = cache_time, \
-		switch_pm_text = switch_pm_text, switch_pm_parameter = switch_pm_parameter, \
-		is_personal = is_personal, next_offset = next_offset)
-		return a
-	except:
-		return False
 
 
 def blockKeys(UserID):
@@ -2167,9 +2170,11 @@ async def message_process(msg: types.Message):
 	msg_id = msg.message_id
 	setupUserSteps(msg, user_id)
 	langU = lang[user_steps[user_id]['lang']]
-	print(colored("Message:", "yellow"),
-	colored("ID: {} | Type: {}".format(msg.from_user.id, content), "white"),
-	colored("MSG_ID:", "yellow"), colored(msg_id, "white"))
+	print(colored("Message >", "cyan"))
+	print(colored("userID", "yellow"), colored(user_id, "white"))
+	print(colored("Type", "yellow"), colored(content, "white"))
+	print(colored("msgID", "yellow"), colored(msg_id, "white"))
+	print()
 	if 'reply_to_message' in msg:
 		reply_msg = msg.reply_to_message
 		reply_id = reply_msg.message_id
@@ -2183,7 +2188,7 @@ async def message_process(msg: types.Message):
 	if not DataBase.get('checkBotInfo'):
 		try:
 			b = await bot.get_me()
-			DataBase.hmset(db, 'user', b.username)
+			DataBase.hset(db, 'user', b.username)
 			DataBase.hset(db, 'id', b.id)
 			DataBase.hset(db, 'name', b.first_name)
 			DataBase.hset(db, 'token', telegram_datas['botToken'])
@@ -2244,9 +2249,11 @@ async def callback_query_process(msg: types.CallbackQuery):
 		msg_id = msg.message.message_id
 	else:
 		msg_id = 0
-	print(colored("Callback Query:", "yellow"),
-	colored("ID: {} | Query: {}".format(user_id, input), "white")
-	)
+	print(colored("Callback >", "cyan"))
+	print(colored("userID", "yellow"), colored(user_id, "white"))
+	print(colored("Query", "yellow"), colored(input, "white"))
+	print(colored("queryID", "yellow"), colored(msg.id, "white"))
+	print()
 	if re.search(r"@(\d+)", input):
 		ap = re_matches("@(\d+)", input, 's')
 		if int(ap[1]) != user_id:
@@ -2563,6 +2570,86 @@ async def callback_query_process(msg: types.CallbackQuery):
 				await sendVideo(chat_id, _.reply_to_message, file, langU[f'najva_vid-{ap[1]}'], 'html', supports_streaming = True, reply_markup = keyboard)
 
 
+async def inline_query_process(msg: types.InlineQuery):
+	# {
+	# "id": "601066437965102448",
+	# "from": {
+	# "id": 139946685, "is_bot": false, "first_name": "Alireza 🏴🏳",
+	# "username": "ferisystem", "language_code": "de"},
+	# "chat_type": "sender/private/group/supergroup/channel",
+	# "query": "text", "offset": ""
+	# }
+	msg_id = msg.id
+	user_id = msg.from_user.id
+	if msg.from_user.username:
+		username = f'@{msg.from_user.username}'
+	else:
+		username = user_id
+	user_name = msg.from_user.first_name
+	chat_type = msg.chat_type
+	input = msg.query
+	saveUsername(msg, mode = "inline")
+	setupUserSteps(msg, user_id)
+	langU = lang[user_steps[user_id]['lang']]
+	buttuns = langU['buttuns']
+	print(colored("Inline >", "cyan"))
+	print(colored("userID", "yellow"), colored(user_id, "white"))
+	print(colored("Query", "yellow"), colored(input, "white"))
+	print(colored("inlineID", "yellow"), colored(msg_id, "white"))
+	print()
+	if input == '':
+		input_content = InputTextMessageContent(
+		message_text = langU['inline']['text']['help_send']
+		)
+		inlineKeys = iMarkup()
+		inlineKeys.add(
+			iButtun(buttuns['help_comp'], url = 't.me/{}?start=help'.format(redis.hget(db, 'user')))
+			)
+		item1 = InlineQueryResultArticle(
+			id = f'help:{user_id}',
+			title = langU['inline']['title']['help_send'],
+			description = langU['inline']['desc']['help_send'],
+			thumb_url = pic_question,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+			reply_markup = inlineKeys,
+		)
+		input_content = InputTextMessageContent(
+		message_text = langU['inline']['text']['my_id'].format(user_id)
+		)
+		inlineKeys = iMarkup()
+		inlineKeys.add(
+			iButtun(buttuns['najva_to'].format(user_name),
+			switch_inline_query_current_chat = '{} {}'.format(username, buttuns['example']))
+			)
+		item2 = InlineQueryResultArticle(
+			id = f'myid:{user_id}',
+			title = langU['inline']['title']['my_id'],
+			description = langU['inline']['desc']['my_id'].format(user_id),
+			thumb_url = pic_atsign,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+			reply_markup = inlineKeys,
+		)
+		await answerInlineQuery(msg_id, results = [item1, item2], cache_time = 1)
+
+
+async def chosen_inline_process(msg: types.ChosenInlineResult):
+	#{
+	# "from": {
+	# "id": 139946685, "is_bot": false,
+	# "first_name": "Alireza 🏴🏳",
+	# "username": "ferisystem", "language_code": "de"},
+	# "query": "awd", "result_id": "601066437369956078"
+	# }
+	user_id = msg.from_user.id
+	user_name = msg.from_user.first_name
+	result_id = msg.result_id
+	input = msg.query
+
+
 async def channel_post_process(msg: types.Message):
 	if (msg.chat.username or '') != IDs_datas['chUsername'] and int(msg.chat.id) != int(redis.hget(db, 'supchat')):
 		await bot.leave_chat(msg.chat.id)
@@ -2619,13 +2706,20 @@ async def bot_run(app):
 	dp.register_message_handler(message_process, content_types = content_types)
 	dp.register_channel_post_handler(channel_post_process, content_types = content_types)
 	dp.register_callback_query_handler(callback_query_process)
+	dp.register_inline_handler(inline_query_process)
+	dp.register_chosen_inline_handler(chosen_inline_process)
 	dp.register_errors_handler(errors_handlers)
 	webhook = await bot.get_webhook_info()
 	if webhook.url != gv().WEBHOOK_URL:
 		if not webhook.url:
 			await bot.delete_webhook()
 		await bot.set_webhook(gv().WEBHOOK_URL, open(gv().WEBHOOK_SSL_CERT, 'rb'), max_connections = 100, \
-		allowed_updates = ['message', 'channel_post', 'callback_query'])
+		allowed_updates = [
+		'message', 'edited_message', 'channel_post', 'edited_channel_post',
+		'inline_query', 'chosen_inline_result', 'callback_query', 'shipping_query',
+		'pre_checkout_query', 'poll', 'poll_answer', 'my_chat_member', 'chat_member',
+		'chat_join_request'
+		])
 	# await client.start(bot_token = telegram_datas['botToken'])
 	bt = None
 	while not bt:
