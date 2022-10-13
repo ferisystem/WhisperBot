@@ -2183,7 +2183,7 @@ async def message_process(msg: types.Message):
 	if not DataBase.get('checkBotInfo'):
 		try:
 			b = await bot.get_me()
-			DataBase.hmset(db, 'user', b.username)
+			DataBase.hset(db, 'user', b.username)
 			DataBase.hset(db, 'id', b.id)
 			DataBase.hset(db, 'name', b.first_name)
 			DataBase.hset(db, 'token', telegram_datas['botToken'])
