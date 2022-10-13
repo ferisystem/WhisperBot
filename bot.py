@@ -1026,12 +1026,12 @@ async def editMessageMedia(chat_id, media, message_id = None, inline_message_id 
 	else:
 		markup = reply_markup
 	try:
-		if inline_message_id>0:
+		if inline_message_id > 0:
 			result = await bot.edit_message_media(chat_id = None, message_id = None,
 			inline_message_id = inline_message_id,
 			media = media, reply_markup = reply_markup)
 			return True, result
-		elif message_id>0:
+		elif message_id > 0:
 			result = await bot.edit_message_media(chat_id, message_id,
 			inline_message_id = None, media = media, reply_markup = reply_markup)
 			return True, result
@@ -1047,6 +1047,19 @@ async def answerCallbackQuery(query_id, text, show_alert = False, cache_time = 0
 		return await bot.answer_callback_query(query_id.id, text, show_alert, url_web, cache_time)
 	except Exception as e:
 		print(e)
+		return False
+
+
+async def answerInlineQuery(inline_msg_id, results, cache_time = 1, \
+	switch_pm_text = None, switch_pm_parameter = None,\
+	is_personal = False, next_offset = None):
+	try:
+		result = await bot.answer_inline_query(
+		inline_msg_id, results, cache_time, \
+		is_personal, next_offset, switch_pm_text,
+		switch_pm_parameter)
+		return True, result
+	except:
 		return False
 
 
@@ -1517,17 +1530,6 @@ def saveUsername(msg, mode = "message"):
 		if us and int(redis.hget("UsernamesIds", us.lower()) or "0") != int(uid):
 			redis.hset("UsernamesIds", us.lower(), uid)
 			cPrint("@{} [{}] Saved".format(us, uid), 2, None, "magenta")
-
-
-async def answerInlineQuery(inline_msg_id, results, cache_time = 0, \
-	switch_pm_text = None, switch_pm_parameter = None, is_personal = False, next_offset = None):
-	try:
-		a = await bot.answer_inline_query(inline_msg_id, results, cache_time = cache_time, \
-		switch_pm_text = switch_pm_text, switch_pm_parameter = switch_pm_parameter, \
-		is_personal = is_personal, next_offset = next_offset)
-		return a
-	except:
-		return False
 
 
 def blockKeys(UserID):
@@ -2564,11 +2566,27 @@ async def callback_query_process(msg: types.CallbackQuery):
 
 
 async def inline_query_process(msg: types.InlineQuery):
-	print(msg)
+	# {
+	# "id": "601066437965102448",
+	# "from": {
+	# "id": 139946685, "is_bot": false, "first_name": "Alireza 🏴🏳",
+	# "username": "ferisystem", "language_code": "de"},
+	# "chat_type": "sender/private/group/supergroup/channel",
+	# "query": "text", "offset": ""
+	# }
+	input = msg.query
+	
 
 
 async def chosen_inline_process(msg: types.ChosenInlineResult):
-	print(msg)
+	#{
+	# "from": {
+	# "id": 139946685, "is_bot": false,
+	# "first_name": "Alireza 🏴🏳",
+	# "username": "ferisystem", "language_code": "de"},
+	# "query": "awd", "result_id": "601066437369956078"
+	# }
+
 
 
 async def channel_post_process(msg: types.Message):
