@@ -2574,8 +2574,14 @@ async def inline_query_process(msg: types.InlineQuery):
 	# "chat_type": "sender/private/group/supergroup/channel",
 	# "query": "text", "offset": ""
 	# }
+	msg_id = msg.id
+	user_id = msg.from_user.id
+	user_name = msg.from_user.first_name
+	chat_type = msg.chat_type
 	input = msg.query
-	
+	saveUsername(msg, mode = "inline")
+	setupUserSteps(msg, user_id)
+	langU = lang[user_steps[user_id]['lang']]
 
 
 async def chosen_inline_process(msg: types.ChosenInlineResult):
@@ -2586,7 +2592,10 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 	# "username": "ferisystem", "language_code": "de"},
 	# "query": "awd", "result_id": "601066437369956078"
 	# }
-
+	user_id = msg.from_user.id
+	user_name = msg.from_user.first_name
+	result_id = msg.result_id
+	input = msg.query
 
 
 async def channel_post_process(msg: types.Message):
