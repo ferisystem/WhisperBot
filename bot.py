@@ -2170,9 +2170,11 @@ async def message_process(msg: types.Message):
 	msg_id = msg.message_id
 	setupUserSteps(msg, user_id)
 	langU = lang[user_steps[user_id]['lang']]
-	print(colored("Message:", "yellow"),
-	colored("ID: {} | Type: {}".format(msg.from_user.id, content), "white"),
-	colored("MSG_ID:", "yellow"), colored(msg_id, "white"))
+	print(colored("Message >", "cyan"))
+	print(colored("userID", "yellow"), colored(user_id, "white"))
+	print(colored("Type", "yellow"), colored(content, "white"))
+	print(colored("msgID", "yellow"), colored(msg_id, "white"))
+	print()
 	if 'reply_to_message' in msg:
 		reply_msg = msg.reply_to_message
 		reply_id = reply_msg.message_id
@@ -2247,9 +2249,11 @@ async def callback_query_process(msg: types.CallbackQuery):
 		msg_id = msg.message.message_id
 	else:
 		msg_id = 0
-	print(colored("Callback Query:", "yellow"),
-	colored("ID: {} | Query: {}".format(user_id, input), "white")
-	)
+	print(colored("Callback >", "cyan"))
+	print(colored("userID", "yellow"), colored(user_id, "white"))
+	print(colored("Query", "yellow"), colored(input, "white"))
+	print(colored("queryID", "yellow"), colored(msg.id, "white"))
+	print()
 	if re.search(r"@(\d+)", input):
 		ap = re_matches("@(\d+)", input, 's')
 		if int(ap[1]) != user_id:
@@ -2588,6 +2592,11 @@ async def inline_query_process(msg: types.InlineQuery):
 	setupUserSteps(msg, user_id)
 	langU = lang[user_steps[user_id]['lang']]
 	buttuns = langU['buttuns']
+	print(colored("Inline >", "cyan"))
+	print(colored("userID", "yellow"), colored(user_id, "white"))
+	print(colored("Query", "yellow"), colored(input, "white"))
+	print(colored("inlineID", "yellow"), colored(msg_id, "white"))
+	print()
 	if input == '':
 		input_content = InputTextMessageContent(
 		message_text = langU['inline']['text']['help_send']
