@@ -2577,12 +2577,54 @@ async def inline_query_process(msg: types.InlineQuery):
 	# }
 	msg_id = msg.id
 	user_id = msg.from_user.id
+	if msg.from_user.username:
+		username = f'@{msg.from_user.username}'
+	else:
+		username = user_id
 	user_name = msg.from_user.first_name
 	chat_type = msg.chat_type
 	input = msg.query
 	saveUsername(msg, mode = "inline")
 	setupUserSteps(msg, user_id)
 	langU = lang[user_steps[user_id]['lang']]
+	buttuns = langU['buttuns']
+	if input == '':
+		input_content = InputTextMessageContent(
+		message_text = langU['inline']['text']['help_send']
+		)
+		inlineKeys = iMarkup()
+		inlineKeys.add(
+			iButtun(buttuns['help_comp'], url = 't.me/{}?start=help'.format(redis.hget(db, 'user')))
+			)
+		item1 = InlineQueryResultArticle(
+			id = f'help:{user_id}',
+			title = langU['inline']['title']['help_send'],
+			description = langU['inline']['desc']['help_send'],
+			thumb_url = pic_question,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+			reply_markup = inlineKeys,
+		)
+		input_content = InputTextMessageContent(
+		message_text = langU['inline']['text']['my_id'].format(user_id)
+		)
+		inlineKeys = iMarkup()
+		inlineKeys.add(
+			iButtun(buttuns['najva_to'].format(user_name),
+			switch_inline_query_current_chat = '{} {}'.format(username, buttuns['example']))
+			)
+		item2 = InlineQueryResultArticle(
+			id = f'myid:{user_id}',
+			title = langU['inline']['title']['my_id'],
+			description = langU['inline']['desc']['my_id'].format(user_id),
+			thumb_url = pic_atsign,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+			reply_markup = inlineKeys,
+		)
+		await answerInlineQuery(msg_id, results = [item1, item2], cache_time = 1)
 
 
 async def chosen_inline_process(msg: types.ChosenInlineResult):
