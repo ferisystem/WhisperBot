@@ -2619,13 +2619,20 @@ async def bot_run(app):
 	dp.register_message_handler(message_process, content_types = content_types)
 	dp.register_channel_post_handler(channel_post_process, content_types = content_types)
 	dp.register_callback_query_handler(callback_query_process)
+	dp.register_inline_handler(inline_query_process)
+	dp.register_chosen_inline_handler(chosen_inline_process)
 	dp.register_errors_handler(errors_handlers)
 	webhook = await bot.get_webhook_info()
 	if webhook.url != gv().WEBHOOK_URL:
 		if not webhook.url:
 			await bot.delete_webhook()
 		await bot.set_webhook(gv().WEBHOOK_URL, open(gv().WEBHOOK_SSL_CERT, 'rb'), max_connections = 100, \
-		allowed_updates = ['message', 'channel_post', 'callback_query'])
+		allowed_updates = [
+		'message', 'edited_message', 'channel_post', 'edited_channel_post',
+		'inline_query', 'chosen_inline_result', 'callback_query', 'shipping_query',
+		'pre_checkout_query', 'poll', 'poll_answer', 'my_chat_member', 'chat_member',
+		'chat_join_request'
+		])
 	# await client.start(bot_token = telegram_datas['botToken'])
 	bt = None
 	while not bt:
