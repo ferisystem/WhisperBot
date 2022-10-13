@@ -1059,7 +1059,8 @@ async def answerInlineQuery(inline_msg_id, results, cache_time = 1, \
 		is_personal, next_offset, switch_pm_text,
 		switch_pm_parameter)
 		return True, result
-	except:
+	except Exception as e:
+		print(e)
 		return False
 
 
