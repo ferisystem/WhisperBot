@@ -348,6 +348,40 @@ async def userInfos(userID, info = "name"):
 		return '!!!'
 
 
+async def userIds(username):
+	# if username:match("@"):
+	username = username.replace("@", "")
+	# end
+	if redis.hget("UsernamesIds", username.lower()):
+		return int(redis.hget("UsernamesIds", username.lower()))
+	else:
+		try:
+			getC = await client.get_input_entity(username)
+			redis.hset("UsernamesIds", username.lower(), "-100{}".format(getC.channel_id))
+			return int("-100{}".format(getC.channel_id))
+		except:
+			try:
+				getC = await client.get_entity(username)
+				redis.hset("UsernamesIds", username.lower(), "-100{}".format(getC.channel_id))
+				return int("-100{}".format(getC.channel_id))
+			except:
+				try:
+					getC = await client.get_input_entity(username)
+					redis.hset("UsernamesIds", username.lower(), getC.user_id)
+					return int(getC.user_id)
+				except:
+					try:
+						getC = await client.get_entity(username)
+						if getC.megagroup:
+							redis.hset("UsernamesIds", username.lower(), "-100{}".format(getC.id))
+							return int("-100{}".format(getC.id))
+						else:
+							redis.hset("UsernamesIds", username.lower(), getC.id)
+							return int(getC.id)
+					except:
+						return False
+
+
 def set_stats(type_stat, hash, value = None):
 	hash = "stat_{}".format(hash)
 	if type_stat == "++":
@@ -2634,6 +2668,83 @@ async def inline_query_process(msg: types.InlineQuery):
 			reply_markup = inlineKeys,
 		)
 		await answerInlineQuery(msg_id, results = [item1, item2], cache_time = 1)
+	if re.search(r'(?:(?<!\d)\d{6,10}(?!\d)) (.*)$', input) or re.search(r'(@[a-zA-Z0-9_]*) (.*)$', input):
+		ap = re.findall(r'(@[a-zA-Z0-9_]*)', input)
+		ap2 = re.findall(r'(?:(?<!\d)\d{6,10}(?!\d))', input)
+		text = input
+		users = set()
+		for i in ap:
+			text = text.replace(f"{i} ", '')
+			users.add(i)
+		for i in ap2:
+			text = text.replace(f"{i} ", '')
+			users.add(i)
+		users = list(users)
+		ti_me = time()
+		inlineKeys = iMarkup()
+		inlineKeys.add(
+			iButtun(buttuns['show_najva'], callback_data = 'showN:{}:{}'.format(user_id, ti_me))
+				)
+		ads = DataBase.get('have_ads')
+		if ads:
+			inlineKeys.add(
+				iButtun(DataBase.hget('info_ads', 'buttuns'), url = DataBase.hget('info_ads', 'url'))
+				)
+		if len(users) > 1:
+			name_users = ""
+			count = 0
+			for i in users:
+				if "@" in i:
+					k = await userIds(i)
+					if k:
+						users[count] = k
+				count += 1
+			for i in users:
+				name_user = await userInfos(i, info = "name")
+				if str(i).isdigit():
+					name_users = '{}\n<a href="tg://user?id={}">{}</a>'.format(name_users, i, name_user)
+				else:
+					name_users = '{}\n{}'.format(name_users, name_user)
+			input_content = InputTextMessageContent(
+				message_text = langU['inline']['text']['najva_group'].format(len(users), name_users),
+				parse_mode = 'HTML',
+				disable_web_page_preview = True,
+			)
+			item1 = InlineQueryResultArticle(
+				id = f'najvaP:{user_id}',
+				title = langU['inline']['title']['najva_group'].format(len(users)),
+				description = langU['inline']['desc']['najva_group'].format(len(text)),
+				thumb_url = pic_group,
+				thumb_width = 512,
+				thumb_height = 512,
+				input_message_content = input_content,
+				reply_markup = inlineKeys,
+			)
+		else:
+			name_user = await userInfos(users[0], info = "name")
+			input_content = InputTextMessageContent(
+				message_text = langU['inline']['text']['najva_person'].format(name_user),
+				parse_mode = 'HTML',
+				disable_web_page_preview = False,
+			)
+			item1 = InlineQueryResultArticle(
+				id = f'najvaP:{user_id}',
+				title = langU['inline']['title']['najva_person'].format(name_user),
+				description = langU['inline']['desc']['najva_person'].format(len(text)),
+				thumb_url = pic_message,
+				thumb_width = 512,
+				thumb_height = 512,
+				input_message_content = input_content,
+				reply_markup = inlineKeys,
+			)
+		user_steps[user_id].update({
+		"najva":{
+		"time": ti_me,
+		"text": text,
+		"users": users,
+		}
+		})
+		await answerInlineQuery(msg_id, results = [item1,], cache_time = 1)
 
 
 async def chosen_inline_process(msg: types.ChosenInlineResult):
@@ -2648,6 +2759,18 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 	user_name = msg.from_user.first_name
 	result_id = msg.result_id
 	input = msg.query
+	saveUsername(msg, mode = "inline")
+	setupUserSteps(msg, user_id)
+	langU = lang[user_steps[user_id]['lang']]
+	buttuns = langU['buttuns']
+	if re.match(r"^najvaP:(\d+)$", result_id) and 'najva' in user_steps[user_id]:
+		ap = re_matches(r"^najvaP:(\d+)$", result_id)
+		najva = user_steps[user_id]['najva']
+		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'text', najva['text'])
+		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', str(najva['users']))
+		for i in najva['users']:
+			if DataBase.hget(f'setting_najva:{i}', 'recv'):
+				await sendText(i, 0, 1, langU['you_recv_najva'].format('<a href="tg://user?id={}">{}</a>'.format(user_id, user_name)), 'html')
 
 
 async def channel_post_process(msg: types.Message):
