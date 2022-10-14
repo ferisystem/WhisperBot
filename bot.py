@@ -2701,11 +2701,14 @@ async def inline_query_process(msg: types.InlineQuery):
 				count += 1
 			for i in users:
 				name_user = await userInfos(i, info = "name")
-				name_users = "{}\n{}".format(name_users, name_user)
+				if str(i).isdigit():
+					name_users = '{}\n<a href="tg://user?id={}">{}</a>'.format(name_users, i, name_user)
+				else:
+					name_users = '{}\n{}'.format(name_users, name_user)
 			input_content = InputTextMessageContent(
 				message_text = langU['inline']['text']['najva_group'].format(len(users), name_users),
 				parse_mode = 'HTML',
-				disable_web_page_preview = False,
+				disable_web_page_preview = True,
 			)
 			item1 = InlineQueryResultArticle(
 				id = f'najvaP:{user_id}',
