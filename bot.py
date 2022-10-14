@@ -2634,6 +2634,73 @@ async def inline_query_process(msg: types.InlineQuery):
 			reply_markup = inlineKeys,
 		)
 		await answerInlineQuery(msg_id, results = [item1, item2], cache_time = 1)
+	if re.search(r'(?:(?<!\d)\d{6,10}(?!\d)) (.*)$', input) or re.search(r'(@[a-zA-Z0-9_]*) (.*)$', input):
+		ap = re.findall(r'(@[a-zA-Z0-9_]*)', input)
+		ap2 = re.findall(r'(?:(?<!\d)\d{6,10}(?!\d))', input)
+		text = input
+		users = set()
+		for i in ap:
+			text = text.replace(f"{i} ", '')
+			users.add(i)
+		for i in ap2:
+			text = text.replace(f"{i} ", '')
+			users.add(i)
+		users = list(users)
+		ti_me = time()
+		inlineKeys = iMarkup()
+		inlineKeys.add(
+			iButtun(buttuns['show_najva'], callback_data = 'showN:{}:{}'.format(user_id, ti_me))
+				)
+		ads = DataBase.get('have_ads')
+		if ads:
+			inlineKeys.add(
+				iButtun(DataBase.hget('info_ads', 'buttuns'), url = DataBase.hget('info_ads', 'url'))
+				)
+		if len(users) > 1:
+			name_users = ""
+			for i in users:
+				name_user = await userInfos(i, info = "name")
+				name_users = "{}\n{}".format(name_users, name_user)
+			input_content = InputTextMessageContent(
+				message_text = langU['inline']['text']['najva_group'].format(len(users), name_users),
+				parse_mode = 'HTML',
+				disable_web_page_preview = False,
+			)
+			item1 = InlineQueryResultArticle(
+				id = f'najvaP:{user_id}',
+				title = langU['inline']['title']['najva_group'].format(len(users)),
+				description = langU['inline']['desc']['najva_group'].format(len(text)),
+				thumb_url = pic_group,
+				thumb_width = 512,
+				thumb_height = 512,
+				input_message_content = input_content,
+				reply_markup = inlineKeys,
+			)
+		else:
+			name_user = await userInfos(users[0], info = "name")
+			input_content = InputTextMessageContent(
+				message_text = langU['inline']['text']['najva_person'].format(name_user),
+				parse_mode = 'HTML',
+				disable_web_page_preview = False,
+			)
+			item1 = InlineQueryResultArticle(
+				id = f'najvaP:{user_id}',
+				title = langU['inline']['title']['najva_person'].format(name_user),
+				description = langU['inline']['desc']['najva_person'].format(len(text)),
+				thumb_url = pic_message,
+				thumb_width = 512,
+				thumb_height = 512,
+				input_message_content = input_content,
+				reply_markup = inlineKeys,
+			)
+		user_steps[user_id].update({
+		"najva":{
+		"time": ti_me,
+		"najva_text": text,
+		"users": users,
+		}
+		})
+		await answerInlineQuery(msg_id, results = [item1,], cache_time = 1)
 
 
 async def chosen_inline_process(msg: types.ChosenInlineResult):
