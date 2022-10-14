@@ -348,6 +348,40 @@ async def userInfos(userID, info = "name"):
 		return '!!!'
 
 
+async def userIds(username):
+	# if username:match("@"):
+	username = username.replace("@", "")
+	# end
+	if redis.hget("UsernamesIds", username.lower()):
+		return int(redis.hget("UsernamesIds", username.lower()))
+	else:
+		try:
+			getC = await client.get_input_entity(username)
+			redis.hset("UsernamesIds", username.lower(), "-100{}".format(getC.channel_id))
+			return int("-100{}".format(getC.channel_id))
+		except:
+			try:
+				getC = await client.get_entity(username)
+				redis.hset("UsernamesIds", username.lower(), "-100{}".format(getC.channel_id))
+				return int("-100{}".format(getC.channel_id))
+			except:
+				try:
+					getC = await client.get_input_entity(username)
+					redis.hset("UsernamesIds", username.lower(), getC.user_id)
+					return int(getC.user_id)
+				except:
+					try:
+						getC = await client.get_entity(username)
+						if getC.megagroup:
+							redis.hset("UsernamesIds", username.lower(), "-100{}".format(getC.id))
+							return int("-100{}".format(getC.id))
+						else:
+							redis.hset("UsernamesIds", username.lower(), getC.id)
+							return int(getC.id)
+					except:
+						return False
+
+
 def set_stats(type_stat, hash, value = None):
 	hash = "stat_{}".format(hash)
 	if type_stat == "++":
