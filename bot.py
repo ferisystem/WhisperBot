@@ -2763,11 +2763,14 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 	setupUserSteps(msg, user_id)
 	langU = lang[user_steps[user_id]['lang']]
 	buttuns = langU['buttuns']
-	if re.match(r"^najvaP:(\d+)$", result_id):
+	if re.match(r"^najvaP:(\d+)$", result_id) and 'najva' in user_steps[user_id]:
 		ap = re_matches(r"^najvaP:(\d+)$", result_id)
 		najva = user_steps[user_id]['najva']
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'text', najva['text'])
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', str(najva['users']))
+		for i in najva['users']:
+			if DataBase.hget(f'setting_najva:{i}', 'recv'):
+				await sendText(i, 0, 1, langU['you_recv_najva'].format('<a href="tg://user?id={}">{}</a>'.format(user_id, user_name)), 'html')
 
 
 async def channel_post_process(msg: types.Message):
