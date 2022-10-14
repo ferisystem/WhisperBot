@@ -2692,6 +2692,13 @@ async def inline_query_process(msg: types.InlineQuery):
 				)
 		if len(users) > 1:
 			name_users = ""
+			count = 0
+			for i in users:
+				if "@" in i:
+					k = await userIds(i)
+					if k:
+						users[count] = k
+				count += 1
 			for i in users:
 				name_user = await userInfos(i, info = "name")
 				name_users = "{}\n{}".format(name_users, name_user)
