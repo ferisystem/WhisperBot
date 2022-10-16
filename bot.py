@@ -2747,9 +2747,7 @@ async def inline_query_process(msg: types.InlineQuery):
 		await answerInlineQuery(msg_id, results = [item1,], cache_time = 1)
 	if re.search(r'@[Aa][Ll][Ll] (.*)$', input) or re.search(r'@[Aa][Ll][Ll] (.*)$', input):
 		ap = re.findall(r'@[Aa][Ll][Ll] (.*)$', input)
-		text = input
-		for i in ap:
-			text = text.replace(f"{i} ", '')
+		text = ap[0]
 		ti_me = time()
 		inlineKeys = iMarkup()
 		inlineKeys.add(
