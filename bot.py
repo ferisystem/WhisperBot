@@ -2745,6 +2745,60 @@ async def inline_query_process(msg: types.InlineQuery):
 		}
 		})
 		await answerInlineQuery(msg_id, results = [item1,], cache_time = 1)
+	if re.search(r'@[Aa][Ll][Ll] (.*)$', input) or re.search(r'@[Aa][Ll][Ll] (.*)$', input):
+		ap = re.findall(r'@[Aa][Ll][Ll] (.*)$', input)
+		text = input
+		for i in ap:
+			text = text.replace(f"{i} ", '')
+		ti_me = time()
+		inlineKeys = iMarkup()
+		inlineKeys.add(
+			iButtun(buttuns['stats'], callback_data = 'showS:{}:{}'.format(user_id, ti_me)),
+			iButtun(buttuns['show_najva'], callback_data = 'showN:{}:{}'.format(user_id, ti_me))
+				)
+		ads = DataBase.get('have_ads')
+		if ads:
+			inlineKeys.add(
+				iButtun(DataBase.hget('info_ads', 'buttuns'), url = DataBase.hget('info_ads', 'url'))
+				)
+		input_content = InputTextMessageContent(
+			message_text = langU['inline']['text']['najva_all'],
+			parse_mode = 'HTML',
+			disable_web_page_preview = False,
+		)
+		item1 = InlineQueryResultArticle(
+			id = f'najvaA:{user_id}',
+			title = langU['inline']['title']['najva_all'],
+			description = langU['inline']['desc']['najva_all'].format(len(text)),
+			thumb_url = pic_all,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+			reply_markup = inlineKeys,
+		)
+		input_content = InputTextMessageContent(
+			message_text = langU['inline']['text']['najva_all2'],
+			parse_mode = 'HTML',
+			disable_web_page_preview = False,
+		)
+		item2 = InlineQueryResultArticle(
+			id = f'najvaA2:{user_id}',
+			title = langU['inline']['title']['najva_all'],
+			description = langU['inline']['desc']['najva_all2'].format(len(text)),
+			thumb_url = pic_all,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+			reply_markup = inlineKeys,
+		)
+		user_steps[user_id].update({
+		"najva":{
+		"time": ti_me,
+		"text": text,
+		"users": 'all',
+		}
+		})
+		await answerInlineQuery(msg_id, results = [item1, item2], cache_time = 1)
 
 
 async def chosen_inline_process(msg: types.ChosenInlineResult):
