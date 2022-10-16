@@ -2668,7 +2668,7 @@ async def inline_query_process(msg: types.InlineQuery):
 			reply_markup = inlineKeys,
 		)
 		await answerInlineQuery(msg_id, results = [item1, item2], cache_time = 1)
-	if re.search(r'(?:(?<!\d)\d{6,10}(?!\d)) (.*)$', input) or re.search(r'(@[a-zA-Z0-9_]*) (.*)$', input):
+	if not re.findall(r'@all ', input.lower()) and (re.search(r'(?:(?<!\d)\d{6,10}(?!\d)) (.*)$', input) or re.search(r'(@[a-zA-Z0-9_]*) (.*)$', input)):
 		ap = re.findall(r'(@[a-zA-Z0-9_]*)', input)
 		ap2 = re.findall(r'(?:(?<!\d)\d{6,10}(?!\d))', input)
 		text = input
