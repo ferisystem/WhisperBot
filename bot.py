@@ -2014,7 +2014,7 @@ def najva_help4_keys(UserID):
 	inlineKeys = iMarkup()
 	inlineKeys.add(
 		iButtun(buttuns['example'],
-		switch_inline_query = '@All {}'.format(UserID, buttuns['example']))
+		switch_inline_query = '@All {}'.format(buttuns['example']))
 		)
 	inlineKeys.add(
 		iButtun(buttuns['back_help_najva'],
@@ -2668,7 +2668,7 @@ async def inline_query_process(msg: types.InlineQuery):
 			reply_markup = inlineKeys,
 		)
 		await answerInlineQuery(msg_id, results = [item1, item2], cache_time = 1)
-	if re.search(r'(?:(?<!\d)\d{6,10}(?!\d)) (.*)$', input) or re.search(r'(@[a-zA-Z0-9_]*) (.*)$', input):
+	if not re.findall(r'@all ', input.lower()) and (re.search(r'(?:(?<!\d)\d{6,10}(?!\d)) (.*)$', input) or re.search(r'(@[a-zA-Z0-9_]*) (.*)$', input)):
 		ap = re.findall(r'(@[a-zA-Z0-9_]*)', input)
 		ap2 = re.findall(r'(?:(?<!\d)\d{6,10}(?!\d))', input)
 		text = input
@@ -2745,6 +2745,165 @@ async def inline_query_process(msg: types.InlineQuery):
 		}
 		})
 		await answerInlineQuery(msg_id, results = [item1,], cache_time = 1)
+	if re.search(r'@[Aa][Ll][Ll] (.*)$', input) or re.search(r'@[Aa][Ll][Ll] (.*)$', input):
+		ap = re.findall(r'@[Aa][Ll][Ll] (.*)$', input)
+		text = ap[0]
+		ti_me = time()
+		inlineKeys = iMarkup()
+		inlineKeys.add(
+			iButtun(buttuns['stats'], callback_data = 'showS:{}:{}'.format(user_id, ti_me)),
+			iButtun(buttuns['show_najva'], callback_data = 'showN:{}:{}'.format(user_id, ti_me))
+				)
+		ads = DataBase.get('have_ads')
+		if ads:
+			inlineKeys.add(
+				iButtun(DataBase.hget('info_ads', 'buttuns'), url = DataBase.hget('info_ads', 'url'))
+				)
+		input_content = InputTextMessageContent(
+			message_text = langU['inline']['text']['najva_all'],
+			parse_mode = 'HTML',
+			disable_web_page_preview = False,
+		)
+		item1 = InlineQueryResultArticle(
+			id = f'najvaA:{user_id}',
+			title = langU['inline']['title']['najva_all'],
+			description = langU['inline']['desc']['najva_all'].format(len(text)),
+			thumb_url = pic_all,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+			reply_markup = inlineKeys,
+		)
+		input_content = InputTextMessageContent(
+			message_text = langU['inline']['text']['najva_all2'],
+			parse_mode = 'HTML',
+			disable_web_page_preview = False,
+		)
+		item2 = InlineQueryResultArticle(
+			id = f'najvaA2:{user_id}',
+			title = langU['inline']['title']['najva_all'],
+			description = langU['inline']['desc']['najva_all2'].format(len(text)),
+			thumb_url = pic_all,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+			reply_markup = inlineKeys,
+		)
+		user_steps[user_id].update({
+		"najva":{
+		"time": ti_me,
+		"text": text,
+		"users": 'all',
+		}
+		})
+		await answerInlineQuery(msg_id, results = [item1, item2], cache_time = 1)
+	if re.search(r'set$', input):
+		set_desc = langU['inline']['desc']
+		if DataBase.hget(f'setting_najva:{user_id}', 'seen'):
+			seen = langU['is_power_on']
+			title1 = langU['inline']['title']['power_off']
+			photo1 = pic_tick
+		else:
+			seen = langU['is_power_off']
+			title1 = langU['inline']['title']['power_on']
+			photo1 = pic_cross
+		seen = set_desc['najva_seen'].format(seen)
+		if DataBase.hget(f'setting_najva:{user_id}', 'recv'):
+			recv = langU['is_power_on']
+			title2 = langU['inline']['title']['power_off']
+			photo2 = pic_tick
+		else:
+			recv = langU['is_power_off']
+			title2 = langU['inline']['title']['power_on']
+			photo2 = pic_cross
+		recv = set_desc['najva_recv'].format(recv)
+		if DataBase.hget(f'setting_najva:{user_id}', 'encrypt'):
+			encrypt = langU['is_power_on']
+			title3 = langU['inline']['title']['power_off']
+			photo3 = pic_tick
+		else:
+			encrypt = langU['is_power_off']
+			title3 = langU['inline']['title']['power_on']
+			photo3 = pic_cross
+		encrypt = set_desc['najva_encrypt'].format(encrypt)
+		if DataBase.hget(f'setting_najva:{user_id}', 'noname'):
+			noname = langU['is_power_on']
+			title4 = langU['inline']['title']['power_off']
+			photo4 = pic_tick
+		else:
+			noname = langU['is_power_off']
+			title4 = langU['inline']['title']['power_on']
+			photo4 = pic_cross
+		noname = set_desc['najva_noname'].format(noname)
+		if DataBase.hget(f'setting_najva:{user_id}', 'dispo'):
+			dispo = langU['is_power_on']
+			title5 = langU['inline']['title']['power_off']
+			photo5 = pic_tick
+		else:
+			dispo = langU['is_power_off']
+			title5 = langU['inline']['title']['power_on']
+			photo5 = pic_cross
+		dispo = set_desc['najva_dispo'].format(dispo)
+		inlineKeys = iMarkup()
+		inlineKeys.add(
+			iButtun(buttuns['quick_set'], switch_inline_query_current_chat = 'set')
+				)
+		input_content = InputTextMessageContent(
+			message_text = langU['inline']['text']['setting_changed'],
+			parse_mode = 'HTML',
+			disable_web_page_preview = False,
+		)
+		item1 = InlineQueryResultArticle(
+			id = f'set:seen:{user_id}',
+			title = title1,
+			description = seen,
+			thumb_url = photo1,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+			reply_markup = inlineKeys,
+		)
+		item2 = InlineQueryResultArticle(
+			id = f'set:recv:{user_id}',
+			title = title2,
+			description = recv,
+			thumb_url = photo2,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+			reply_markup = inlineKeys,
+		)
+		item3 = InlineQueryResultArticle(
+			id = f'set:encrypt:{user_id}',
+			title = title3,
+			description = encrypt,
+			thumb_url = photo3,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+			reply_markup = inlineKeys,
+		)
+		item4 = InlineQueryResultArticle(
+			id = f'set:noname:{user_id}',
+			title = title4,
+			description = noname,
+			thumb_url = photo4,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+			reply_markup = inlineKeys,
+		)
+		item5 = InlineQueryResultArticle(
+			id = f'set:dispo:{user_id}',
+			title = title5,
+			description = dispo,
+			thumb_url = photo5,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+			reply_markup = inlineKeys,
+		)
+		await answerInlineQuery(msg_id, [item1, item2, item3, item4, item5], 1, langU['inline']['title']['all_set'], 'set')
 
 
 async def chosen_inline_process(msg: types.ChosenInlineResult):
