@@ -2014,7 +2014,7 @@ def najva_help4_keys(UserID):
 	inlineKeys = iMarkup()
 	inlineKeys.add(
 		iButtun(buttuns['example'],
-		switch_inline_query = '@All {}'.format(UserID, buttuns['example']))
+		switch_inline_query = '@All {}'.format(buttuns['example']))
 		)
 	inlineKeys.add(
 		iButtun(buttuns['back_help_najva'],
