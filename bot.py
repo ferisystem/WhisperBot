@@ -342,8 +342,11 @@ async def userInfos(userID, info = "name"):
 					else:
 						return False
 			except:
-				redis.setex('userInfo2:{}'.format(userID), 86400, userID)
-				return int(userID)
+				if str(userID).isdigit():
+					redis.setex('userInfo2:{}'.format(userID), 86400, userID)
+					return int(userID)
+				else:
+					return userID
 	else:
 		return '!!!'
 
@@ -2695,6 +2698,17 @@ async def callback_query_process(msg: types.CallbackQuery):
 				await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = najva_autodel2_keys(user_id))
 			else:
 				await answerCallbackQuery(msg, langU['autodel_must_1'], cache_time = 2)
+	else:
+		# {
+		# "id": "601066437221691493",
+		# "from": {
+		# "id": 139946685, "is_bot": false, "first_name": "Alireza 🏴🏳",
+		# "username": "ferisystem", "language_code": "de"},
+		# "inline_message_id": "BAAAACcAAABRsQ-ZJkZtztRsZ9I", "chat_instance": "8145064389776335333", "data": "showN:139946685:1666127436.399383"
+		# }
+		msgID = msg.id
+		msg_id = msg.inline_message_id
+
 
 
 async def inline_query_process(msg: types.InlineQuery):
@@ -2814,6 +2828,10 @@ async def inline_query_process(msg: types.InlineQuery):
 				reply_markup = inlineKeys,
 			)
 		else:
+			if "@" in users[0]:
+				k = await userIds(users[0])
+				if k:
+					users[0] = k
 			name_user = await userInfos(users[0], info = "name")
 			input_content = InputTextMessageContent(
 				message_text = langU['inline']['text']['najva_person'].format(name_user),
