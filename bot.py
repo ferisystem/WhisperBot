@@ -2174,18 +2174,14 @@ def najva_seen_keys(UserID, from_user, time_data):
 	hash = ':{}:{}'.format(from_user, time_data)
 	langU = lang[user_steps[UserID]['lang']]
 	buttuns = langU['buttuns']
-	inlineKeys = iMarkup()
+	inlineKeys = iMarkup(row_width = 3)
 	inlineKeys.add(
 		iButtun(buttuns['stats'],
-		callback_data = 'showS{}'.format(hash))
-		)
-	inlineKeys.add(
+		callback_data = 'showS{}'.format(hash)),
 		iButtun(buttuns['show_najva'],
-		callback_data = 'showN{}'.format(hash))
-		)
-	inlineKeys.add(
+		callback_data = 'showN{}'.format(hash)),
 		iButtun(buttuns['delete'],
-		callback_data = 'delNajva{}'.format(hash))
+		callback_data = 'delNajva{}'.format(hash)),
 		)
 	return inlineKeys
 
