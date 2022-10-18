@@ -2185,6 +2185,17 @@ def najva_seen_keys(UserID, from_user, time_data):
 		)
 	return inlineKeys
 
+def najva_seen2_keys(UserID, from_user, time_data):
+	hash = ':{}:{}'.format(from_user, time_data)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['stats'],
+		callback_data = 'showS{}'.format(hash)),
+		)
+	return inlineKeys
+
 
 def isUserSteps(user_id):
 	if user_id in user_steps and 'action' in user_steps[user_id]:
@@ -2743,6 +2754,14 @@ async def callback_query_process(msg: types.CallbackQuery):
 			else:
 				DataBase.sadd('najva_nosy:{}:{}'.format(from_user, time_data), user_id)
 				await answerCallbackQuery(msg, langU['najva_not_for_you'], show_alert = True, cache_time = 3600)
+		if re.match(r"^delnajva:(\d+):([-+]?\d*\.\d+|\d+)$", input):
+			ap = re_matches(r"^delnajva:(\d+):([-+]?\d*\.\d+|\d+)$", input)
+			if user_id == int(ap[1]):
+				DataBase.delete('najva:{}:{}'.format(ap[1], ap[2]))
+				await answerCallbackQuery(msg, langU['najva_deleted'])
+				await bot.edit_message_reply_markup(inline_message_id = msg_id, reply_markup = najva_seen2_keys(user_id, ap[1], ap[2]))
+			else:
+				await answerCallbackQuery(msg, langU['must_be_owner_najva'], cache_time = 3600)
 
 
 async def inline_query_process(msg: types.InlineQuery):
