@@ -2173,6 +2173,26 @@ def najva_autodel2_keys(UserID):
 	return inlineKeys
 
 
+def najva_seen_keys(UserID, from_user, time_data):
+	hash = ':{}:{}'.format(from_user, time_data)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['stats'],
+		callback_data = 'showS{}'.format(hash))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['show_najva'],
+		callback_data = 'showN{}'.format(hash))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['delete'],
+		callback_data = 'delNajva{}'.format(hash))
+		)
+	return inlineKeys
+
+
 def isUserSteps(user_id):
 	if user_id in user_steps and 'action' in user_steps[user_id]:
 		return True
@@ -2344,6 +2364,10 @@ async def callback_query_process(msg: types.CallbackQuery):
 	# "chat_instance": "1169386402171875241", "data": "anon:@139946685"}
 	saveUsername(msg, mode = "callback")
 	user_id = msg.from_user.id
+	if msg.from_user.username:
+		username = msg.from_user.username
+	else:
+		username = ''
 	input = msg.data.lower()
 	setupUserSteps(msg, user_id)
 	langU = lang[user_steps[user_id]['lang']]
@@ -2708,7 +2732,24 @@ async def callback_query_process(msg: types.CallbackQuery):
 		# }
 		msgID = msg.id
 		msg_id = msg.inline_message_id
-
+		if re.match(r"^shown:(\d+):([-+]?\d*\.\d+|\d+)$", input):
+			ap = re_matches(r"^shown:(\d+):([-+]?\d*\.\d+|\d+)$", input)
+			from_user = ap[1]
+			time_data = ap[2]
+			text_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'text')
+			users_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'users')
+			if username in users_data or str(user_id) in users_data or str(user_id) in from_user:
+				await answerCallbackQuery(msg, text_data, show_alert = True, cache_time = 3600)
+				if not str(user_id) in from_user and DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0:
+					if DataBase.hget(f'setting_najva:{from_user}', 'seen'):
+						await sendText(from_user, 0, 1, langU['najva_seened'].format(msg.from_user.first_name))
+					await editText(inline_msg_id = msg_id, text = langU['najva_seened']
+					.format('<a href="tg://user?id{}">{}</a>'.format(user_id, msg.from_user.first_name)),
+					parse_mode = 'html', reply_markup = najva_seen_keys(user_id, from_user, time_data))
+					DataBase.sadd('najva_seened:{}:{}'.format(from_user, time_data), user_id)
+			else:
+				DataBase.sadd('najva_nosy:{}:{}'.format(from_user, time_data), user_id)
+				await answerCallbackQuery(msg, langU['najva_not_for_you'], show_alert = True, cache_time = 3600)
 
 
 async def inline_query_process(msg: types.InlineQuery):
