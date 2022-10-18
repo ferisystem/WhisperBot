@@ -2742,15 +2742,20 @@ async def callback_query_process(msg: types.CallbackQuery):
 			time_data = ap[2]
 			text_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'text')
 			users_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'users')
-			if username in users_data or str(user_id) in users_data or str(user_id) in from_user:
+			if username in users_data or str(user_id) in users_data or str(user_id) in from_user or users_data == 'all':
 				await answerCallbackQuery(msg, text_data, show_alert = True)#, cache_time = 3600)
 				if not str(user_id) in from_user and DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0:
-					if DataBase.hget(f'setting_najva:{from_user}', 'seen'):
+					if DataBase.hget(f'setting_najva:{from_user}', 'seen') and users_data != 'all':
 						await sendText(from_user, 0, 1, langU['najva_seened'].format(msg.from_user.first_name))
-					await editText(inline_msg_id = msg_id, text = langU['najva_seened']
-					.format('<a href="tg://user?id{}">{}</a>'.format(user_id, msg.from_user.first_name)),
-					parse_mode = 'html', reply_markup = najva_seen_keys(user_id, from_user, time_data))
-					DataBase.sadd('najva_seened:{}:{}'.format(from_user, time_data), user_id)
+					if users_data != 'all':
+						await editText(inline_msg_id = msg_id, text = langU['najva_seened']
+						.format('<a href="tg://user?id{}">{}</a>'.format(user_id, msg.from_user.first_name)),
+						parse_mode = 'html', reply_markup = najva_seen_keys(user_id, from_user, time_data))
+					if users_data == 'all':
+						DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
+					else:
+						DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
+						DataBase.sadd('najva_seened:{}:{}'.format(from_user, time_data), user_id)
 			else:
 				DataBase.sadd('najva_nosy:{}:{}'.format(from_user, time_data), user_id)
 				await answerCallbackQuery(msg, langU['najva_not_for_you'], show_alert = True, cache_time = 3600)
