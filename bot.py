@@ -2304,7 +2304,16 @@ async def message_process(msg: types.Message):
 					else:
 						await sendText(chat_id, msg, 1, "❌\n{}".format(sendM))
 		else:
-			await bot.leave_chat(chat_id)
+			# await bot.leave_chat(chat_id)
+			if msg.via_bot and msg.via_bot.username == redis.hget(db, 'user'):
+				if reply_msg:
+					Uid = reply_msg.from_user.id
+					Uname = reply_msg.from_user.first_name
+					time_data = msg.reply_markup.inline_keyboard[0][0].callback_data.split(':')[2]
+					DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'users', Uid)
+					await editText(chat_id, msg_id, 0, langU['inline']['text']['najva_person'].format(Uname), 'HTML', msg.reply_markup)
+				else:
+					await editText(chat_id, msg_id, 0, langU['inline']['text']['didnt_enter_user'], 'HTML')
 	if isGroup(msg):
 		await bot.leave_chat(chat_id)
 
@@ -2987,6 +2996,42 @@ async def inline_query_process(msg: types.InlineQuery):
 			reply_markup = inlineKeys,
 		)
 		await answerInlineQuery(msg_id, [item1, item2, item3, item4, item5], 1, langU['inline']['title']['all_set'], 'set')
+	if not re.findall(r'@all ', input.lower()) and not re.findall(r'(?:(?<!\d)\d{6,10}(?!\d))', input) and not re.findall(r'(@[a-zA-Z0-9_]*)', input) and chat_type == 'supergroup':
+		ap = re_matches(r'(.*)', input)
+		text = ap[1]
+		ti_me = time()
+		inlineKeys = iMarkup()
+		inlineKeys.add(
+			iButtun(buttuns['show_najva'], callback_data = 'showN:{}:{}'.format(user_id, ti_me))
+				)
+		ads = DataBase.get('have_ads')
+		if ads:
+			inlineKeys.add(
+				iButtun(DataBase.hget('info_ads', 'buttuns'), url = DataBase.hget('info_ads', 'url'))
+				)
+		input_content = InputTextMessageContent(
+			message_text = langU['inline']['text']['najva_reply'],
+			parse_mode = 'HTML',
+			disable_web_page_preview = True,
+		)
+		item1 = InlineQueryResultArticle(
+			id = f'najvaR:{user_id}',
+			title = langU['inline']['title']['najva_reply'],
+			description = langU['inline']['desc']['najva_reply'],
+			thumb_url = pic_message,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+			reply_markup = inlineKeys,
+		)
+		user_steps[user_id].update({
+		"najva":{
+		"time": ti_me,
+		"text": text,
+		"users": 'reply',
+		}
+		})
+		await answerInlineQuery(msg_id, results = [item1,], cache_time = 1)
 
 
 async def chosen_inline_process(msg: types.ChosenInlineResult):
@@ -3018,6 +3063,10 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		najva = user_steps[user_id]['najva']
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'text', najva['text'])
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', 'all')
+	if re.match(r"^najvaR:(\d+)$", result_id) and 'najva' in user_steps[user_id]:
+		ap = re_matches(r"^najvaR:(\d+)$", result_id)
+		najva = user_steps[user_id]['najva']
+		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'text', najva['text'])
 	if re.match(r"^set:(.*):(\d+)$", result_id):
 		ap = re_matches(r"^set:(.*):(\d+)$", result_id)
 		if DataBase.hget(f'setting_najva:{user_id}', ap[1]):
