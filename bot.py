@@ -2118,6 +2118,58 @@ def najva_help9_keys(UserID):
 	return inlineKeys
 
 
+def najva_autodel_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['najva_settings_auto_del'].
+		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'autodel'))),
+		callback_data = 'najva:autodel{}'.format(hash))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['back_nset'],
+		callback_data = 'najva:settings{}'.format(hash))
+		)
+	return inlineKeys
+
+
+def najva_autodel2_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup(row_width = 6)
+	inlineKeys.add(
+		iButtun(buttuns['najva_settings_auto_del'].
+		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'autodel'))),
+		callback_data = 'najva:autodel{}'.format(hash))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['autodel_status'].format(DataBase.get(f'autodel_time:{UserID}')),
+		callback_data = 'none')
+		)
+	inlineKeys.add(
+		iButtun('-1',
+			callback_data = 'autodel:-1{}'.format(hash)),
+		iButtun('-5',
+			callback_data = 'autodel:-5{}'.format(hash)),
+		iButtun('-10',
+			callback_data = 'autodel:-10{}'.format(hash)),
+		iButtun('+1',
+			callback_data = 'autodel:+1{}'.format(hash)),
+		iButtun('+5',
+			callback_data = 'autodel:+5{}'.format(hash)),
+		iButtun('+10',
+			callback_data = 'autodel:+10{}'.format(hash)),
+	)
+	inlineKeys.add(
+		iButtun(buttuns['back_nset'],
+			callback_data = 'najva:settings{}'.format(hash)),
+	)
+	return inlineKeys
+
+
 def isUserSteps(user_id):
 	if user_id in user_steps and 'action' in user_steps[user_id]:
 		return True
@@ -2553,14 +2605,34 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await sendText(chat_id, _.reply_to_message, 1, langU['najva_help'], None, najva_help_keys(user_id))
 		if re.match(r"^najva:settings1:(.*):@(\d+)$", input):
 			ap = re_matches(r"^najva:settings1:(.*):@(\d+)$", input)
-			if DataBase.hget('setting_najva:{}'.format(user_id), ap[1]):
-				DataBase.hdel('setting_najva:{}'.format(user_id), ap[1])
-				text = langU['najva_setoff_{}'.format(ap[1])]
+			if ap[1] == 'autodel':
+				if DataBase.hget('setting_najva:{}'.format(user_id), 'autodel'):
+					await editText(chat_id, msg_id, 0, langU['autodel'], None, najva_autodel2_keys(user_id))
+				else:
+					await editText(chat_id, msg_id, 0, langU['autodel'], None, najva_autodel_keys(user_id))
 			else:
-				DataBase.hset('setting_najva:{}'.format(user_id), ap[1], 1)
-				text = langU['najva_seton_{}'.format(ap[1])]
-			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
-			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = najva_settings_keys(user_id))
+				if DataBase.hget('setting_najva:{}'.format(user_id), ap[1]):
+					DataBase.hdel('setting_najva:{}'.format(user_id), ap[1])
+					text = langU['najva_setoff_{}'.format(ap[1])]
+				else:
+					DataBase.hset('setting_najva:{}'.format(user_id), ap[1], 1)
+					text = langU['najva_seton_{}'.format(ap[1])]
+				await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
+				await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = najva_settings_keys(user_id))
+		if re.match(r"^najva:autodel:@(\d+)$", input):
+			ap = re_matches(r"^najva:autodel:@(\d+)$", input)
+			if DataBase.hget('setting_najva:{}'.format(user_id), 'autodel'):
+				DataBase.hdel('setting_najva:{}'.format(user_id), 'autodel')
+				text = langU['najva_setoff_autodel']
+				await answerCallbackQuery(msg, text, cache_time = 2)
+				await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = najva_autodel_keys(user_id))
+			else:
+				if not DataBase.get('autodel_time:{}'.format(user_id)):
+					DataBase.set('autodel_time:{}'.format(user_id), 10)
+				text = langU['najva_seton_autodel']
+				DataBase.hset('setting_najva:{}'.format(user_id), 'autodel', 1)
+				await answerCallbackQuery(msg, text, cache_time = 2)
+				await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = najva_autodel2_keys(user_id))
 		if re.match(r"^najva:help:(.*):@(\d+)$", input):
 			ap = re_matches(r"^najva:help:(.*):@(\d+)$", input)
 			await _.delete()
@@ -2605,6 +2677,14 @@ async def callback_query_process(msg: types.CallbackQuery):
 			file = f'Files/helps/vid-{ap[1]}.mp4'
 			with open(file, 'rb') as file:
 				await sendVideo(chat_id, _.reply_to_message, file, langU[f'najva_vid-{ap[1]}'], 'html', supports_streaming = True, reply_markup = keyboard)
+		if re.match(r"^autodel:(.*):@(\d+)$", input):
+			ap = re_matches(r"^autodel:(.*):@(\d+)$", input)
+			old_autodel_time = DataBase.get('autodel_time:{}'.format(user_id))
+			if int(old_autodel_time) + int(ap[1]) > 0:
+				DataBase.set('autodel_time:{}'.format(user_id), int(old_autodel_time) + int(ap[1]))
+				await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = najva_autodel2_keys(user_id))
+			else:
+				await answerCallbackQuery(msg, langU['autodel_must_1'], cache_time = 2)
 
 
 async def inline_query_process(msg: types.InlineQuery):
