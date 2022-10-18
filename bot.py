@@ -1021,10 +1021,7 @@ async def copyMessage(chat_id, from_chat_id, message_id, caption = None,\
 		pass
 
 
-async def editText(chat_id, msg_id, inline_msg_id, text, parse_mode = None, reply_markup = None, entities = None):
-	if msg_id > 0 and inline_msg_id > 0:
-		print("Error in editText")
-		return False
+async def editText(chat_id = None, msg_id = 0, inline_msg_id = 0, text = None, parse_mode = None, reply_markup = None, entities = None):
 	if parse_mode:
 		parse_mode = parse_mode.replace('md', 'Markdown')
 		parse_mode = parse_mode.replace('html', 'HTML')
@@ -1039,10 +1036,10 @@ async def editText(chat_id, msg_id, inline_msg_id, text, parse_mode = None, repl
 		markup = reply_markup
 	try:
 		DataBase.incr('amarBot.editbybot')
-		if inline_msg_id > 0:
-			result = await bot.edit_message_text(text = text, parse_mode = (parse_mode or None), inline_message_id = msg_id, reply_markup = markup, entities = entities)#, disable_web_page_preview = False)
+		if inline_msg_id and not inline_msg_id.isdigit():
+			result = await bot.edit_message_text(text = text, parse_mode = (parse_mode or None), inline_message_id = inline_msg_id, reply_markup = markup, entities = entities)#, disable_web_page_preview = False)
 			return True, result
-		elif msg_id > 0:
+		elif msg_id:
 			result = await bot.edit_message_text(chat_id = chat_id, text = text, parse_mode = (parse_mode or None), disable_web_page_preview = True, message_id = msg_id, reply_markup = markup)
 			return True, result
 	except expts.BadRequest as a:
@@ -2739,7 +2736,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			text_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'text')
 			users_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'users')
 			if username in users_data or str(user_id) in users_data or str(user_id) in from_user:
-				await answerCallbackQuery(msg, text_data, show_alert = True, cache_time = 3600)
+				await answerCallbackQuery(msg, text_data, show_alert = True)#, cache_time = 3600)
 				if not str(user_id) in from_user and DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0:
 					if DataBase.hget(f'setting_najva:{from_user}', 'seen'):
 						await sendText(from_user, 0, 1, langU['najva_seened'].format(msg.from_user.first_name))
