@@ -2313,7 +2313,7 @@ async def message_process(msg: types.Message):
 					DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'users', Uid)
 					await editText(chat_id, msg_id, 0, langU['inline']['text']['najva_person'].format(Uname), 'HTML', msg.reply_markup)
 				else:
-					await editText(chat_id, msg_id, 0, langU['inline']['text']['didnt_enter_user'], 'HTML')
+					await editText(chat_id, msg_id, 0, langU['didnt_enter_user'], 'HTML')
 	if isGroup(msg):
 		await bot.leave_chat(chat_id)
 
