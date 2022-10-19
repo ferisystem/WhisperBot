@@ -2333,15 +2333,17 @@ async def message_process(msg: types.Message):
 		else:
 			# await bot.leave_chat(chat_id)
 			if msg.via_bot and msg.via_bot.username == redis.hget(db, 'user') and msg.reply_markup:
-				time_data = msg.reply_markup.inline_keyboard[0][0].callback_data.split(':')[2]
-				if reply_msg:
-					Uid = reply_msg.from_user.id
-					Uname = reply_msg.from_user.first_name
-					DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'users', Uid)
-					await editText(chat_id, msg_id, 0, langU['inline']['text']['najva_person'].format(Uname), 'HTML', msg.reply_markup)
-				else:
-					if DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'users') == 'reply':
-						await editText(chat_id, msg_id, 0, langU['didnt_enter_user'], 'HTML')
+				time_data = msg.reply_markup.inline_keyboard[0][0]
+				if time_data.callback_data and 'showN' in time_data.callback_data:
+					time_data = time_data.callback_data.split(':')[2]
+					if reply_msg:
+						Uid = reply_msg.from_user.id
+						Uname = reply_msg.from_user.first_name
+						DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'users', Uid)
+						await editText(chat_id, msg_id, 0, langU['inline']['text']['najva_person'].format(Uname), 'HTML', msg.reply_markup)
+					else:
+						if DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'users') == 'reply':
+							await editText(chat_id, msg_id, 0, langU['didnt_enter_user'], 'HTML')
 	if isGroup(msg):
 		await bot.leave_chat(chat_id)
 
