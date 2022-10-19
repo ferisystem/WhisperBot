@@ -2332,7 +2332,7 @@ async def message_process(msg: types.Message):
 						await sendText(chat_id, msg, 1, "❌\n{}".format(sendM))
 		else:
 			# await bot.leave_chat(chat_id)
-			if msg.via_bot and msg.via_bot.username == redis.hget(db, 'user'):
+			if msg.via_bot and msg.via_bot.username == redis.hget(db, 'user') and msg.reply_markup:
 				time_data = msg.reply_markup.inline_keyboard[0][0].callback_data.split(':')[2]
 				if reply_msg:
 					Uid = reply_msg.from_user.id
@@ -2889,10 +2889,10 @@ async def inline_query_process(msg: types.InlineQuery):
 		text = input
 		users = set()
 		for i in ap:
-			text = text.replace(f"{i} ", '')
+			text = text.replace(f"{i} ", '').replace(f"{i}", '')
 			users.add(i)
 		for i in ap2:
-			text = text.replace(f"{i} ", '')
+			text = text.replace(f"{i} ", '').replace(f"{i}", '')
 			users.add(i)
 		users = list(users)
 		ti_me = time()
@@ -2905,6 +2905,22 @@ async def inline_query_process(msg: types.InlineQuery):
 			inlineKeys.add(
 				iButtun(DataBase.hget('info_ads', 'buttuns'), url = DataBase.hget('info_ads', 'url'))
 				)
+		if text == "":
+			input_content = InputTextMessageContent(
+				message_text = langU['inline']['text']['najva_havn_text'],
+				parse_mode = 'HTML',
+				disable_web_page_preview = True,
+			)
+			item1 = InlineQueryResultArticle(
+				id = f'najvaP:{user_id}',
+				title = langU['inline']['title']['najva_havn_text'],
+				description = langU['inline']['desc']['najva_havn_text'],
+				thumb_url = pic_cross,
+				thumb_width = 512,
+				thumb_height = 512,
+				input_message_content = input_content,
+			)
+			return await answerInlineQuery(msg_id, results = [item1,], cache_time = 1)
 		if len(users) > 1:
 			name_users = ""
 			count = 0
