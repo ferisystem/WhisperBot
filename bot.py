@@ -2754,7 +2754,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 						DataBase.sadd('najva_seened:{}:{}'.format(from_user, time_data), user_id)
 					if str(users_data).isdigit() and not DataBase.get('najva_seen_time:{}:{}'.format(from_user, time_data)):
 						DataBase.set('najva_seen_time:{}:{}'.format(from_user, time_data), int(time()))
-				if not str(user_id) in from_user
+				if not str(user_id) in from_user:
 					DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
 			else:
 				DataBase.sadd('najva_nosy:{}:{}'.format(from_user, time_data), user_id)
@@ -2770,10 +2770,50 @@ async def callback_query_process(msg: types.CallbackQuery):
 		if re.match(r"^shows:(\d+):([-+]?\d*\.\d+|\d+)$", input):
 			ap = re_matches(r"^shows:(\d+):([-+]?\d*\.\d+|\d+)$", input)
 			from_user, time_data = ap[1], ap[2]
+			if user_id != int(from_user):
+				await answerCallbackQuery(msg, langU['must_be_owner_najva'], show_alert = True, cache_time = 3600)
+				return False
+			seen_time = DataBase.get('najva_seen_time:{}:{}'.format(from_user, time_data))
 			seen_count = DataBase.get('najva_seen_count:{}:{}'.format(from_user, time_data))
 			seened_users = DataBase.smembers('najva_seened:{}:{}'.format(from_user, time_data))
-			seen_time = DataBase.get('najva_seen_time:{}:{}'.format(from_user, time_data))
-			
+			nosy_users = DataBase.smembers('najva_nosy:{}:{}'.format(from_user, time_data))
+			if len(nosy_users) > 0:
+				nosy_users_text = ""
+				for i in nosy_users:
+					name_user = await userInfos(i, info = "name")
+					nosy_users_text = "{}\n{}".format(name_user, nosy_users_text)
+			else:
+				nosy_users_text = langU['nobody_nosy']
+			if not seen_count:
+				await answerCallbackQuery(msg, langU['no_one_seen'], show_alert = True, cache_time = 3)
+			else:
+				if seen_time:
+					ti_me = datetime.fromtimestamp(int(seen_time))
+					ti_me = ti_me.strftime('%Y-%m-%d %H:%M:%S')
+					ti_me = re_matches(r'(\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+)', ti_me)
+					if user_steps[user_id]['lang'] == 'fa':
+						ti_me2 = gregorian_to_jalali(int(ti_me[1]), int(ti_me[2]), int(ti_me[3]))
+						seen_time = "{:04d}/{}/{:02d} - {:02d}:{:02d}:{:02d}".format(
+						ti_me2[0], echoMonth(ti_me2[1], True), ti_me2[2],
+						int(ti_me[4]), int(ti_me[5]), int(ti_me[6]))
+					else:
+						seen_time = "{:04d}/{}/{:02d} - {:02d}:{:02d}:{:02d}".format(
+						int(ti_me[1]), echoMonth(ti_me[2], False), int(ti_me[3]),
+						int(ti_me[4]), int(ti_me[5]), int(ti_me[6]))
+					name_user = list(DataBase.smembers('najva_seened:{}:{}'.format(from_user, time_data)))[0]
+					name_user = await userInfos(name_user, info = "name")
+					await answerCallbackQuery(msg, langU['seen_najva_person'].
+					format(seen_time, seen_count, name_user, langU['nosies'].format(nosy_users_text)), show_alert = True, cache_time = 3)
+				else:
+					if len(seened_users) > 0:
+						seened_users_text = ""
+						for i in seened_users:
+							name_user = await userInfos(i, info = "name")
+							seened_users_text = "{}\n{}".format(name_user, seened_users_text)
+						await answerCallbackQuery(msg, langU['seen_najva_group'].
+						format(seen_count, len(seened_users), seened_users_text, langU['nosies'].format(nosy_users_text)), show_alert = True, cache_time = 3)
+					else:
+						await answerCallbackQuery(msg, langU['seen_najva_all'].format(seen_count), show_alert = True, cache_time = 3)
 
 
 async def inline_query_process(msg: types.InlineQuery):
