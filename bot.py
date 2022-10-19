@@ -2332,16 +2332,20 @@ async def message_process(msg: types.Message):
 						await sendText(chat_id, msg, 1, "❌\n{}".format(sendM))
 		else:
 			# await bot.leave_chat(chat_id)
-			if msg.via_bot and msg.via_bot.username == redis.hget(db, 'user'):
-				time_data = msg.reply_markup.inline_keyboard[0][0].callback_data.split(':')[2]
-				if reply_msg:
-					Uid = reply_msg.from_user.id
-					Uname = reply_msg.from_user.first_name
-					DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'users', Uid)
-					await editText(chat_id, msg_id, 0, langU['inline']['text']['najva_person'].format(Uname), 'HTML', msg.reply_markup)
-				else:
-					if DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'users') == 'reply':
-						await editText(chat_id, msg_id, 0, langU['didnt_enter_user'], 'HTML')
+			if msg.via_bot and msg.via_bot.username == redis.hget(db, 'user') and msg.reply_markup:
+				time_data = msg.reply_markup.inline_keyboard[0][0]
+				if time_data.callback_data and 'showN' in time_data.callback_data:
+					time_data = time_data.callback_data.split(':')[2]
+					if reply_msg:
+						Uid = reply_msg.from_user.id
+						Uname = reply_msg.from_user.first_name
+						DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'users', Uid)
+						await editText(chat_id, msg_id, 0, langU['inline']['text']['najva_person'].format(Uname), 'HTML', msg.reply_markup)
+						if DataBase.hget(f'setting_najva:{Uid}', 'recv'):
+							await sendText(Uid, 0, 1, '<a href="t.me/c/{}/{}">{}</a>'.format(str(chat_id).replace('-100', ''), msg_id, langU['new_najva']), 'html')
+					else:
+						if DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'users') == 'reply':
+							await editText(chat_id, msg_id, 0, langU['didnt_enter_user'], 'HTML')
 	if isGroup(msg):
 		await bot.leave_chat(chat_id)
 
@@ -2742,20 +2746,23 @@ async def callback_query_process(msg: types.CallbackQuery):
 			time_data = ap[2]
 			text_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'text')
 			users_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'users')
-			if username in users_data or str(user_id) in users_data or str(user_id) in from_user or users_data == 'all':
+			if (username != "" and username in users_data) or str(user_id) in users_data or str(user_id) in from_user or users_data == 'all':
 				await answerCallbackQuery(msg, text_data, show_alert = True)#, cache_time = 3600)
 				if not str(user_id) in from_user and DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0:
 					if DataBase.hget(f'setting_najva:{from_user}', 'seen') and users_data != 'all':
 						await sendText(from_user, 0, 1, langU['najva_seened'].format(msg.from_user.first_name))
 					if users_data != 'all':
-						await editText(inline_msg_id = msg_id, text = langU['najva_seened']
-						.format('<a href="tg://user?id{}">{}</a>'.format(user_id, msg.from_user.first_name)),
-						parse_mode = 'html', reply_markup = najva_seen_keys(user_id, from_user, time_data))
-					if users_data == 'all':
-						DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
-					else:
-						DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
+						if users_data == 1:
+							await bot.edit_message_reply_markup(inline_message_id = msg_id, reply_markup = najva_seen_keys(user_id, from_user, time_data))
+						else:
+							await editText(inline_msg_id = msg_id, text = langU['najva_seened']
+							.format('<a href="tg://user?id{}">{}</a>'.format(user_id, msg.from_user.first_name)),
+							parse_mode = 'html', reply_markup = najva_seen_keys(user_id, from_user, time_data))
 						DataBase.sadd('najva_seened:{}:{}'.format(from_user, time_data), user_id)
+					if str(users_data).isdigit() and not DataBase.get('najva_seen_time:{}:{}'.format(from_user, time_data)):
+						DataBase.set('najva_seen_time:{}:{}'.format(from_user, time_data), int(time()))
+				if not str(user_id) in from_user:
+					DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
 			else:
 				DataBase.sadd('najva_nosy:{}:{}'.format(from_user, time_data), user_id)
 				await answerCallbackQuery(msg, langU['najva_not_for_you'], show_alert = True, cache_time = 3600)
@@ -2767,6 +2774,53 @@ async def callback_query_process(msg: types.CallbackQuery):
 				await bot.edit_message_reply_markup(inline_message_id = msg_id, reply_markup = najva_seen2_keys(user_id, ap[1], ap[2]))
 			else:
 				await answerCallbackQuery(msg, langU['must_be_owner_najva'], cache_time = 3600)
+		if re.match(r"^shows:(\d+):([-+]?\d*\.\d+|\d+)$", input):
+			ap = re_matches(r"^shows:(\d+):([-+]?\d*\.\d+|\d+)$", input)
+			from_user, time_data = ap[1], ap[2]
+			if user_id != int(from_user):
+				await answerCallbackQuery(msg, langU['must_be_owner_najva'], show_alert = True, cache_time = 3600)
+				return False
+			seen_time = DataBase.get('najva_seen_time:{}:{}'.format(from_user, time_data))
+			seen_count = DataBase.get('najva_seen_count:{}:{}'.format(from_user, time_data))
+			seened_users = DataBase.smembers('najva_seened:{}:{}'.format(from_user, time_data))
+			nosy_users = DataBase.smembers('najva_nosy:{}:{}'.format(from_user, time_data))
+			if len(nosy_users) > 0:
+				nosy_users_text = ""
+				for i in nosy_users:
+					name_user = await userInfos(i, info = "name")
+					nosy_users_text = "{}\n{}".format(name_user, nosy_users_text)
+			else:
+				nosy_users_text = langU['nobody_nosy']
+			if not seen_count:
+				await answerCallbackQuery(msg, langU['no_one_seen'], show_alert = True, cache_time = 3)
+			else:
+				if seen_time:
+					ti_me = datetime.fromtimestamp(int(seen_time))
+					ti_me = ti_me.strftime('%Y-%m-%d %H:%M:%S')
+					ti_me = re_matches(r'(\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+)', ti_me)
+					if user_steps[user_id]['lang'] == 'fa':
+						ti_me2 = gregorian_to_jalali(int(ti_me[1]), int(ti_me[2]), int(ti_me[3]))
+						seen_time = "{:04d}/{}/{:02d} - {:02d}:{:02d}:{:02d}".format(
+						ti_me2[0], echoMonth(ti_me2[1], True), ti_me2[2],
+						int(ti_me[4]), int(ti_me[5]), int(ti_me[6]))
+					else:
+						seen_time = "{:04d}/{}/{:02d} - {:02d}:{:02d}:{:02d}".format(
+						int(ti_me[1]), echoMonth(ti_me[2], False), int(ti_me[3]),
+						int(ti_me[4]), int(ti_me[5]), int(ti_me[6]))
+					name_user = list(DataBase.smembers('najva_seened:{}:{}'.format(from_user, time_data)))[0]
+					name_user = await userInfos(name_user, info = "name")
+					await answerCallbackQuery(msg, langU['seen_najva_person'].
+					format(seen_time, seen_count, name_user, langU['nosies'].format(nosy_users_text)), show_alert = True, cache_time = 3)
+				else:
+					if len(seened_users) > 0:
+						seened_users_text = ""
+						for i in seened_users:
+							name_user = await userInfos(i, info = "name")
+							seened_users_text = "{}\n{}".format(name_user, seened_users_text)
+						await answerCallbackQuery(msg, langU['seen_najva_group'].
+						format(seen_count, len(seened_users), seened_users_text, langU['nosies'].format(nosy_users_text)), show_alert = True, cache_time = 3)
+					else:
+						await answerCallbackQuery(msg, langU['seen_najva_all'].format(seen_count), show_alert = True, cache_time = 3)
 
 
 async def inline_query_process(msg: types.InlineQuery):
@@ -2839,10 +2893,10 @@ async def inline_query_process(msg: types.InlineQuery):
 		text = input
 		users = set()
 		for i in ap:
-			text = text.replace(f"{i} ", '')
+			text = text.replace(f"{i} ", '').replace(f"{i}", '')
 			users.add(i)
 		for i in ap2:
-			text = text.replace(f"{i} ", '')
+			text = text.replace(f"{i} ", '').replace(f"{i}", '')
 			users.add(i)
 		users = list(users)
 		ti_me = time()
@@ -2855,6 +2909,22 @@ async def inline_query_process(msg: types.InlineQuery):
 			inlineKeys.add(
 				iButtun(DataBase.hget('info_ads', 'buttuns'), url = DataBase.hget('info_ads', 'url'))
 				)
+		if text == "":
+			input_content = InputTextMessageContent(
+				message_text = langU['inline']['text']['najva_havn_text'],
+				parse_mode = 'HTML',
+				disable_web_page_preview = True,
+			)
+			item1 = InlineQueryResultArticle(
+				id = f'najvaP:{user_id}',
+				title = langU['inline']['title']['najva_havn_text'],
+				description = langU['inline']['desc']['najva_havn_text'],
+				thumb_url = pic_cross,
+				thumb_width = 512,
+				thumb_height = 512,
+				input_message_content = input_content,
+			)
+			return await answerInlineQuery(msg_id, results = [item1,], cache_time = 1)
 		if len(users) > 1:
 			name_users = ""
 			count = 0
@@ -2867,9 +2937,9 @@ async def inline_query_process(msg: types.InlineQuery):
 			for i in users:
 				name_user = await userInfos(i, info = "name")
 				if str(i).isdigit():
-					name_users = '{}\n<a href="tg://user?id={}">{}</a>'.format(name_users, i, name_user)
+					name_users = '<a href="tg://user?id={}">{}</a>\n{}'.format(i, name_user, name_users)
 				else:
-					name_users = '{}\n{}'.format(name_users, name_user)
+					name_users = '{}\n{}'.format(name_user, name_users)
 			input_content = InputTextMessageContent(
 				message_text = langU['inline']['text']['najva_group'].format(len(users), name_users),
 				parse_mode = 'HTML',
@@ -3127,11 +3197,19 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 	setupUserSteps(msg, user_id)
 	langU = lang[user_steps[user_id]['lang']]
 	buttuns = langU['buttuns']
+	print(colored("Chosen_Inline >", "cyan"))
+	print(colored("userID", "yellow"), colored(user_id, "white"))
+	print(colored("Query", "yellow"), colored(input, "white"))
+	print(colored("resultID", "yellow"), colored(result_id, "white"))
+	print()
 	if re.match(r"^najvaP:(\d+)$", result_id) and 'najva' in user_steps[user_id]:
 		ap = re_matches(r"^najvaP:(\d+)$", result_id)
 		najva = user_steps[user_id]['najva']
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'text', najva['text'])
-		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', najva['users'][0])
+		if len(najva['users']) > 1:
+			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', str(najva['users']))
+		else:
+			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', najva['users'][0])
 		for i in najva['users']:
 			if DataBase.hget(f'setting_najva:{i}', 'recv'):
 				await sendText(i, 0, 1, langU['you_recv_najva'].format('<a href="tg://user?id={}">{}</a>'.format(user_id, user_name)), 'html')
