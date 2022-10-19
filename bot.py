@@ -2748,9 +2748,12 @@ async def callback_query_process(msg: types.CallbackQuery):
 					if DataBase.hget(f'setting_najva:{from_user}', 'seen') and users_data != 'all':
 						await sendText(from_user, 0, 1, langU['najva_seened'].format(msg.from_user.first_name))
 					if users_data != 'all':
-						await editText(inline_msg_id = msg_id, text = langU['najva_seened']
-						.format('<a href="tg://user?id{}">{}</a>'.format(user_id, msg.from_user.first_name)),
-						parse_mode = 'html', reply_markup = najva_seen_keys(user_id, from_user, time_data))
+						if users_data == 1:
+							await bot.edit_message_reply_markup(inline_message_id = msg_id, reply_markup = najva_seen_keys(user_id, from_user, time_data))
+						else:
+							await editText(inline_msg_id = msg_id, text = langU['najva_seened']
+							.format('<a href="tg://user?id{}">{}</a>'.format(user_id, msg.from_user.first_name)),
+							parse_mode = 'html', reply_markup = najva_seen_keys(user_id, from_user, time_data))
 						DataBase.sadd('najva_seened:{}:{}'.format(from_user, time_data), user_id)
 					if str(users_data).isdigit() and not DataBase.get('najva_seen_time:{}:{}'.format(from_user, time_data)):
 						DataBase.set('najva_seen_time:{}:{}'.format(from_user, time_data), int(time()))
