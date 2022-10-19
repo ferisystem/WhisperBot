@@ -2341,6 +2341,8 @@ async def message_process(msg: types.Message):
 						Uname = reply_msg.from_user.first_name
 						DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'users', Uid)
 						await editText(chat_id, msg_id, 0, langU['inline']['text']['najva_person'].format(Uname), 'HTML', msg.reply_markup)
+						if DataBase.hget(f'setting_najva:{Uid}', 'recv'):
+							await sendText(Uid, 0, 1, '<a href="t.me/c/{}/{}">{}</a>'.format(str(chat_id).replace('-100', ''), msg_id, langU['new_najva']), 'html')
 					else:
 						if DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'users') == 'reply':
 							await editText(chat_id, msg_id, 0, langU['didnt_enter_user'], 'HTML')
