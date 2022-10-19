@@ -2917,9 +2917,9 @@ async def inline_query_process(msg: types.InlineQuery):
 			for i in users:
 				name_user = await userInfos(i, info = "name")
 				if str(i).isdigit():
-					name_users = '{}\n<a href="tg://user?id={}">{}</a>'.format(name_users, i, name_user)
+					name_users = '<a href="tg://user?id={}">{}</a>\n{}'.format(i, name_user, name_users)
 				else:
-					name_users = '{}\n{}'.format(name_users, name_user)
+					name_users = '{}\n{}'.format(name_user, name_users)
 			input_content = InputTextMessageContent(
 				message_text = langU['inline']['text']['najva_group'].format(len(users), name_users),
 				parse_mode = 'HTML',
