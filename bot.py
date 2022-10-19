@@ -3183,7 +3183,10 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		ap = re_matches(r"^najvaP:(\d+)$", result_id)
 		najva = user_steps[user_id]['najva']
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'text', najva['text'])
-		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', najva['users'][0])
+		if len(najva['users']) > 1:
+			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', str(najva['users']))
+		else:
+			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', najva['users'][0])
 		for i in najva['users']:
 			if DataBase.hget(f'setting_najva:{i}', 'recv'):
 				await sendText(i, 0, 1, langU['you_recv_najva'].format('<a href="tg://user?id={}">{}</a>'.format(user_id, user_name)), 'html')
