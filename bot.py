@@ -3174,6 +3174,11 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 	setupUserSteps(msg, user_id)
 	langU = lang[user_steps[user_id]['lang']]
 	buttuns = langU['buttuns']
+	print(colored("Chosen_Inline >", "cyan"))
+	print(colored("userID", "yellow"), colored(user_id, "white"))
+	print(colored("Query", "yellow"), colored(input, "white"))
+	print(colored("resultID", "yellow"), colored(result_id, "white"))
+	print()
 	if re.match(r"^najvaP:(\d+)$", result_id) and 'najva' in user_steps[user_id]:
 		ap = re_matches(r"^najvaP:(\d+)$", result_id)
 		najva = user_steps[user_id]['najva']
