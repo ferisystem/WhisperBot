@@ -2755,10 +2755,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 					if str(users_data).isdigit() and not DataBase.get('najva_seen_time:{}:{}'.format(from_user, time_data)):
 						DataBase.set('najva_seen_time:{}:{}'.format(from_user, time_data), int(time()))
 				if not str(user_id) in from_user
-					if users_data == 'all':
-						DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
-					else:
-						DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
+					DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
 			else:
 				DataBase.sadd('najva_nosy:{}:{}'.format(from_user, time_data), user_id)
 				await answerCallbackQuery(msg, langU['najva_not_for_you'], show_alert = True, cache_time = 3600)
@@ -2770,6 +2767,12 @@ async def callback_query_process(msg: types.CallbackQuery):
 				await bot.edit_message_reply_markup(inline_message_id = msg_id, reply_markup = najva_seen2_keys(user_id, ap[1], ap[2]))
 			else:
 				await answerCallbackQuery(msg, langU['must_be_owner_najva'], cache_time = 3600)
+		if re.match(r"^shows:(\d+):([-+]?\d*\.\d+|\d+)$", input):
+			ap = re_matches(r"^shows:(\d+):([-+]?\d*\.\d+|\d+)$", input)
+			from_user, time_data = ap[1], ap[2]
+			seen_count = DataBase.get('najva_seen_count:{}:{}'.format(from_user, time_data))
+			seened_users = DataBase.smembers('najva_seened:{}:{}'.format(from_user, time_data))
+			seen_time = DataBase.get('najva_seen_time:{}:{}'.format(from_user, time_data))
 			
 
 
