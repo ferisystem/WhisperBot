@@ -2751,11 +2751,14 @@ async def callback_query_process(msg: types.CallbackQuery):
 						await editText(inline_msg_id = msg_id, text = langU['najva_seened']
 						.format('<a href="tg://user?id{}">{}</a>'.format(user_id, msg.from_user.first_name)),
 						parse_mode = 'html', reply_markup = najva_seen_keys(user_id, from_user, time_data))
+						DataBase.sadd('najva_seened:{}:{}'.format(from_user, time_data), user_id)
+					if str(users_data).isdigit() and not DataBase.get('najva_seen_time:{}:{}'.format(from_user, time_data)):
+						DataBase.set('najva_seen_time:{}:{}'.format(from_user, time_data), int(time()))
+				if not str(user_id) in from_user
 					if users_data == 'all':
 						DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
 					else:
 						DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
-						DataBase.sadd('najva_seened:{}:{}'.format(from_user, time_data), user_id)
 			else:
 				DataBase.sadd('najva_nosy:{}:{}'.format(from_user, time_data), user_id)
 				await answerCallbackQuery(msg, langU['najva_not_for_you'], show_alert = True, cache_time = 3600)
@@ -2767,6 +2770,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 				await bot.edit_message_reply_markup(inline_message_id = msg_id, reply_markup = najva_seen2_keys(user_id, ap[1], ap[2]))
 			else:
 				await answerCallbackQuery(msg, langU['must_be_owner_najva'], cache_time = 3600)
+			
 
 
 async def inline_query_process(msg: types.InlineQuery):
