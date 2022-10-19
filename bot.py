@@ -2742,7 +2742,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			time_data = ap[2]
 			text_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'text')
 			users_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'users')
-			if username in users_data or str(user_id) in users_data or str(user_id) in from_user or users_data == 'all':
+			if (username != "" and username in users_data) or str(user_id) in users_data or str(user_id) in from_user or users_data == 'all':
 				await answerCallbackQuery(msg, text_data, show_alert = True)#, cache_time = 3600)
 				if not str(user_id) in from_user and DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0:
 					if DataBase.hget(f'setting_najva:{from_user}', 'seen') and users_data != 'all':
