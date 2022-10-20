@@ -3290,6 +3290,19 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 			DataBase.hdel(f'setting_najva:{user_id}', ap[1])
 		else:
 			DataBase.hset(f'setting_najva:{user_id}', ap[1], 1)
+	if re.match(r"^najvaS:(\d+)$", result_id) and 'najva' in user_steps[user_id]:
+		ap = re_matches(r"^najvaS:(\d+)$", result_id)
+		najva = user_steps[user_id]['najva']
+		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', najva['users'])
+		DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
+		DataBase.hset('najva_special:{}'.format(user_id), 'id', msg.inline_message_id)
+		DataBase.setex('ready_to_recv_special:{}'.format(user_id), 1800, 'True')
+		del user_steps[user_id]['najva']
+		inlineKeys = iMarkup()
+		inlineKeys.add(
+			iButtun(buttuns['cancel'], callback_data = 'cancel:special:{}'.format(user_id)),
+		)
+		await sendText(user_id, 0, 1, langU['send_special_najva'], 'html', inlineKeys)
 
 
 async def channel_post_process(msg: types.Message):
