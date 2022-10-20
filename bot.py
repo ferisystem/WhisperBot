@@ -2084,7 +2084,7 @@ def najva_help8_keys(UserID):
 		switch_inline_query = '{} @user1 @user2 {}'.format(UserID, buttuns['example']))
 		)
 	inlineKeys.add(
-		iButtun(buttuns['example_speacial'],
+		iButtun(buttuns['example_special'],
 		switch_inline_query = UserID)
 		)
 	inlineKeys.add(
@@ -2916,7 +2916,7 @@ async def inline_query_process(msg: types.InlineQuery):
 				disable_web_page_preview = True,
 			)
 			item1 = InlineQueryResultArticle(
-				id = f'najvaP:{user_id}',
+				id = 'null',
 				title = langU['inline']['title']['najva_havn_text'],
 				description = langU['inline']['desc']['najva_havn_text'],
 				thumb_url = pic_cross,
@@ -3179,6 +3179,63 @@ async def inline_query_process(msg: types.InlineQuery):
 		}
 		})
 		await answerInlineQuery(msg_id, results = [item1,], cache_time = 1)
+	if not re.findall(r'@all ', input.lower()) and (re.search(r'^(?:(?<!\d)\d{6,10}(?!\d))$', input) or re.search(r'^(@[a-zA-Z0-9_]*)$', input)):
+		ap1 = re.findall(r'(@[a-zA-Z0-9_]*)', input)
+		ap2 = re.findall(r'(?:(?<!\d)\d{6,10}(?!\d))', input)
+		ap = ap1 or ap2
+		user = ap[0]
+		ti_me = time()
+		inlineKeys = iMarkup()
+		inlineKeys.add(
+			iButtun("{} - {}".format(redis.hget(db, 'name'), redis.hget(db, 'user')), url = 't.me/{}'.format(redis.hget(db, 'user')))
+				)
+		ads = DataBase.get('have_ads')
+		if ads:
+			inlineKeys.add(
+				iButtun(DataBase.hget('info_ads', 'buttuns'), url = DataBase.hget('info_ads', 'url'))
+				)
+		input_content = InputTextMessageContent(
+			message_text = langU['inline']['text']['najva_havn_text'],
+			parse_mode = 'HTML',
+			disable_web_page_preview = True,
+		)
+		item2 = InlineQueryResultArticle(
+			id = 'null',
+			title = langU['inline']['title']['najva_havn_text'],
+			description = langU['inline']['desc']['najva_havn_text'],
+			thumb_url = pic_cross,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+		)
+		if '@' in user:
+			name_user = await userIds(user)
+		else:
+			name_user = user
+		name_user = await userInfos(name_user, info = "name")
+		input_content = InputTextMessageContent(
+			message_text = langU['inline']['text']['najva_special'].format(name_user),
+			parse_mode = 'HTML',
+			disable_web_page_preview = True,
+		)
+		item1 = InlineQueryResultArticle(
+			id = f'najvaS:{user_id}',
+			title = langU['inline']['title']['najva_special'].format(name_user),
+			description = langU['inline']['desc']['najva_special'],
+			thumb_url = pic_special,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+			reply_markup = inlineKeys,
+		)
+		user_steps[user_id].update({
+		"najva":{
+		"time": ti_me,
+		"text": None,
+		"users": user,
+		}
+		})
+		await answerInlineQuery(msg_id, results = [item1, item2], cache_time = 1)
 
 
 async def chosen_inline_process(msg: types.ChosenInlineResult):
@@ -3187,6 +3244,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 	# "id": 139946685, "is_bot": false,
 	# "first_name": "Alireza 🏴🏳",
 	# "username": "ferisystem", "language_code": "de"},
+	# "inline_message_id": "BAAAAKqZKQC9alcIRMLU6NZ-9PU", # if keyboard attached
 	# "query": "awd", "result_id": "601066437369956078"
 	# }
 	user_id = msg.from_user.id
