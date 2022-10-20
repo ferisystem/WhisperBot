@@ -2736,7 +2736,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			DataBase.delete('najva:{}:{}'.format(user_id, time_data))
 			DataBase.delete('najva_special:{}'.format(user_id))
 			DataBase.delete('ready_to_recv_special:{}'.format(user_id))
-			await editText(inline_msg_id = special_msgID, text = langU['najva_seened'])
+			await editText(inline_msg_id = special_msgID, text = langU['special_najva_cancel'])
 			await _.delete()
 			await answerCallbackQuery(msg, langU['canceled'], cache_time = 3600)
 	else:
