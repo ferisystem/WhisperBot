@@ -2314,32 +2314,45 @@ async def show_speical_najva_keys(UserID, from_user, time_data):
 
 
 def find_media_id(msg):
-	file_type = 'media'
 	can_hide = False
 	if msg.photo:
 		file_id = msg.photo[-1].file_id
+		file_type = 'photo'
 		can_hide = True
 	elif msg.video:
 		file_id = msg.video.file_id
+		file_type = 'video'
 		can_hide = True
 	elif msg.sticker:
 		file_id = msg.sticker.file_id
+		file_type = 'sticker'
 		can_hide = True
 	elif msg.animation:
 		file_id = msg.animation.file_id
+		file_type = 'animation'
 		can_hide = True
 	elif msg.voice:
 		file_id = msg.voice.file_id
+		file_type = 'voice'
 		can_hide = True
 	elif msg.audio:
 		file_id = msg.audio.file_id
+		file_type = 'audio'
 	elif msg.document:
 		file_id = msg.document.file_id
+		file_type = 'document'
 	elif msg.video_note:
 		file_id = msg.video_note.file_id
-	elif msg.text or msg.contact or msg.venue:
+		file_type = 'video_note'
+	elif msg.text:
 		file_id = msg.message_id
-		file_type = 'message'
+		file_type = 'text'
+	elif msg.contact:
+		file_id = msg.message_id
+		file_type = 'contact'
+	elif msg.venue:
+		file_id = msg.message_id
+		file_type = 'venue'
 	return file_id, file_type, can_hide
 
 
