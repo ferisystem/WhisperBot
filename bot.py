@@ -2847,7 +2847,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 				inlineKeys.add(
 					iButtun(
 						langU['buttuns']['show_najva'],
-						callback_data = 'special:show:{}:{}'.format(user_id, time_data)
+						callback_data = 'shown:{}:{}'.format(user_id, time_data)
 						)
 					)
 				users_data = DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'users')
@@ -2901,7 +2901,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 				inlineKeys.add(
 					iButtun(
 						langU['buttuns']['show_najva'],
-						callback_data = 'special:showpv:{}:{}'.format(user_id, time_data)
+						callback_data = 'showpv:{}:{}'.format(user_id, time_data)
 						)
 					)
 				users_data = DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'users')
