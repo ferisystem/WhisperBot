@@ -1481,7 +1481,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 					text = langU['speical_najva_seen2'].format(msg.from_user.first_name),
 					parse_mode = 'html',reply_markup = najva_seen3_keys(from_user, time_data))
 					DataBase.delete('najva:{}:{}'.format(from_user, time_data))
-					DataBase.delete('najva_special:{}:{}'.format(from_user, time_data))
+					DataBase.delete('najva_special:{}'.format(from_user))
 					DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', msg_[1].message_id)
 				else:
 					we_have = DataBase.get('link_anon:{}'.format(ap[1]))
@@ -3517,9 +3517,23 @@ async def inline_query_process(msg: types.InlineQuery):
 		ap = re_matches(r'sp(\d+)\.(\d+)\.(\d+)', input)
 		from_user = ap[1]
 		time_data = float(f"{ap[2]}.{ap[3]}")
-		DataBase.set('najva_seen_time:{}:{}'.format(from_user, time_data), int(time()))
-		DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
 		special_msgID = DataBase.hget('najva_special:{}'.format(from_user), 'id')
+		if not special_msgID:
+			input_content = InputTextMessageContent(
+				message_text = langU['inline']['text']['special_404'],
+				parse_mode = 'HTML',
+				disable_web_page_preview = True,
+			)
+			item1 = InlineQueryResultArticle(
+				id = 'null',
+				title = langU['inline']['title']['special_404'],
+				description = langU['inline']['desc']['special_404'],
+				thumb_url = pic_cross,
+				thumb_width = 512,
+				thumb_height = 512,
+				input_message_content = input_content,
+			)
+			await answerInlineQuery(msg_id, results = [item1,], cache_time = 3600)
 		users_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'users')
 		file_id = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'file_id')
 		file_type = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'file_type')
@@ -3565,6 +3579,13 @@ async def inline_query_process(msg: types.InlineQuery):
 			if DataBase.hget(f'setting_najva:{from_user}', 'seen') and not DataBase.get('notif_before:{}:{}'.format(from_user, time_data)):
 				DataBase.set('notif_before:{}:{}'.format(from_user, time_data), 1)
 				await sendText(from_user, source_id, 1, langU['speical_najva_seen'].format(msg.from_user.first_name))
+				await editText(inline_msg_id = special_msgID,
+					text = langU['speical_najva_seen2'].format(msg.from_user.first_name),
+					parse_mode = 'html',reply_markup = najva_seen3_keys(from_user, time_data))
+				DataBase.set('najva_seen_time:{}:{}'.format(from_user, time_data), int(time()))
+				DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
+				DataBase.delete('najva:{}:{}'.format(from_user, time_data))
+				DataBase.delete('najva_special:{}'.format(from_user))
 			await answerInlineQuery(msg_id, results = [item1,], is_personal = True, cache_time = 3600)
 
 
