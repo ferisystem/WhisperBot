@@ -2289,7 +2289,7 @@ def register_special_keys(UserID):
 
 
 async def show_speical_najva_keys(UserID, from_user):
-	hash2 = '{}:@{}'.format(from_user, UserID)
+	hash2 = ':{}:@{}'.format(from_user, UserID)
 	langU = lang[user_steps[UserID]['lang']]
 	buttuns = langU['buttuns']
 	inlineKeys = iMarkup()
@@ -2319,18 +2319,34 @@ async def show_speical_najva_keys(UserID, from_user):
 
 
 def report_najva_keys(UserID, from_user, reply_id):
-	hash2 = '{}:{}:@{}'.format(from_user, reply_id, UserID)
+	hash2 = ':{}:{}:@{}'.format(from_user, reply_id, UserID)
 	langU = lang[user_steps[UserID]['lang']]
 	buttuns = langU['buttuns']
 	inlineKeys = iMarkup()
 	inlineKeys.add(
 		iButtun(buttuns['report'],
 		callback_data = 'special:report2{}'.format(hash2)),
+	)
+	inlineKeys.add(
 		iButtun(buttuns['cancel'],
 		callback_data = 'report:cancel{}'.format(hash2)),
 	)
 	return inlineKeys
 
+
+def ban_user_keys(UserID, user_id):
+	langU = lang[user_steps[int(user_id)]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	if DataBase.sismember('isBanned', UserID):
+		which_one = buttuns['unban_user']
+	else:
+		which_one = buttuns['ban_user']
+	inlineKeys.add(
+		iButtun(which_one,
+		callback_data = 'banuser:{}'.format(UserID)),
+	)
+	return inlineKeys
 
 def find_media_id(msg):
 	can_hide = False
@@ -3059,13 +3075,23 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
 			inlineKeys = await show_speical_najva_keys(user_id, ap[1])
 			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = inlineKeys)
-		if re.match(r"^special:report:(\d+)@(\d+)$", input):
-			ap = re_matches(r"^special:report:(\d+)@(\d+)$", input)
-			await sendText(chat_id, reply_msg, 1, langU['report_special_najva'], 'html', report_najva_keys(user_id, ap[1], reply_id))
+		if re.match(r"^special:report:(\d+):@(\d+)$", input):
+			ap = re_matches(r"^special:report:(\d+):@(\d+)$", input)
+			await sendText(chat_id, _, 1, langU['report_special_najva'], 'html', report_najva_keys(user_id, ap[1], msg_id))
 		if re.match(r"^report:cancel:(\d+)@(\d+)$", input):
 			ap = re_matches(r"^report:cancel:(\d+)@(\d+)$", input)
 			await _.delete()
 			await answerCallbackQuery(msg, langU['canceled'], cache_time = 3600)
+		if re.match(r"^special:report2:(\d+):(\d+):@(\d+)$", input):
+			ap = re_matches(r"^special:report2:(\d+):(\d+):@(\d+)$", input)
+			from_user = ap[1]
+			msg_ID = ap[2]
+			msg_ = await copyMessage(gv().sudoID, chat_id, msg_ID)
+			name_user = await userInfos(from_user, info = "name")
+			text = langU['reported_this_user'].format(msg.from_user.first_name, name_user)
+			await sendText(gv().sudoID, msg_[1].message_id, 1, text, 'html', ban_user_keys(from_user, gv().sudoID))
+			await editText(chat_id, msg_id, 0, langU['reported_special_najva'])
+			await _.reply_to_message.delete()
 	else:
 		# {
 		# "id": "601066437221691493",
