@@ -2430,6 +2430,12 @@ async def callback_query_process(msg: types.CallbackQuery):
 		msg_id = msg.message.message_id
 	else:
 		msg_id = 0
+	if 'message' in msg and 'reply_to_message' in msg:
+		reply_msg = msg.message.reply_to_message
+		reply_id = reply_msg.message_id
+	else:
+		reply_msg = None
+		reply_id = 0
 	print(colored("Callback >", "cyan"))
 	print(colored("userID", "yellow"), colored(user_id, "white"))
 	print(colored("Query", "yellow"), colored(input, "white"))
