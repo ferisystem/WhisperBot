@@ -2352,6 +2352,16 @@ def generate_link():
 	return text
 
 
+def generate_uniqid():
+	text = ''.join(random.choices(string.ascii_letters + string.digits, k=29))
+	while True:
+		if not DataBase.sismember('file_ids', text):
+			DataBase.sadd('file_ids', text):
+			break
+		text = ''.join(random.choices(string.ascii_letters + string.digits, k=29))
+	return text
+
+
 async def message_process(msg: types.Message):
 	if int(msg.date.timestamp())  <  (int(time())-60):
 		cPrint("{} Old Message Skipped".format(msg.date), 2, textColor = "cyan")
