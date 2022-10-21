@@ -2778,7 +2778,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 				await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = najva_autodel2_keys(user_id))
 			else:
 				await answerCallbackQuery(msg, langU['autodel_must_1'], cache_time = 2)
-		if re.match(r"^cancel:special:(\d+)", input):
+		if re.match(r"^cancel:special:@(\d+)", input):
 			time_data = DataBase.hget('najva_special:{}'.format(user_id), 'time')
 			special_msgID = DataBase.hget('najva_special:{}'.format(user_id), 'id')
 			DataBase.delete('najva:{}:{}'.format(user_id, time_data))
