@@ -3073,6 +3073,10 @@ async def callback_query_process(msg: types.CallbackQuery):
 		if re.match(r"^delnajva:(\d+):([-+]?\d*\.\d+|\d+)$", input):
 			ap = re_matches(r"^delnajva:(\d+):([-+]?\d*\.\d+|\d+)$", input)
 			if user_id == int(ap[1]):
+				seen_id = DataBase.hget('najva:{}:{}'.format(ap[1], ap[2]), 'seen_id')
+				if seen_id:
+					seen_id = seen_id.split(':')
+					await bot.delete_message(seen_id[0], seen_id)
 				DataBase.delete('najva:{}:{}'.format(ap[1], ap[2]))
 				await answerCallbackQuery(msg, langU['najva_deleted'])
 				await bot.edit_message_reply_markup(inline_message_id = msg_id, reply_markup = najva_seen2_keys(user_id, ap[1], ap[2]))
