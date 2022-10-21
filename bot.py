@@ -2942,7 +2942,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 							await bot.edit_message_reply_markup(inline_message_id = msg_id, reply_markup = najva_seen_keys(user_id, from_user, time_data))
 						else:
 							await editText(inline_msg_id = msg_id, text = langU['najva_seened']
-							.format('<a href="tg://user?id{}">{}</a>'.format(user_id, msg.from_user.first_name)),
+							.format('<a href="tg://user?id={}">{}</a>'.format(user_id, msg.from_user.first_name)),
 							parse_mode = 'html', reply_markup = najva_seen_keys(user_id, from_user, time_data))
 						DataBase.sadd('najva_seened:{}:{}'.format(from_user, time_data), user_id)
 					if str(users_data).isdigit() and not DataBase.get('najva_seen_time:{}:{}'.format(from_user, time_data)):
