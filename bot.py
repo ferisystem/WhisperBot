@@ -2253,15 +2253,15 @@ def find_media_id(msg):
 	elif msg.sticker:
 		file_id = msg.sticker.file_id
 	elif msg.animation:
-		file_id = msg.sticker.file_id
+		file_id = msg.animation.file_id
 	elif msg.voice:
-		file_id = msg.sticker.file_id
+		file_id = msg.voice.file_id
 	elif msg.audio:
-		file_id = msg.sticker.file_id
+		file_id = msg.audio.file_id
 	elif msg.document:
-		file_id = msg.sticker.file_id
+		file_id = msg.document.file_id
 	elif msg.video_note:
-		file_id = msg.sticker.file_id
+		file_id = msg.video_note.file_id
 	elif msg.text or msg.contact or msg.venue:
 		file_id = msg.message_id
 		file_type = 'message'
