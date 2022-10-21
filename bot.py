@@ -2973,7 +2973,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 					name_user = users_data
 				name_user = await userInfos(name_user, info = "name")
 				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user), parse_mode = 'html', reply_markup = inlineKeys)
-				await editText(chat_id, msg_id, 0, langU['reg_najva'])
+				await editText(chat_id, msg_id, 0, langU['reg2_najva'])
 			except Exception as e:
 				await editText(chat_id, msg_id, 0, langU['error_reg_najva'])
 		if re.match(r"^special:sendpv:@(\d+)", input):
