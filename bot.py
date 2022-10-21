@@ -1372,6 +1372,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 			elif msg.venue or msg.location:
 				allow = True
 			if allow:
+				DataBase.delete('ready_to_recv_special:{}'.format(user_id))
 				time_data = DataBase.hget('najva_special:{}'.format(user_id), 'time')
 				users_data = DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'users')
 				if '@' in users_data:
