@@ -2875,7 +2875,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 				inlineKeys.add(
 					iButtun(
 						langU['buttuns']['show_najva'],
-						switch_inline_query_current_chat = 'sp:{}'.format(find_ID)
+						switch_inline_query_current_chat = 'sp{}.{}'.format(user_id, time_data)
 						)
 					)
 				users_data = DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'users')
