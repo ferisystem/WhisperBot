@@ -2239,7 +2239,7 @@ def register_special_keys(UserID):
 		)
 	inlineKeys.add(
 		iButtun(buttuns['cancel'],
-			callback_data = 'cancel:special{}'.format(hash)),
+			callback_data = 'special:cancel{}'.format(hash)),
 	)
 	return inlineKeys
 
@@ -2778,7 +2778,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 				await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = najva_autodel2_keys(user_id))
 			else:
 				await answerCallbackQuery(msg, langU['autodel_must_1'], cache_time = 2)
-		if re.match(r"^cancel:special:@(\d+)", input):
+		if re.match(r"^special:cancel:@(\d+)", input):
 			time_data = DataBase.hget('najva_special:{}'.format(user_id), 'time')
 			special_msgID = DataBase.hget('najva_special:{}'.format(user_id), 'id')
 			DataBase.delete('najva:{}:{}'.format(user_id, time_data))
@@ -3357,7 +3357,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		del user_steps[user_id]['najva']
 		inlineKeys = iMarkup()
 		inlineKeys.add(
-			iButtun(buttuns['cancel'], callback_data = 'cancel:special:{}'.format(user_id)),
+			iButtun(buttuns['cancel'], callback_data = 'special:cancel:{}'.format(user_id)),
 		)
 		await sendText(user_id, 0, 1, langU['send_special_najva'], 'html', inlineKeys)
 
