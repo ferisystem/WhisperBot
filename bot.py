@@ -2289,7 +2289,7 @@ def register_special_keys(UserID):
 
 
 async def show_speical_najva_keys(UserID, from_user):
-	hash2 = ':@{}'.format(UserID)
+	hash2 = '{}:@{}'.format(from_user, UserID)
 	langU = lang[user_steps[UserID]['lang']]
 	buttuns = langU['buttuns']
 	inlineKeys = iMarkup()
@@ -2313,7 +2313,21 @@ async def show_speical_najva_keys(UserID, from_user):
 		iButtun(buttuns['report'],
 		callback_data = 'special:report{}'.format(hash2)),
 		iButtun(which_one,
-		callback_data = 'special:block:{}{}'.format(from_user, hash2)),
+		callback_data = 'special:block{}'.format(hash2)),
+	)
+	return inlineKeys
+
+
+def report_najva_keys(UserID, from_user, reply_id):
+	hash2 = '{}:{}:@{}'.format(from_user, reply_id, UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['report'],
+		callback_data = 'special:report2{}'.format(hash2)),
+		iButtun(buttuns['cancel'],
+		callback_data = 'report:cancel{}'.format(hash2)),
 	)
 	return inlineKeys
 
@@ -3045,6 +3059,13 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
 			inlineKeys = await show_speical_najva_keys(user_id, ap[1])
 			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = inlineKeys)
+		if re.match(r"^special:report:(\d+)@(\d+)$", input):
+			ap = re_matches(r"^special:report:(\d+)@(\d+)$", input)
+			await sendText(chat_id, reply_msg, 1, langU['report_special_najva'], 'html', report_najva_keys(user_id, ap[1], reply_id))
+		if re.match(r"^report:cancel:(\d+)@(\d+)$", input):
+			ap = re_matches(r"^report:cancel:(\d+)@(\d+)$", input)
+			await _.delete()
+			await answerCallbackQuery(msg, langU['canceled'], cache_time = 3600)
 	else:
 		# {
 		# "id": "601066437221691493",
