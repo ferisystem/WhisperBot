@@ -2998,6 +2998,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 					id_user = await userIds(users_data)
 				else:
 					id_user = users_data
+				if not id_user:
+					return await answerCallbackQuery(msg, langU['cant_sent_najva_pv'], show_alert = True, cache_time = 3600)
 				name_user = await userInfos(id_user, info = "name")
 				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user), parse_mode = 'html')
 				await sendText(id_user, 0, 1, langU['receive_new_najva_pv'].format(msg.from_user.first_name), 'html', inlineKeys)
