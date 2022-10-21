@@ -3092,6 +3092,17 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await sendText(gv().sudoID, msg_[1].message_id, 1, text, 'html', ban_user_keys(from_user, gv().sudoID))
 			await editText(chat_id, msg_id, 0, langU['reported_special_najva'])
 			await _.reply_to_message.delete()
+		if re.match(r"^banuser:(\d+)$", input):
+			ap = re_matches(r"^banuser:(\d+)$", input)
+			if DataBase.sismember('isBanned', ap[1]):
+				DataBase.srem('isBanned', ap[1])
+				text = langU['user_unbanned']
+			else:
+				DataBase.sadd('isBanned', ap[1])
+				text = langU['user_banned']
+			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
+			inlineKeys = ban_user_keys(ap[1], chat_id)
+			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = inlineKeys)
 	else:
 		# {
 		# "id": "601066437221691493",
