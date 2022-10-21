@@ -1362,6 +1362,26 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 					else:
 						DataBase.sadd('inbox_user:{}'.format(which_user), f"{msg_.message_id}:{user_id}:{msg_id}:{ap[2]}:{int(time())}:no")
 					await sendText(which_user, 0, 1, langU['new_message'].format(msg_.message_id))
+		if DataBase.get('ready_to_recv_special:{}'.format(user_id)):
+			if msg.text or msg.photo or msg.voice or msg.video:
+				allow = True
+			elif msg.animation or msg.audio or msg.sticker:
+				allow = True
+			elif msg.video_note or msg.document or msg.contact:
+				allow = True
+			elif msg.venue or msg.location:
+				allow = True
+			if allow:
+				time_data = DataBase.hget('najva_special:{}'.format(user_id), 'time')
+				users_data = DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'users')
+				if '@' in users_data:
+					name_user = await userIds(users_data)
+				else:
+					name_user = users_data
+				name_user = await userInfos(name_user, info = "name")
+				await sendText(chat_id, msg, 1, langU['register_special'].format(name_user), 'html', register_special_keys(user_id))
+			else:
+				await sendText(chat_id, 0, 1, langU['now_allow_type'])
 		if 'text' in msg:
 			input = msg.text.lower()
 			if DataBase.get('ready_to_change_link:{}'.format(user_id)) and not '/start' in input:
@@ -2185,6 +2205,7 @@ def najva_seen_keys(UserID, from_user, time_data):
 		)
 	return inlineKeys
 
+
 def najva_seen2_keys(UserID, from_user, time_data):
 	hash = ':{}:{}'.format(from_user, time_data)
 	langU = lang[user_steps[UserID]['lang']]
@@ -2194,6 +2215,32 @@ def najva_seen2_keys(UserID, from_user, time_data):
 		iButtun(buttuns['stats'],
 		callback_data = 'showS{}'.format(hash)),
 		)
+	return inlineKeys
+
+
+def register_special_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['anti_save'].format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'antisave'))),
+		callback_data = 'special:antisave{}'.format(hash))
+		)
+	inlineKeys.add(
+		iButtun(buttuns['send_pv'],
+		callback_data = 'special:sendpv{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['reg_najva'],
+		callback_data = 'special:reg1{}'.format(hash)),
+		iButtun(buttuns['reg2_najva'],
+		callback_data = 'special:reg2{}'.format(hash)),
+		)
+	inlineKeys.add(
+		iButtun(buttuns['cancel'],
+			callback_data = 'cancel:special{}'.format(hash)),
+	)
 	return inlineKeys
 
 
@@ -2534,6 +2581,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			DataBase.delete('ready_to_change_link:{}'.format(user_id))
 			DataBase.delete('ready_to_change_name:{}'.format(user_id))
 			DataBase.delete('ready_to_enter_id:{}'.format(user_id))
+			DataBase.delete('ready_to_recv_special:{}'.format(user_id))			
 			DataBase.delete('who_conneted:{}'.format(user_id))
 			await editText(chat_id, msg_id, 0, langU['anon'], None, anonymous_keys(user_id))
 		if re.match(r"^anon:link:@(\d+)$", input):
