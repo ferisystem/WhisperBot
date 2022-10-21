@@ -2454,7 +2454,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 		msg_id = msg.message.message_id
 	else:
 		msg_id = 0
-	if 'message' in msg and 'reply_to_message' in msg:
+	if 'message' in msg and 'reply_to_message' in msg.message:
 		reply_msg = msg.message.reply_to_message
 		reply_id = reply_msg.message_id
 	else:
