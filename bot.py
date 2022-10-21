@@ -1399,7 +1399,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 					DataBase.delete('ready_to_change_link:{}'.format(user_id))
 					await bot.delete_message(chat_id, DataBase.get('pre_msgbot:{}'.format(user_id)))
 					await sendText(chat_id, msg, 1, "{}\nt.me/{}?start={}".format(langU['customize_link_anon'],
-					redis.hget(db, 'user'), DataBase.get('link_anon:{}'.format(user_id))), 'md', anonymous_cus_link_keys(user_id))
+					gv().botUser, DataBase.get('link_anon:{}'.format(user_id))), 'md', anonymous_cus_link_keys(user_id))
 			if DataBase.get('ready_to_change_name:{}'.format(user_id)) and not '/start' in input:
 				if 21 < len(msg.text):
 					await sendText(chat_id, msg, 1, langU['rules_cus_name_anon'], 'md')
@@ -1703,7 +1703,7 @@ def anonymous_my_link_keys(UserID):
 		iButtun(buttuns['share_link_anon'],
 		url = 'https://t.me/share/url?text={}&url=t.me/{}?start={}'.format(
 			langU['share_text_anon'],
-			redis.hget(db, 'user'),
+			gv().botUser,
 			DataBase.get('link_anon:{}'.format(UserID))
 			))
 		)
@@ -2419,7 +2419,7 @@ async def message_process(msg: types.Message):
 						await sendText(chat_id, msg, 1, "❌\n{}".format(sendM))
 		else:
 			# await bot.leave_chat(chat_id)
-			if msg.via_bot and msg.via_bot.username == redis.hget(db, 'user') and msg.reply_markup:
+			if msg.via_bot and msg.via_bot.username == gv().botUser and msg.reply_markup:
 				time_data = msg.reply_markup.inline_keyboard[0][0]
 				if time_data.callback_data and 'showN' in time_data.callback_data:
 					time_data = time_data.callback_data.split(':')[2]
@@ -2636,7 +2636,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 		if re.match(r"^anon:cus:@(\d+)$", input):
 			DataBase.setex('ready_to_change_link:{}'.format(user_id), 3600, 'True')
 			DataBase.set('pre_msgbot:{}'.format(user_id), msg.message.message_id)
-			await editText(chat_id, msg_id, 0, "{}t.me/{}?start={}".format(langU['customize_link_anon'], redis.hget(db, 'user'), DataBase.get('link_anon:{}'.format(user_id))), None, anonymous_cus_link_keys(user_id))
+			await editText(chat_id, msg_id, 0, "{}t.me/{}?start={}".format(langU['customize_link_anon'], gv().botUser, DataBase.get('link_anon:{}'.format(user_id))), None, anonymous_cus_link_keys(user_id))
 		if re.match(r"^anon:change:@(\d+)$", input):
 			link_previous = DataBase.get('link_anon:{}'.format(user_id))
 			DataBase.delete('link_anon:{}'.format(link_previous))
@@ -2649,15 +2649,15 @@ async def callback_query_process(msg: types.CallbackQuery):
 					DataBase.sadd('links_anon', text)
 					break
 				text = generate_link()
-			await editText(chat_id, msg_id, 0, "{}t.me/{}?start={}".format(langU['customize_link_anon'], redis.hget(db, 'user'), DataBase.get('link_anon:{}'.format(user_id))), None, anonymous_cus_link_keys(user_id))
+			await editText(chat_id, msg_id, 0, "{}t.me/{}?start={}".format(langU['customize_link_anon'], gv().botUser, DataBase.get('link_anon:{}'.format(user_id))), None, anonymous_cus_link_keys(user_id))
 		if re.match(r"^anon:telg:@(\d+)$", input):
 			await editText(chat_id, msg_id, 0, "{}\n<code>https://t.me/{}?start={}</code>".format(langU['telg_link_anon'],
-			redis.hget(db, 'user'), DataBase.get('link_anon:{}'.format(user_id))), 'html', anonymous_insta_link_keys(user_id))
+			gv().botUser, DataBase.get('link_anon:{}'.format(user_id))), 'html', anonymous_insta_link_keys(user_id))
 		if re.match(r"^anon:insta:@(\d+)$", input):
 			link_picture = '<a href="https://s6.uupload.ir/files/photo_2022-09-01_18-03-08_s3qf.jpg">مشاهده عکس آموزشی</a>'
 			await editText(chat_id, msg_id, 0,
 			'{}\n{}\n<code>https://t.me/{}?start={}</code>'
-			.format(link_picture, langU['insta_link_anon'], redis.hget(db, 'user'), DataBase.get('link_anon:{}'.format(user_id))),
+			.format(link_picture, langU['insta_link_anon'], gv().botUser, DataBase.get('link_anon:{}'.format(user_id))),
 			parse_mode = 'html', reply_markup = anonymous_insta_link_keys(user_id))
 		if re.match(r"^anon:help:@(\d+)$", input):
 			await editText(chat_id, msg_id, 0, langU['help_anon'], None, anonymous_help_keys(user_id))
@@ -3045,7 +3045,7 @@ async def inline_query_process(msg: types.InlineQuery):
 		)
 		inlineKeys = iMarkup()
 		inlineKeys.add(
-			iButtun(buttuns['help_comp'], url = 't.me/{}?start=help'.format(redis.hget(db, 'user')))
+			iButtun(buttuns['help_comp'], url = 't.me/{}?start=help'.format(gv().botUser))
 			)
 		item1 = InlineQueryResultArticle(
 			id = f'help:{user_id}',
@@ -3376,7 +3376,7 @@ async def inline_query_process(msg: types.InlineQuery):
 		ti_me = time()
 		inlineKeys = iMarkup()
 		inlineKeys.add(
-			iButtun("{} - {}".format(redis.hget(db, 'name'), redis.hget(db, 'user')), url = 't.me/{}'.format(redis.hget(db, 'user')))
+			iButtun("{} - {}".format(gv().botName, gv().botUser), url = 't.me/{}'.format(gv().botUser))
 				)
 		ads = DataBase.get('have_ads')
 		if ads:
@@ -3495,7 +3495,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 
 
 async def channel_post_process(msg: types.Message):
-	if (msg.chat.username or '') != IDs_datas['chUsername'] and int(msg.chat.id) != int(redis.hget(db, 'supchat')):
+	if (msg.chat.username or '') != IDs_datas['chUsername'] and int(msg.chat.id) != int(gv().supchat):
 		await bot.leave_chat(msg.chat.id)
 
 
