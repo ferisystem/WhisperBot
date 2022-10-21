@@ -2219,6 +2219,25 @@ def najva_seen2_keys(UserID, from_user, time_data):
 	return inlineKeys
 
 
+def najva_seen3_keys(UserID, from_user, time_data):
+	hash = ':{}:{}'.format(from_user, time_data)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup(row_width = 3)
+	inlineKeys.add(
+		iButtun(buttuns['stats'],
+		callback_data = 'showS{}'.format(hash)),
+		iButtun(buttuns['delete'],
+		callback_data = 'delNajva{}'.format(hash)),
+		)
+	ads = DataBase.get('have_ads')
+	if ads:
+		inlineKeys.add(
+			iButtun(DataBase.hget('info_ads', 'buttuns'), url = DataBase.hget('info_ads', 'url'))
+		)
+	return inlineKeys
+
+
 def register_special_keys(UserID):
 	hash = ':@{}'.format(UserID)
 	langU = lang[user_steps[UserID]['lang']]
@@ -2258,16 +2277,16 @@ async def show_speical_najva_keys(UserID, from_user, time_data):
 	else:
 		call_url = 'https://t.me?openmessage?user_id={}'.format(from_user)
 	inlineKeys.add(
-		iButtun(name_user,
-		url = call_url),
 		iButtun(buttuns['special_najva'],
-		callback_data = 'none'),
+		callback_data = 'none')
+		iButtun(name_user,
+		url = call_url),,
 	)
 	inlineKeys.add(
-		iButtun(buttuns['block'],
-		callback_data = 'special:block{}'.format(hash2)),
 		iButtun(buttuns['report'],
 		callback_data = 'special:report{}'.format(hash2)),
+		iButtun(buttuns['block'],
+		callback_data = 'special:block{}'.format(hash2)),
 	)
 	return inlineKeys
 
