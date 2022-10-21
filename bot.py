@@ -2852,10 +2852,11 @@ async def callback_query_process(msg: types.CallbackQuery):
 				await editText(chat_id, msg_id, 0, langU['error_reg_najva'])
 		if re.match(r"^special:reg2:@(\d+)", input):
 			try:
-				msg_ = await reply_msg.forward(gv().supchat)
-				find_ID, find_type, can_hide = find_media_id(msg_)
+				find_ID, find_type, can_hide = find_media_id(reply_msg)
 				if not can_hide:
 					return await answerCallbackQuery(msg, langU['cant_hide'], show_alert = True, cache_time = 3600)
+				msg_ = await reply_msg.forward(gv().supchat)
+				find_ID, find_type, can_hide = find_media_id(msg_)
 				time_data = DataBase.hget('najva_special:{}'.format(user_id), 'time')
 				special_msgID = DataBase.hget('najva_special:{}'.format(user_id), 'id')
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_id', find_ID)
