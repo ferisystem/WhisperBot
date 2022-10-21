@@ -3486,7 +3486,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		del user_steps[user_id]['najva']
 		inlineKeys = iMarkup()
 		inlineKeys.add(
-			iButtun(buttuns['cancel'], callback_data = 'special:cancel:{}'.format(user_id)),
+			iButtun(buttuns['cancel'], callback_data = 'special:cancel:@{}'.format(user_id)),
 		)
 		await sendText(user_id, 0, 1, langU['send_special_najva'], 'html', inlineKeys)
 
