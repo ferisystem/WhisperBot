@@ -2844,6 +2844,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 				special_msgID = DataBase.hget('najva_special:{}'.format(user_id), 'id')
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_id', find_ID)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_type', find_type)
+				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'source_id', reply_id)
+				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'msg_id', msg_.message_id)
 				inlineKeys = iMarkup()
 				inlineKeys.add(
 					iButtun(
@@ -2872,6 +2874,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 				special_msgID = DataBase.hget('najva_special:{}'.format(user_id), 'id')
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_id', find_ID)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_type', find_type)
+				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'source_id', reply_id)
+				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'msg_id', msg_.message_id)
 				inlineKeys = iMarkup()
 				inlineKeys.add(
 					iButtun(
@@ -2897,7 +2901,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 				special_msgID = DataBase.hget('najva_special:{}'.format(user_id), 'id')
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_id', find_ID)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_type', find_type)
-				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'souce_id', reply_id)
+				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'source_id', reply_id)
+				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'msg_id', msg_.message_id)
 				inlineKeys = iMarkup()
 				inlineKeys.add(
 					iButtun(
