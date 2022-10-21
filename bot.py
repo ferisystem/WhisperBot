@@ -3005,6 +3005,30 @@ async def callback_query_process(msg: types.CallbackQuery):
 					format(id_user, name_user)), 'html')
 			except Exception as e:
 				await editText(chat_id, msg_id, 0, langU['error_reg_najva'])
+		if re.match(r"^showpv:(\d+):([-+]?\d*\.\d+|\d+)$", input):
+			ap = re_matches(r"^showpv:(\d+):([-+]?\d*\.\d+|\d+)$", input)
+			await _.delete()
+			from_user = ap[1]
+			time_data = ap[2]
+			DataBase.set('najva_seen_time:{}:{}'.format(from_user, time_data), int(time()))
+			DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
+			DataBase.sadd('najva_seened:{}:{}'.format(from_user, time_data), user_id)
+			special_msgID = DataBase.hget('najva_special:{}'.format(from_user), 'id')
+			users_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'users')
+			file_id = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'file_id')
+			file_type = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'file_type')
+			source_id = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'source_id')
+			msgid = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'msg_id')
+			inlineKeys = await show_speical_najva_keys(user_id, from_user, time_data)
+			msg_ = await copyMessage(chat_id, gv().supchat, msgid, reply_markup = inlineKeys)
+			if DataBase.hget(f'setting_najva:{from_user}', 'seen'):
+				await sendText(from_user, source_id, 1, langU['speical_najva_seen'].format(msg.from_user.first_name))
+			await editText(inline_msg_id = special_msgID,
+			text = langU['speical_najva_seen2'].format(msg.from_user.first_name),
+			parse_mode = 'html', reply_markup = najva_seen3_keys(from_user, time_data))
+			DataBase.delete('najva:{}:{}'.format(from_user, time_data))
+			DataBase.delete('najva_special:{}'.format(from_user))
+			DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', msg_[1].message_id)
 	else:
 		# {
 		# "id": "601066437221691493",
