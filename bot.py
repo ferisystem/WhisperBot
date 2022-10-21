@@ -2245,7 +2245,7 @@ def register_special_keys(UserID):
 	return inlineKeys
 
 
-await def show_speical_najva_keys(UserID, from_user, time_data):
+async def show_speical_najva_keys(UserID, from_user, time_data):
 	hash = ':{}:{}'.format(from_user, time_data)
 	hash2 = ':@{}'.format(UserID)
 	langU = lang[user_steps[UserID]['lang']]
