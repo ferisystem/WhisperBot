@@ -1474,7 +1474,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 					file_type = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'file_type')
 					source_id = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'source_id')
 					msgid = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'msg_id')
-					inlineKeys = await show_speical_najva_keys(user_id, from_user, time_data)
+					inlineKeys = await show_speical_najva_keys(user_id, from_user)
 					msg_ = await copyMessage(chat_id, gv().supchat, msgid, reply_markup = inlineKeys)
 					if DataBase.hget(f'setting_najva:{from_user}', 'seen'):
 						await sendText(from_user, source_id, 1, langU['speical_najva_seen'].format(msg.from_user.first_name))
@@ -2288,8 +2288,7 @@ def register_special_keys(UserID):
 	return inlineKeys
 
 
-async def show_speical_najva_keys(UserID, from_user, time_data):
-	hash = ':{}:{}'.format(from_user, time_data)
+async def show_speical_najva_keys(UserID, from_user):
 	hash2 = ':@{}'.format(UserID)
 	langU = lang[user_steps[UserID]['lang']]
 	buttuns = langU['buttuns']
@@ -2300,6 +2299,10 @@ async def show_speical_najva_keys(UserID, from_user, time_data):
 		call_url = 'https://t.me/{}'.format(uname_user)
 	else:
 		call_url = 'https://t.me?openmessage?user_id={}'.format(from_user)
+	if DataBase.sismember('blocks2:{}'.format(UserID), from_user):
+		which_one = buttuns['unblock']
+	else:
+		which_one = buttuns['block']
 	inlineKeys.add(
 		iButtun(buttuns['special_najva'],
 		callback_data = 'none'),
@@ -2309,8 +2312,8 @@ async def show_speical_najva_keys(UserID, from_user, time_data):
 	inlineKeys.add(
 		iButtun(buttuns['report'],
 		callback_data = 'special:report{}'.format(hash2)),
-		iButtun(buttuns['block'],
-		callback_data = 'special:block{}'.format(hash2)),
+		iButtun(which_one,
+		callback_data = 'special:block:{}{}'.format(from_user, hash2)),
 	)
 	return inlineKeys
 
@@ -3021,7 +3024,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			file_type = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'file_type')
 			source_id = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'source_id')
 			msgid = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'msg_id')
-			inlineKeys = await show_speical_najva_keys(user_id, from_user, time_data)
+			inlineKeys = await show_speical_najva_keys(user_id, from_user)
 			msg_ = await copyMessage(chat_id, gv().supchat, msgid, reply_markup = inlineKeys)
 			if DataBase.hget(f'setting_najva:{from_user}', 'seen'):
 				await sendText(from_user, source_id, 1, langU['speical_najva_seen'].format(msg.from_user.first_name))
