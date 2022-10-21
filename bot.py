@@ -2888,6 +2888,34 @@ async def callback_query_process(msg: types.CallbackQuery):
 				await editText(chat_id, msg_id, 0, langU['reg_najva'])
 			except Exception as e:
 				await editText(chat_id, msg_id, 0, langU['error_reg_najva'])
+		if re.match(r"^special:sendpv:@(\d+)", input):
+			try:
+				msg_ = await reply_msg.forward(gv().supchat)
+				find_ID, find_type, can_hide = find_media_id(msg_)
+				time_data = DataBase.hget('najva_special:{}'.format(user_id), 'time')
+				special_msgID = DataBase.hget('najva_special:{}'.format(user_id), 'id')
+				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_id', find_ID)
+				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_type', find_type)
+				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'souce_id', reply_id)
+				inlineKeys = iMarkup()
+				inlineKeys.add(
+					iButtun(
+						langU['buttuns']['show_najva'],
+						callback_data = 'special:showpv:{}:{}'.format(user_id, time_data)
+						)
+					)
+				users_data = DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'users')
+				if '@' in users_data:
+					id_user = await userIds(users_data)
+				else:
+					id_user = users_data
+				name_user = await userInfos(id_user, info = "name")
+				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user), parse_mode = 'html')
+				await sendText(id_user, 0, 1, langU['receive_new_najva_pv'].format(msg.from_user.first_name), 'html', inlineKeys)
+				await editText(chat_id, msg_id, 0, langU['sent_najva_pv'].format('<a href="tg://user?id={}">{}</a>'.
+					format(id_user, name_user)), 'html')
+			except Exception as e:
+				await editText(chat_id, msg_id, 0, langU['error_reg_najva'])
 	else:
 		# {
 		# "id": "601066437221691493",
