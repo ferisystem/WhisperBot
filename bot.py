@@ -2244,6 +2244,28 @@ def register_special_keys(UserID):
 	return inlineKeys
 
 
+def find_media_id(msg):
+	if msg.photo:
+		file_id = msg.photo[-1].file_id
+	elif msg.video:
+		file_id = msg.video.file_id
+	elif msg.sticker:
+		file_id = msg.sticker.file_id
+	elif msg.animation:
+		file_id = msg.sticker.file_id
+	elif msg.voice:
+		file_id = msg.sticker.file_id
+	elif msg.audio:
+		file_id = msg.sticker.file_id
+	elif msg.document:
+		file_id = msg.sticker.file_id
+	elif msg.video_note:
+		file_id = msg.sticker.file_id
+	elif msg.text or msg.contact or msg.venue:
+		file_id = msg.message_id
+	return file_id
+
+
 def isUserSteps(user_id):
 	if user_id in user_steps and 'action' in user_steps[user_id]:
 		return True
