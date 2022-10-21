@@ -1474,7 +1474,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 					file_type = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'file_type')
 					source_id = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'source_id')
 					msgid = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'msg_id')
-					inlineKeys = await show_speical_najva_keys(user_id, from_user, time_data)
+					inlineKeys = await show_speical_najva_keys(user_id, from_user)
 					msg_ = await copyMessage(chat_id, gv().supchat, msgid, reply_markup = inlineKeys)
 					if DataBase.hget(f'setting_najva:{from_user}', 'seen'):
 						await sendText(from_user, source_id, 1, langU['speical_najva_seen'].format(msg.from_user.first_name))
@@ -2288,9 +2288,8 @@ def register_special_keys(UserID):
 	return inlineKeys
 
 
-async def show_speical_najva_keys(UserID, from_user, time_data):
-	hash = ':{}:{}'.format(from_user, time_data)
-	hash2 = ':@{}'.format(UserID)
+async def show_speical_najva_keys(UserID, from_user):
+	hash2 = ':{}:@{}'.format(from_user, UserID)
 	langU = lang[user_steps[UserID]['lang']]
 	buttuns = langU['buttuns']
 	inlineKeys = iMarkup()
@@ -2300,6 +2299,10 @@ async def show_speical_najva_keys(UserID, from_user, time_data):
 		call_url = 'https://t.me/{}'.format(uname_user)
 	else:
 		call_url = 'https://t.me?openmessage?user_id={}'.format(from_user)
+	if DataBase.sismember('blocks2:{}'.format(UserID), from_user):
+		which_one = buttuns['unblock']
+	else:
+		which_one = buttuns['block']
 	inlineKeys.add(
 		iButtun(buttuns['special_najva'],
 		callback_data = 'none'),
@@ -2309,11 +2312,41 @@ async def show_speical_najva_keys(UserID, from_user, time_data):
 	inlineKeys.add(
 		iButtun(buttuns['report'],
 		callback_data = 'special:report{}'.format(hash2)),
-		iButtun(buttuns['block'],
+		iButtun(which_one,
 		callback_data = 'special:block{}'.format(hash2)),
 	)
 	return inlineKeys
 
+
+def report_najva_keys(UserID, from_user, reply_id):
+	hash2 = ':{}:{}:@{}'.format(from_user, reply_id, UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['report'],
+		callback_data = 'special:report2{}'.format(hash2)),
+	)
+	inlineKeys.add(
+		iButtun(buttuns['cancel'],
+		callback_data = 'report:cancel{}'.format(hash2)),
+	)
+	return inlineKeys
+
+
+def ban_user_keys(UserID, user_id):
+	langU = lang[user_steps[int(user_id)]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	if DataBase.sismember('isBanned', UserID):
+		which_one = buttuns['unban_user']
+	else:
+		which_one = buttuns['ban_user']
+	inlineKeys.add(
+		iButtun(which_one,
+		callback_data = 'banuser:{}'.format(UserID)),
+	)
+	return inlineKeys
 
 def find_media_id(msg):
 	can_hide = False
@@ -3021,7 +3054,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			file_type = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'file_type')
 			source_id = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'source_id')
 			msgid = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'msg_id')
-			inlineKeys = await show_speical_najva_keys(user_id, from_user, time_data)
+			inlineKeys = await show_speical_najva_keys(user_id, from_user)
 			msg_ = await copyMessage(chat_id, gv().supchat, msgid, reply_markup = inlineKeys)
 			if DataBase.hget(f'setting_najva:{from_user}', 'seen'):
 				await sendText(from_user, source_id, 1, langU['speical_najva_seen'].format(msg.from_user.first_name))
@@ -3031,6 +3064,45 @@ async def callback_query_process(msg: types.CallbackQuery):
 			DataBase.delete('najva:{}:{}'.format(from_user, time_data))
 			DataBase.delete('najva_special:{}'.format(from_user))
 			DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', f'{chat_id}:{msg_[1].message_id}')
+		if re.match(r"^special:block:(\d+):@(\d+)$", input):
+			ap = re_matches(r"^special:block:(\d+):@(\d+)$", input)
+			if DataBase.sismember('blocks2:{}'.format(user_id), ap[1]):
+				DataBase.srem('blocks2:{}'.format(user_id), ap[1])
+				text = langU['user_unblocked']
+			else:
+				DataBase.sadd('blocks2:{}'.format(user_id), ap[1])
+				text = langU['user_blocked']
+			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
+			inlineKeys = await show_speical_najva_keys(user_id, ap[1])
+			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = inlineKeys)
+		if re.match(r"^special:report:(\d+):@(\d+)$", input):
+			ap = re_matches(r"^special:report:(\d+):@(\d+)$", input)
+			await sendText(chat_id, _, 1, langU['report_special_najva'], 'html', report_najva_keys(user_id, ap[1], msg_id))
+		if re.match(r"^report:cancel:(\d+)@(\d+)$", input):
+			ap = re_matches(r"^report:cancel:(\d+)@(\d+)$", input)
+			await _.delete()
+			await answerCallbackQuery(msg, langU['canceled'], cache_time = 3600)
+		if re.match(r"^special:report2:(\d+):(\d+):@(\d+)$", input):
+			ap = re_matches(r"^special:report2:(\d+):(\d+):@(\d+)$", input)
+			from_user = ap[1]
+			msg_ID = ap[2]
+			msg_ = await copyMessage(gv().sudoID, chat_id, msg_ID)
+			name_user = await userInfos(from_user, info = "name")
+			text = langU['reported_this_user'].format(msg.from_user.first_name, name_user)
+			await sendText(gv().sudoID, msg_[1].message_id, 1, text, 'html', ban_user_keys(from_user, gv().sudoID))
+			await editText(chat_id, msg_id, 0, langU['reported_special_najva'])
+			await _.reply_to_message.delete()
+		if re.match(r"^banuser:(\d+)$", input):
+			ap = re_matches(r"^banuser:(\d+)$", input)
+			if DataBase.sismember('isBanned', ap[1]):
+				DataBase.srem('isBanned', ap[1])
+				text = langU['user_unbanned']
+			else:
+				DataBase.sadd('isBanned', ap[1])
+				text = langU['user_banned']
+			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
+			inlineKeys = ban_user_keys(ap[1], chat_id)
+			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = inlineKeys)
 	else:
 		# {
 		# "id": "601066437221691493",
