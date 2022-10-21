@@ -3519,6 +3519,12 @@ async def inline_query_process(msg: types.InlineQuery):
 		from_user = ap[1]
 		time_data = float(f"{ap[2]}.{ap[3]}")
 		special_msgID = DataBase.hget('najva_special:{}'.format(from_user), 'id')
+		users_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'users')
+		if not str(user_id) in users_data and not str(username) in users_data:
+			if special_msgID:
+				return DataBase.sadd('najva_nosy:{}:{}'.format(from_user, time_data), user_id)
+			else:
+				return False
 		if not special_msgID:
 			input_content = InputTextMessageContent(
 				message_text = langU['inline']['text']['special_404'],
@@ -3535,7 +3541,6 @@ async def inline_query_process(msg: types.InlineQuery):
 				input_message_content = input_content,
 			)
 			await answerInlineQuery(msg_id, results = [item1,], cache_time = 3600)
-		users_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'users')
 		file_id = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'file_id')
 		file_type = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'file_type')
 		source_id = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'source_id')
