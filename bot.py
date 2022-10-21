@@ -2793,6 +2793,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await editText(inline_msg_id = special_msgID, text = langU['special_najva_cancel'])
 			await _.delete()
 			await answerCallbackQuery(msg, langU['canceled'], cache_time = 3600)
+		if re.match(r"^special:antisave:@(\d+)", input):
+			await answerCallbackQuery(msg, langU['anti_save'], show_alert = True, cache_time = 3600)
 	else:
 		# {
 		# "id": "601066437221691493",
