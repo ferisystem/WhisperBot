@@ -2246,16 +2246,22 @@ def register_special_keys(UserID):
 
 def find_media_id(msg):
 	file_type = 'media'
+	can_hide = False
 	if msg.photo:
 		file_id = msg.photo[-1].file_id
+		can_hide = True
 	elif msg.video:
 		file_id = msg.video.file_id
+		can_hide = True
 	elif msg.sticker:
 		file_id = msg.sticker.file_id
+		can_hide = True
 	elif msg.animation:
 		file_id = msg.animation.file_id
+		can_hide = True
 	elif msg.voice:
 		file_id = msg.voice.file_id
+		can_hide = True
 	elif msg.audio:
 		file_id = msg.audio.file_id
 	elif msg.document:
@@ -2265,7 +2271,7 @@ def find_media_id(msg):
 	elif msg.text or msg.contact or msg.venue:
 		file_id = msg.message_id
 		file_type = 'message'
-	return file_id, file_type
+	return file_id, file_type, can_hide
 
 
 def isUserSteps(user_id):
@@ -2822,7 +2828,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 		if re.match(r"^special:reg1:@(\d+)", input):
 			try:
 				msg_ = await reply_msg.forward(gv().supchat)
-				find_ID, find_type = find_media_id(msg_)
+				find_ID, find_type, can_hide = find_media_id(msg_)
 				time_data = DataBase.hget('najva_special:{}'.format(user_id), 'time')
 				special_msgID = DataBase.hget('najva_special:{}'.format(user_id), 'id')
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_id', find_ID)
