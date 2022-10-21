@@ -1472,9 +1472,9 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 					file_id = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'file_id')
 					file_type = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'file_type')
 					source_id = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'source_id')
-					msg_ID = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'msg_id')
+					msgid = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'msg_id')
 					inlineKeys = await show_speical_najva_keys(user_id, from_user, time_data)
-					msg_ = await copyMessage(chat_id, gv().supchat, int(msg_ID), reply_markup = inlineKeys)
+					msg_ = await copyMessage(chat_id, gv().supchat, msgid, reply_markup = inlineKeys)
 					if DataBase.hget(f'setting_najva:{from_user}', 'seen'):
 						await sendText(from_user, source_id, 1, langU['speical_najva_seen'].format(msg.from_user.first_name))
 					await editText(inline_msg_id = special_msgID,
@@ -1482,7 +1482,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 					parse_mode = 'html',reply_markup = najva_seen3_keys(from_user, time_data))
 					DataBase.delete('najva:{}:{}'.format(from_user, time_data))
 					DataBase.delete('najva_special:{}:{}'.format(from_user, time_data))
-					DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', msg_.message_id)
+					DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', msg_[1].message_id)
 				else:
 					we_have = DataBase.get('link_anon:{}'.format(ap[1]))
 					if we_have:
