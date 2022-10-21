@@ -2245,6 +2245,7 @@ def register_special_keys(UserID):
 
 
 def find_media_id(msg):
+	file_type = 'media'
 	if msg.photo:
 		file_id = msg.photo[-1].file_id
 	elif msg.video:
@@ -2263,7 +2264,8 @@ def find_media_id(msg):
 		file_id = msg.sticker.file_id
 	elif msg.text or msg.contact or msg.venue:
 		file_id = msg.message_id
-	return file_id
+		file_type = 'message'
+	return file_id, file_type
 
 
 def isUserSteps(user_id):
