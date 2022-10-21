@@ -2245,6 +2245,33 @@ def register_special_keys(UserID):
 	return inlineKeys
 
 
+def show_speical_najva_keys(UserID, from_user, time_data):
+	hash = ':{}:{}'.format(from_user, time_data)
+	hash2 = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	name_user = await userInfos(from_user, info = "name")
+	uname_user = await userInfos(from_user, info = "username")
+	if uname_user:
+		call_url = 'https://t.me/{}'.format(uname_user)
+	else:
+		call_url = 'https://t.me?openmessage?user_id={}'.format(from_user)
+	inlineKeys.add(
+		iButtun(name_user,
+		url = call_url),
+		iButtun(buttuns['special_najva'],
+		callback_data = 'none'),
+	)
+	inlineKeys.add(
+		iButtun(buttuns['block'],
+		callback_data = 'special:block{}'.format(hash2)),
+		iButtun(buttuns['report'],
+		callback_data = 'special:report{}'.format(hash2)),
+	)
+	return inlineKeys
+
+
 def find_media_id(msg):
 	file_type = 'media'
 	can_hide = False
