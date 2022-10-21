@@ -2933,6 +2933,9 @@ async def callback_query_process(msg: types.CallbackQuery):
 			text_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'text')
 			users_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'users')
 			if (username != "" and username in users_data) or str(user_id) in users_data or str(user_id) in from_user or users_data == 'all':
+				file_id = DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'file_id')
+				if file_id:
+					return await answerCallbackQuery(msg, url_web = "t.me/{}?start={}_{}".format(gv().botUser, from_user, time_data.replace('.', '_')))
 				await answerCallbackQuery(msg, text_data, show_alert = True, cache_time = 3600)
 				if not str(user_id) in from_user and DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0:
 					if DataBase.hget(f'setting_najva:{from_user}', 'seen') and users_data != 'all':
