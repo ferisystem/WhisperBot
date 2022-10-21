@@ -3034,6 +3034,17 @@ async def callback_query_process(msg: types.CallbackQuery):
 			DataBase.delete('najva:{}:{}'.format(from_user, time_data))
 			DataBase.delete('najva_special:{}'.format(from_user))
 			DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', f'{chat_id}:{msg_[1].message_id}')
+		if re.match(r"^special:block:(\d+):@(\d+)$", input):
+			ap = re_matches(r"^special:block:(\d+):@(\d+)$", input)
+			if DataBase.sismember('blocks2:{}'.format(user_id), ap[1]):
+				DataBase.srem('blocks2:{}'.format(user_id), ap[1])
+				text = langU['user_unblocked']
+			else:
+				DataBase.sadd('blocks2:{}'.format(user_id), ap[1])
+				text = langU['user_blocked']
+			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
+			inlineKeys = await show_speical_najva_keys(user_id, ap[1])
+			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = inlineKeys)
 	else:
 		# {
 		# "id": "601066437221691493",
