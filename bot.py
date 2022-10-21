@@ -1076,7 +1076,7 @@ async def editMessageMedia(chat_id, media, message_id = None, inline_message_id 
 		print(e)
 
 
-async def answerCallbackQuery(query_id, text, show_alert = False, cache_time = 0, url_web = None):
+async def answerCallbackQuery(query_id, text = None, show_alert = False, cache_time = 0, url_web = None):
 	try:
 		return await bot.answer_callback_query(query_id.id, text, show_alert, url_web, cache_time)
 	except Exception as e:
