@@ -1483,7 +1483,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 					parse_mode = 'html',reply_markup = najva_seen3_keys(from_user, time_data))
 					DataBase.delete('najva:{}:{}'.format(from_user, time_data))
 					DataBase.delete('najva_special:{}'.format(from_user))
-					DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', msg_[1].message_id)
+					DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', f'{chat_id}:{msg_[1].message_id}')
 				else:
 					we_have = DataBase.get('link_anon:{}'.format(ap[1]))
 					if we_have:
@@ -3030,7 +3030,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			parse_mode = 'html', reply_markup = najva_seen3_keys(from_user, time_data))
 			DataBase.delete('najva:{}:{}'.format(from_user, time_data))
 			DataBase.delete('najva_special:{}'.format(from_user))
-			DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', msg_[1].message_id)
+			DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', f'{chat_id}:{msg_[1].message_id}')
 	else:
 		# {
 		# "id": "601066437221691493",
