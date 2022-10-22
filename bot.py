@@ -1364,13 +1364,17 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 						DataBase.sadd('inbox_user:{}'.format(which_user), f"{msg_.message_id}:{user_id}:{msg_id}:{ap[2]}:{int(time())}:no")
 					await sendText(which_user, 0, 1, langU['new_message'].format(msg_.message_id))
 		if DataBase.get('ready_to_recv_special:{}'.format(user_id)):
-			if msg.text or msg.photo or msg.voice or msg.video:
+			if msg.text and (re.match(r"^این$", msg.text) or re.match(r"^this$", msg.text)) and reply_msg:
+				data_msg = reply_msg
+			else:
+				data_msg = msg
+			if data_msg.text or data_msg.photo or data_msg.voice or data_msg.video:
 				allow = True
-			elif msg.animation or msg.audio or msg.sticker:
+			elif data_msg.animation or data_msg.audio or data_msg.sticker:
 				allow = True
-			elif msg.video_note or msg.document or msg.contact:
+			elif data_msg.video_note or data_msg.document or data_msg.contact:
 				allow = True
-			elif msg.venue or msg.location:
+			elif data_msg.venue or data_msg.location:
 				allow = True
 			if allow:
 				DataBase.delete('ready_to_recv_special:{}'.format(user_id))
@@ -1381,7 +1385,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 				else:
 					name_user = users_data
 				name_user = await userInfos(name_user, info = "name")
-				await sendText(chat_id, msg, 1, langU['register_special'].format(name_user), 'html', register_special_keys(user_id))
+				await sendText(chat_id, data_msg, 1, langU['register_special'].format(name_user), 'html', register_special_keys(user_id))
 			else:
 				await sendText(chat_id, 0, 1, langU['now_allow_type'])
 		if 'text' in msg:
