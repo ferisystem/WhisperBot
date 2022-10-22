@@ -3662,12 +3662,14 @@ async def inline_query_process(msg: types.InlineQuery):
 		elif file_type == 'video':
 			item1 = InlineQueryResultCachedVideo(
 				id = 'null',
+				title = ' ',
 				video_file_id = file_id,
 				input_message_content = input_content,
 			)
 		elif file_type == 'voice':
 			item1 = InlineQueryResultCachedVoice(
 				id = 'null',
+				title = ' ',
 				voice_file_id = file_id,
 				input_message_content = input_content,
 			)
