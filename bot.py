@@ -1377,7 +1377,6 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 			elif data_msg.venue or data_msg.location:
 				allow = True
 			if allow:
-				DataBase.delete('ready_to_recv_special:{}'.format(user_id))
 				time_data = DataBase.hget('najva_special:{}'.format(user_id), 'time')
 				users_data = DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'users')
 				if '@' in users_data:
@@ -2962,6 +2961,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 				find_ID, find_type, can_hide = find_media_id(msg_)
 				time_data = DataBase.hget('najva_special:{}'.format(user_id), 'time')
 				special_msgID = DataBase.hget('najva_special:{}'.format(user_id), 'id')
+				DataBase.delete('ready_to_recv_special:{}'.format(user_id))
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_id', find_ID)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_type', find_type)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'source_id', reply_id)
@@ -2992,6 +2992,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 				find_ID, find_type, can_hide = find_media_id(msg_)
 				time_data = DataBase.hget('najva_special:{}'.format(user_id), 'time')
 				special_msgID = DataBase.hget('najva_special:{}'.format(user_id), 'id')
+				DataBase.delete('ready_to_recv_special:{}'.format(user_id))
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_id', find_ID)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_type', find_type)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'source_id', reply_id)
@@ -3037,6 +3038,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 					id_user = users_data
 				if not id_user:
 					return await answerCallbackQuery(msg, langU['cant_sent_najva_pv'], show_alert = True, cache_time = 3600)
+				DataBase.delete('ready_to_recv_special:{}'.format(user_id))
 				name_user = await userInfos(id_user, info = "name")
 				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user), parse_mode = 'html')
 				await sendText(id_user, 0, 1, langU['receive_new_najva_pv'].format(msg.from_user.first_name), 'html', inlineKeys)
