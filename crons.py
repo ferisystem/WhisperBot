@@ -139,12 +139,14 @@ async def main():
 		time_to_del = int(DataBase.get('autodel_time:{}'.format(from_user)) or 0) * 60
 		time_seen = DataBase.get('najva_seen_time:{}:{}'.format(from_user, time_data))
 		seen_id = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'seen_id')
-		if seen_id and now_time > (time_seen + time_to_del):
-			chat_id, msg_id = seen_id.split(':')
-			await client.delete_messages(int(chat_id), int(msg_id))
-			DataBase.srem('najva_autodel', i)
-			DataBase.delete('najva:{}:{}'.format(from_user, time_data))
-			DataBase.delete('najva_special:{}'.format(from_user))
+		if seen_id and time_seen:
+			time_seen = int(time_seen)
+			if now_time > (time_seen + time_to_del):
+				chat_id, msg_id = seen_id.split(':')
+				await client.delete_messages(int(chat_id), int(msg_id))
+				DataBase.srem('najva_autodel', i)
+				DataBase.delete('najva:{}:{}'.format(from_user, time_data))
+				DataBase.delete('najva_special:{}'.format(from_user))
 		if time_seen:
 			time_seen = int(time_seen)
 			if now_time > (time_seen + time_to_del):
