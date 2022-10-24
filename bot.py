@@ -2352,6 +2352,7 @@ def ban_user_keys(UserID, user_id):
 	)
 	return inlineKeys
 
+
 def find_media_id(msg):
 	can_hide = False
 	if msg.photo:
@@ -2967,6 +2968,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_type', find_type)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'source_id', reply_id)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'msg_id', msg_.message_id)
+				if DataBase.hset(f'setting_najva:{user_id}', 'autodel'):
+					DataBase.sadd('najva_autodel', f"{user_id}:{time_data}")
 				inlineKeys = iMarkup()
 				inlineKeys.add(
 					iButtun(
@@ -3001,6 +3004,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_type', find_type)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'source_id', reply_id)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'msg_id', msg_.message_id)
+				if DataBase.hset(f'setting_najva:{user_id}', 'autodel'):
+					DataBase.sadd('najva_autodel', f"{user_id}:{time_data}")
 				inlineKeys = iMarkup()
 				inlineKeys.add(
 					iButtun(
@@ -3031,6 +3036,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_type', find_type)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'source_id', reply_id)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'msg_id', msg_.message_id)
+				if DataBase.hset(f'setting_najva:{user_id}', 'autodel'):
+					DataBase.sadd('najva_autodel', f"{user_id}:{time_data}")
 				inlineKeys = iMarkup()
 				inlineKeys.add(
 					iButtun(
@@ -3168,6 +3175,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 					await bot.delete_message(seen_id[0], seen_id)
 				DataBase.delete('najva:{}:{}'.format(ap[1], ap[2]))
 				DataBase.delete('najva_special:{}'.format(ap[1]))
+				DataBase.srem('najva_autodel', f"{ap[1]}:{ap[2]}")
 				await answerCallbackQuery(msg, langU['najva_deleted'])
 				await bot.edit_message_reply_markup(inline_message_id = msg_id, reply_markup = najva_seen2_keys(user_id, ap[1], ap[2]))
 			else:
@@ -3755,6 +3763,8 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', str(najva['users']))
 		else:
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', najva['users'][0])
+		if DataBase.hset(f'setting_najva:{user_id}', 'autodel'):
+			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}")
 		for i in najva['users']:
 			if DataBase.hget(f'setting_najva:{i}', 'recv'):
 				await sendText(i, 0, 1, langU['you_recv_najva'].format('<a href="tg://user?id={}">{}</a>'.format(user_id, user_name)), 'html')
@@ -3764,12 +3774,16 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		najva = user_steps[user_id]['najva']
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'text', najva['text'])
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', 'all')
+		if DataBase.hset(f'setting_najva:{user_id}', 'autodel'):
+			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}")
 		del user_steps[user_id]['najva']
 	if re.match(r"^najvaR:(\d+)$", result_id) and 'najva' in user_steps[user_id]:
 		ap = re_matches(r"^najvaR:(\d+)$", result_id)
 		najva = user_steps[user_id]['najva']
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'text', najva['text'])
-		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', 'reply')		
+		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', 'reply')
+		if DataBase.hset(f'setting_najva:{user_id}', 'autodel'):
+			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}")
 		del user_steps[user_id]['najva']
 	if re.match(r"^set:(.*):(\d+)$", result_id):
 		ap = re_matches(r"^set:(.*):(\d+)$", result_id)
@@ -3784,6 +3798,8 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
 		DataBase.hset('najva_special:{}'.format(user_id), 'id', msg.inline_message_id)
 		DataBase.setex('ready_to_recv_special:{}'.format(user_id), 1800, 'True')
+		if DataBase.hset(f'setting_najva:{user_id}', 'autodel'):
+			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}")
 		del user_steps[user_id]['najva']
 		inlineKeys = iMarkup()
 		inlineKeys.add(
