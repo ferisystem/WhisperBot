@@ -1484,8 +1484,9 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 					await editText(inline_msg_id = special_msgID,
 					text = langU['speical_najva_seen2'].format(msg.from_user.first_name),
 					parse_mode = 'html',reply_markup = najva_seen3_keys(from_user, time_data))
-					DataBase.delete('najva:{}:{}'.format(from_user, time_data))
-					DataBase.delete('najva_special:{}'.format(from_user))
+					if DataBase.hget(f'setting_najva:{from_user}', 'dispo'):
+						DataBase.delete('najva:{}:{}'.format(from_user, time_data))
+						DataBase.delete('najva_special:{}'.format(from_user))
 					DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', f'{chat_id}:{msg_[1].message_id}')
 				else:
 					we_have = DataBase.get('link_anon:{}'.format(ap[1]))
@@ -3076,8 +3077,9 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await editText(inline_msg_id = special_msgID,
 			text = langU['speical_najva_seen2'].format(msg.from_user.first_name),
 			parse_mode = 'html', reply_markup = najva_seen3_keys(from_user, time_data))
-			DataBase.delete('najva:{}:{}'.format(from_user, time_data))
-			DataBase.delete('najva_special:{}'.format(from_user))
+			if DataBase.hget(f'setting_najva:{from_user}', 'dispo'):
+				DataBase.delete('najva:{}:{}'.format(from_user, time_data))
+				DataBase.delete('najva_special:{}'.format(from_user))
 			DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', f'{chat_id}:{msg_[1].message_id}')
 		if re.match(r"^special:block:(\d+):@(\d+)$", input):
 			ap = re_matches(r"^special:block:(\d+):@(\d+)$", input)
@@ -3165,6 +3167,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 					seen_id = seen_id.split(':')
 					await bot.delete_message(seen_id[0], seen_id)
 				DataBase.delete('najva:{}:{}'.format(ap[1], ap[2]))
+				DataBase.delete('najva_special:{}'.format(ap[1]))
 				await answerCallbackQuery(msg, langU['najva_deleted'])
 				await bot.edit_message_reply_markup(inline_message_id = msg_id, reply_markup = najva_seen2_keys(user_id, ap[1], ap[2]))
 			else:
@@ -3716,8 +3719,9 @@ async def inline_query_process(msg: types.InlineQuery):
 				DataBase.set('najva_seen_time:{}:{}'.format(from_user, time_data), int(time()))
 				DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
 				DataBase.sadd('najva_seened:{}:{}'.format(from_user, time_data), user_id)
-				DataBase.delete('najva:{}:{}'.format(from_user, time_data))
-				DataBase.delete('najva_special:{}'.format(from_user))
+				if DataBase.hget(f'setting_najva:{from_user}', 'dispo'):
+					DataBase.delete('najva:{}:{}'.format(from_user, time_data))
+					DataBase.delete('najva_special:{}'.format(from_user))
 			await answerInlineQuery(msg_id, results = [item1,], is_personal = True, cache_time = 3600)
 
 
