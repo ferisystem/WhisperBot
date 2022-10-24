@@ -1487,6 +1487,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 					if DataBase.hget(f'setting_najva:{from_user}', 'dispo'):
 						DataBase.delete('najva:{}:{}'.format(from_user, time_data))
 						DataBase.delete('najva_special:{}'.format(from_user))
+						DataBase.srem('najva_autodel', f"{from_user}:{time_data}")
 					DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', f'{chat_id}:{msg_[1].message_id}')
 				else:
 					we_have = DataBase.get('link_anon:{}'.format(ap[1]))
@@ -2952,6 +2953,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			DataBase.delete('najva:{}:{}'.format(user_id, time_data))
 			DataBase.delete('najva_special:{}'.format(user_id))
 			DataBase.delete('ready_to_recv_special:{}'.format(user_id))
+			DataBase.srem('najva_autodel', f"{user_id}:{time_data}")
 			await editText(inline_msg_id = special_msgID, text = langU['special_najva_cancel'])
 			await _.delete()
 			await answerCallbackQuery(msg, langU['canceled'], cache_time = 3600)
@@ -3087,6 +3089,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			if DataBase.hget(f'setting_najva:{from_user}', 'dispo'):
 				DataBase.delete('najva:{}:{}'.format(from_user, time_data))
 				DataBase.delete('najva_special:{}'.format(from_user))
+				DataBase.srem('najva_autodel', f"{from_user}:{time_data}")
 			DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', f'{chat_id}:{msg_[1].message_id}')
 		if re.match(r"^special:block:(\d+):@(\d+)$", input):
 			ap = re_matches(r"^special:block:(\d+):@(\d+)$", input)
@@ -3730,6 +3733,7 @@ async def inline_query_process(msg: types.InlineQuery):
 				if DataBase.hget(f'setting_najva:{from_user}', 'dispo'):
 					DataBase.delete('najva:{}:{}'.format(from_user, time_data))
 					DataBase.delete('najva_special:{}'.format(from_user))
+					DataBase.srem('najva_autodel', f"{from_user}:{time_data}")
 			await answerInlineQuery(msg_id, results = [item1,], is_personal = True, cache_time = 3600)
 
 
@@ -3763,6 +3767,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', str(najva['users']))
 		else:
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', najva['users'][0])
+			DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
 		if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
 			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}")
 		for i in najva['users']:
@@ -3782,6 +3787,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		najva = user_steps[user_id]['najva']
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'text', najva['text'])
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', 'reply')
+		DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
 		if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
 			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}")
 		del user_steps[user_id]['najva']
