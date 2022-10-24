@@ -3151,7 +3151,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 				if file_id:
 					return await answerCallbackQuery(msg, url_web = "t.me/{}?start={}_{}".format(gv().botUser, from_user, time_data.replace('.', '_')))
 				await answerCallbackQuery(msg, text_data, show_alert = True, cache_time = 3600)
-				if not str(user_id) in from_user and DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0:
+				# if not str(user_id) in from_user and DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0
+				if DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0:
 					if DataBase.hget(f'setting_najva:{from_user}', 'seen') and users_data != 'all':
 						await sendText(from_user, 0, 1, langU['najva_seened'].format(msg.from_user.first_name))
 					if users_data != 'all':
@@ -3164,8 +3165,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 						DataBase.sadd('najva_seened:{}:{}'.format(from_user, time_data), user_id)
 					if str(users_data).isdigit() and not DataBase.get('najva_seen_time:{}:{}'.format(from_user, time_data)):
 						DataBase.set('najva_seen_time:{}:{}'.format(from_user, time_data), int(time()))
-				if not str(user_id) in from_user:
-					DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
+				# if not str(user_id) in from_user:
+				DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
 			else:
 				DataBase.sadd('najva_nosy:{}:{}'.format(from_user, time_data), user_id)
 				await answerCallbackQuery(msg, langU['najva_not_for_you'], show_alert = True, cache_time = 3600)
