@@ -3768,9 +3768,10 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', str(najva['users']))
 		else:
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', najva['users'][0])
-			DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
-		if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
-			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}")
+			# DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
+			# DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
+			if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
+				DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}:{msg.inline_message_id}:p")
 		for i in najva['users']:
 			if DataBase.hget(f'setting_najva:{i}', 'recv'):
 				await sendText(i, 0, 1, langU['you_recv_najva'].format('<a href="tg://user?id={}">{}</a>'.format(user_id, user_name)), 'html')
@@ -3788,9 +3789,10 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		najva = user_steps[user_id]['najva']
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'text', najva['text'])
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', 'reply')
-		DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
+		# DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
+		# DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
 		if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
-			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}")
+			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}:{msg.inline_message_id}:r")
 		del user_steps[user_id]['najva']
 	if re.match(r"^set:(.*):(\d+)$", result_id):
 		ap = re_matches(r"^set:(.*):(\d+)$", result_id)
@@ -3806,7 +3808,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		DataBase.hset('najva_special:{}'.format(user_id), 'id', msg.inline_message_id)
 		DataBase.setex('ready_to_recv_special:{}'.format(user_id), 1800, 'True')
 		if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
-			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}")
+			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}:{msg.inline_message_id}:s")
 		del user_steps[user_id]['najva']
 		inlineKeys = iMarkup()
 		inlineKeys.add(
