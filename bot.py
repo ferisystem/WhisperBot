@@ -1364,16 +1364,19 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 						DataBase.sadd('inbox_user:{}'.format(which_user), f"{msg_.message_id}:{user_id}:{msg_id}:{ap[2]}:{int(time())}:no")
 					await sendText(which_user, 0, 1, langU['new_message'].format(msg_.message_id))
 		if DataBase.get('ready_to_recv_special:{}'.format(user_id)):
-			if msg.text or msg.photo or msg.voice or msg.video:
+			if msg.text and (re.match(r"^این$", msg.text) or re.match(r"^this$", msg.text)) and reply_msg:
+				data_msg = reply_msg
+			else:
+				data_msg = msg
+			if data_msg.text or data_msg.photo or data_msg.voice or data_msg.video:
 				allow = True
-			elif msg.animation or msg.audio or msg.sticker:
+			elif data_msg.animation or data_msg.audio or data_msg.sticker:
 				allow = True
-			elif msg.video_note or msg.document or msg.contact:
+			elif data_msg.video_note or data_msg.document or data_msg.contact:
 				allow = True
-			elif msg.venue or msg.location:
+			elif data_msg.venue or data_msg.location:
 				allow = True
 			if allow:
-				DataBase.delete('ready_to_recv_special:{}'.format(user_id))
 				time_data = DataBase.hget('najva_special:{}'.format(user_id), 'time')
 				users_data = DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'users')
 				if '@' in users_data:
@@ -1381,7 +1384,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 				else:
 					name_user = users_data
 				name_user = await userInfos(name_user, info = "name")
-				await sendText(chat_id, msg, 1, langU['register_special'].format(name_user), 'html', register_special_keys(user_id))
+				await sendText(chat_id, data_msg, 1, langU['register_special'].format(name_user), 'html', register_special_keys(user_id))
 			else:
 				await sendText(chat_id, 0, 1, langU['now_allow_type'])
 		if 'text' in msg:
@@ -1481,8 +1484,10 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 					await editText(inline_msg_id = special_msgID,
 					text = langU['speical_najva_seen2'].format(msg.from_user.first_name),
 					parse_mode = 'html',reply_markup = najva_seen3_keys(from_user, time_data))
-					DataBase.delete('najva:{}:{}'.format(from_user, time_data))
-					DataBase.delete('najva_special:{}'.format(from_user))
+					if DataBase.hget(f'setting_najva:{from_user}', 'dispo'):
+						DataBase.delete('najva:{}:{}'.format(from_user, time_data))
+						DataBase.delete('najva_special:{}'.format(from_user))
+						DataBase.srem('najva_autodel', f"{from_user}:{time_data}:{special_msgID}")
 					DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', f'{chat_id}:{msg_[1].message_id}')
 				else:
 					we_have = DataBase.get('link_anon:{}'.format(ap[1]))
@@ -2348,6 +2353,7 @@ def ban_user_keys(UserID, user_id):
 	)
 	return inlineKeys
 
+
 def find_media_id(msg):
 	can_hide = False
 	if msg.photo:
@@ -2947,6 +2953,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			DataBase.delete('najva:{}:{}'.format(user_id, time_data))
 			DataBase.delete('najva_special:{}'.format(user_id))
 			DataBase.delete('ready_to_recv_special:{}'.format(user_id))
+			DataBase.srem('najva_autodel', f"{user_id}:{time_data}:{special_msgID}")
 			await editText(inline_msg_id = special_msgID, text = langU['special_najva_cancel'])
 			await _.delete()
 			await answerCallbackQuery(msg, langU['canceled'], cache_time = 3600)
@@ -2958,10 +2965,13 @@ async def callback_query_process(msg: types.CallbackQuery):
 				find_ID, find_type, can_hide = find_media_id(msg_)
 				time_data = DataBase.hget('najva_special:{}'.format(user_id), 'time')
 				special_msgID = DataBase.hget('najva_special:{}'.format(user_id), 'id')
+				DataBase.delete('ready_to_recv_special:{}'.format(user_id))
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_id', find_ID)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_type', find_type)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'source_id', reply_id)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'msg_id', msg_.message_id)
+				if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
+					DataBase.sadd('najva_autodel', f"{user_id}:{time_data}:{special_msgID}")
 				inlineKeys = iMarkup()
 				inlineKeys.add(
 					iButtun(
@@ -2974,8 +2984,11 @@ async def callback_query_process(msg: types.CallbackQuery):
 					name_user = await userIds(users_data)
 				else:
 					name_user = users_data
+				name_user2 = None
+				if DataBase.hget(f'setting_najva:{name_user}', 'noname'):
+					name_user2 = langU['no_name']
 				name_user = await userInfos(name_user, info = "name")
-				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user), parse_mode = 'html', reply_markup = inlineKeys)
+				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user2 or name_user), parse_mode = 'html', reply_markup = inlineKeys)
 				await editText(chat_id, msg_id, 0, langU['reg_najva'])
 			except Exception as e:
 				await editText(chat_id, msg_id, 0, langU['error_reg_najva'])
@@ -2988,10 +3001,13 @@ async def callback_query_process(msg: types.CallbackQuery):
 				find_ID, find_type, can_hide = find_media_id(msg_)
 				time_data = DataBase.hget('najva_special:{}'.format(user_id), 'time')
 				special_msgID = DataBase.hget('najva_special:{}'.format(user_id), 'id')
+				DataBase.delete('ready_to_recv_special:{}'.format(user_id))
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_id', find_ID)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_type', find_type)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'source_id', reply_id)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'msg_id', msg_.message_id)
+				if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
+					DataBase.sadd('najva_autodel', f"{user_id}:{time_data}:{special_msgID}")
 				inlineKeys = iMarkup()
 				inlineKeys.add(
 					iButtun(
@@ -3004,8 +3020,11 @@ async def callback_query_process(msg: types.CallbackQuery):
 					name_user = await userIds(users_data)
 				else:
 					name_user = users_data
+				name_user2 = None
+				if DataBase.hget(f'setting_najva:{name_user}', 'noname'):
+					name_user2 = langU['no_name']
 				name_user = await userInfos(name_user, info = "name")
-				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user), parse_mode = 'html', reply_markup = inlineKeys)
+				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user2 or name_user), parse_mode = 'html', reply_markup = inlineKeys)
 				await editText(chat_id, msg_id, 0, langU['reg2_najva'])
 			except Exception as e:
 				await editText(chat_id, msg_id, 0, langU['error_reg_najva'])
@@ -3019,6 +3038,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'file_type', find_type)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'source_id', reply_id)
 				DataBase.hset('najva:{}:{}'.format(user_id, time_data), 'msg_id', msg_.message_id)
+				if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
+					DataBase.sadd('najva_autodel', f"{user_id}:{time_data}:{special_msgID}")
 				inlineKeys = iMarkup()
 				inlineKeys.add(
 					iButtun(
@@ -3033,8 +3054,12 @@ async def callback_query_process(msg: types.CallbackQuery):
 					id_user = users_data
 				if not id_user:
 					return await answerCallbackQuery(msg, langU['cant_sent_najva_pv'], show_alert = True, cache_time = 3600)
+				DataBase.delete('ready_to_recv_special:{}'.format(user_id))
+				name_user2 = None
+				if DataBase.hget(f'setting_najva:{id_user}', 'noname'):
+					name_user2 = langU['no_name']
 				name_user = await userInfos(id_user, info = "name")
-				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user), parse_mode = 'html')
+				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user2 or name_user), parse_mode = 'html')
 				await sendText(id_user, 0, 1, langU['receive_new_najva_pv'].format(msg.from_user.first_name), 'html', inlineKeys)
 				await editText(chat_id, msg_id, 0, langU['sent_najva_pv'].format('<a href="tg://user?id={}">{}</a>'.
 					format(id_user, name_user)), 'html')
@@ -3061,8 +3086,11 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await editText(inline_msg_id = special_msgID,
 			text = langU['speical_najva_seen2'].format(msg.from_user.first_name),
 			parse_mode = 'html', reply_markup = najva_seen3_keys(from_user, time_data))
-			DataBase.delete('najva:{}:{}'.format(from_user, time_data))
-			DataBase.delete('najva_special:{}'.format(from_user))
+			if DataBase.hget(f'setting_najva:{from_user}', 'dispo'):
+				special_msgID = DataBase.hget('najva_special:{}'.format(from_user), 'id')
+				DataBase.srem('najva_autodel', f"{from_user}:{time_data}:{special_msgID}")
+				DataBase.delete('najva:{}:{}'.format(from_user, time_data))
+				DataBase.delete('najva_special:{}'.format(from_user))
 			DataBase.hset('najva:{}:{}'.format(from_user, time_data), 'seen_id', f'{chat_id}:{msg_[1].message_id}')
 		if re.match(r"^special:block:(\d+):@(\d+)$", input):
 			ap = re_matches(r"^special:block:(\d+):@(\d+)$", input)
@@ -3124,7 +3152,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 				if file_id:
 					return await answerCallbackQuery(msg, url_web = "t.me/{}?start={}_{}".format(gv().botUser, from_user, time_data.replace('.', '_')))
 				await answerCallbackQuery(msg, text_data, show_alert = True, cache_time = 3600)
-				if not str(user_id) in from_user and DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0:
+				# if not str(user_id) in from_user and DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0
+				if DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0:
 					if DataBase.hget(f'setting_najva:{from_user}', 'seen') and users_data != 'all':
 						await sendText(from_user, 0, 1, langU['najva_seened'].format(msg.from_user.first_name))
 					if users_data != 'all':
@@ -3137,8 +3166,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 						DataBase.sadd('najva_seened:{}:{}'.format(from_user, time_data), user_id)
 					if str(users_data).isdigit() and not DataBase.get('najva_seen_time:{}:{}'.format(from_user, time_data)):
 						DataBase.set('najva_seen_time:{}:{}'.format(from_user, time_data), int(time()))
-				if not str(user_id) in from_user:
-					DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
+				# if not str(user_id) in from_user:
+				DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
 			else:
 				DataBase.sadd('najva_nosy:{}:{}'.format(from_user, time_data), user_id)
 				await answerCallbackQuery(msg, langU['najva_not_for_you'], show_alert = True, cache_time = 3600)
@@ -3149,7 +3178,10 @@ async def callback_query_process(msg: types.CallbackQuery):
 				if seen_id:
 					seen_id = seen_id.split(':')
 					await bot.delete_message(seen_id[0], seen_id)
+				special_msgID = DataBase.hget('najva_special:{}'.format(ap[1]), 'id')
+				DataBase.srem('najva_autodel', f"{ap[1]}:{ap[2]}:{special_msgID}")
 				DataBase.delete('najva:{}:{}'.format(ap[1], ap[2]))
+				DataBase.delete('najva_special:{}'.format(ap[1]))
 				await answerCallbackQuery(msg, langU['najva_deleted'])
 				await bot.edit_message_reply_markup(inline_message_id = msg_id, reply_markup = najva_seen2_keys(user_id, ap[1], ap[2]))
 			else:
@@ -3340,9 +3372,12 @@ async def inline_query_process(msg: types.InlineQuery):
 				k = await userIds(users[0])
 				if k:
 					users[0] = k
+			name_user2 = None
+			if DataBase.hget(f'setting_najva:{users[0]}', 'noname'):
+				name_user2 = langU['no_name']
 			name_user = await userInfos(users[0], info = "name")
 			input_content = InputTextMessageContent(
-				message_text = langU['inline']['text']['najva_person'].format(name_user),
+				message_text = langU['inline']['text']['najva_person'].format(name_user2 or name_user),
 				parse_mode = 'HTML',
 				disable_web_page_preview = False,
 			)
@@ -3592,9 +3627,12 @@ async def inline_query_process(msg: types.InlineQuery):
 			name_user = await userIds(user)
 		else:
 			name_user = user
+		name_user2 = None
+		if DataBase.hget(f'setting_najva:{name_user}', 'noname'):
+			name_user2 = langU['no_name']
 		name_user = await userInfos(name_user, info = "name")
 		input_content = InputTextMessageContent(
-			message_text = langU['inline']['text']['najva_special'].format(name_user),
+			message_text = langU['inline']['text']['najva_special'].format(name_user2 or name_user),
 			parse_mode = 'HTML',
 			disable_web_page_preview = True,
 		)
@@ -3662,12 +3700,14 @@ async def inline_query_process(msg: types.InlineQuery):
 		elif file_type == 'video':
 			item1 = InlineQueryResultCachedVideo(
 				id = 'null',
+				title = ' ',
 				video_file_id = file_id,
 				input_message_content = input_content,
 			)
 		elif file_type == 'voice':
 			item1 = InlineQueryResultCachedVoice(
 				id = 'null',
+				title = ' ',
 				voice_file_id = file_id,
 				input_message_content = input_content,
 			)
@@ -3693,8 +3733,11 @@ async def inline_query_process(msg: types.InlineQuery):
 				DataBase.set('najva_seen_time:{}:{}'.format(from_user, time_data), int(time()))
 				DataBase.incr('najva_seen_count:{}:{}'.format(from_user, time_data))
 				DataBase.sadd('najva_seened:{}:{}'.format(from_user, time_data), user_id)
-				DataBase.delete('najva:{}:{}'.format(from_user, time_data))
-				DataBase.delete('najva_special:{}'.format(from_user))
+				if DataBase.hget(f'setting_najva:{from_user}', 'dispo'):
+					special_msgID = DataBase.hget('najva_special:{}'.format(from_user), 'id')
+					DataBase.srem('najva_autodel', f"{from_user}:{time_data}:{special_msgID}")
+					DataBase.delete('najva:{}:{}'.format(from_user, time_data))
+					DataBase.delete('najva_special:{}'.format(from_user))
 			await answerInlineQuery(msg_id, results = [item1,], is_personal = True, cache_time = 3600)
 
 
@@ -3728,6 +3771,10 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', str(najva['users']))
 		else:
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', najva['users'][0])
+			# DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
+			# DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
+			if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
+				DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}:{msg.inline_message_id}")
 		for i in najva['users']:
 			if DataBase.hget(f'setting_najva:{i}', 'recv'):
 				await sendText(i, 0, 1, langU['you_recv_najva'].format('<a href="tg://user?id={}">{}</a>'.format(user_id, user_name)), 'html')
@@ -3742,7 +3789,11 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		ap = re_matches(r"^najvaR:(\d+)$", result_id)
 		najva = user_steps[user_id]['najva']
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'text', najva['text'])
-		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', 'reply')		
+		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', 'reply')
+		# DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
+		# DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
+		if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
+			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}:{msg.inline_message_id}")
 		del user_steps[user_id]['najva']
 	if re.match(r"^set:(.*):(\d+)$", result_id):
 		ap = re_matches(r"^set:(.*):(\d+)$", result_id)
@@ -3757,6 +3808,8 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
 		DataBase.hset('najva_special:{}'.format(user_id), 'id', msg.inline_message_id)
 		DataBase.setex('ready_to_recv_special:{}'.format(user_id), 1800, 'True')
+		if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
+			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}:{msg.inline_message_id}")
 		del user_steps[user_id]['najva']
 		inlineKeys = iMarkup()
 		inlineKeys.add(

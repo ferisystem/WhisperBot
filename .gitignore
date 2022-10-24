@@ -4,3 +4,4 @@ config_bot.py
 .cache
 __pycache__
 Files/*
+*.session
