@@ -2978,8 +2978,11 @@ async def callback_query_process(msg: types.CallbackQuery):
 					name_user = await userIds(users_data)
 				else:
 					name_user = users_data
+				name_user2 = None
+				if DataBase.hget(f'setting_najva:{name_user}', 'noname'):
+					name_user2 = langU['no_name']
 				name_user = await userInfos(name_user, info = "name")
-				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user), parse_mode = 'html', reply_markup = inlineKeys)
+				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user2 or name_user), parse_mode = 'html', reply_markup = inlineKeys)
 				await editText(chat_id, msg_id, 0, langU['reg_najva'])
 			except Exception as e:
 				await editText(chat_id, msg_id, 0, langU['error_reg_najva'])
@@ -3009,8 +3012,11 @@ async def callback_query_process(msg: types.CallbackQuery):
 					name_user = await userIds(users_data)
 				else:
 					name_user = users_data
+				name_user2 = None
+				if DataBase.hget(f'setting_najva:{name_user}', 'noname'):
+					name_user2 = langU['no_name']
 				name_user = await userInfos(name_user, info = "name")
-				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user), parse_mode = 'html', reply_markup = inlineKeys)
+				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user2 or name_user), parse_mode = 'html', reply_markup = inlineKeys)
 				await editText(chat_id, msg_id, 0, langU['reg2_najva'])
 			except Exception as e:
 				await editText(chat_id, msg_id, 0, langU['error_reg_najva'])
@@ -3039,8 +3045,11 @@ async def callback_query_process(msg: types.CallbackQuery):
 				if not id_user:
 					return await answerCallbackQuery(msg, langU['cant_sent_najva_pv'], show_alert = True, cache_time = 3600)
 				DataBase.delete('ready_to_recv_special:{}'.format(user_id))
+				name_user2 = None
+				if DataBase.hget(f'setting_najva:{id_user}', 'noname'):
+					name_user2 = langU['no_name']
 				name_user = await userInfos(id_user, info = "name")
-				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user), parse_mode = 'html')
+				await editText(inline_msg_id = special_msgID, text = langU['special_najva_registered'].format(name_user2 or name_user), parse_mode = 'html')
 				await sendText(id_user, 0, 1, langU['receive_new_najva_pv'].format(msg.from_user.first_name), 'html', inlineKeys)
 				await editText(chat_id, msg_id, 0, langU['sent_najva_pv'].format('<a href="tg://user?id={}">{}</a>'.
 					format(id_user, name_user)), 'html')
@@ -3346,9 +3355,12 @@ async def inline_query_process(msg: types.InlineQuery):
 				k = await userIds(users[0])
 				if k:
 					users[0] = k
+			name_user2 = None
+			if DataBase.hget(f'setting_najva:{users[0]}', 'noname'):
+				name_user2 = langU['no_name']
 			name_user = await userInfos(users[0], info = "name")
 			input_content = InputTextMessageContent(
-				message_text = langU['inline']['text']['najva_person'].format(name_user),
+				message_text = langU['inline']['text']['najva_person'].format(name_user2 or name_user),
 				parse_mode = 'HTML',
 				disable_web_page_preview = False,
 			)
@@ -3598,9 +3610,12 @@ async def inline_query_process(msg: types.InlineQuery):
 			name_user = await userIds(user)
 		else:
 			name_user = user
+		name_user2 = None
+		if DataBase.hget(f'setting_najva:{name_user}', 'noname'):
+			name_user2 = langU['no_name']
 		name_user = await userInfos(name_user, info = "name")
 		input_content = InputTextMessageContent(
-			message_text = langU['inline']['text']['najva_special'].format(name_user),
+			message_text = langU['inline']['text']['najva_special'].format(name_user2 or name_user),
 			parse_mode = 'HTML',
 			disable_web_page_preview = True,
 		)
