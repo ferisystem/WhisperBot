@@ -1582,13 +1582,14 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 								except:
 									pass
 							await editText(chat_id, sendM[1].message_id, 0, langU['fwdd_to_all'].format(len(LIST), n))
-						elif reply_msg.text:
+						elif reply_msg:
 							LIST = DataBase.smembers('allUsers')
 							sendM = await sendText(chat_id, msg, 1, langU['send_to_all'].format(len(LIST)))
 							n = 0
 							for i in LIST:
-								await asyncio.sleep(0.011)
-								sendM2 = await sendText(i, 0, 1, reply_msg.text)
+								await asyncio.sleep(0.1)
+								# sendM2 = await sendText(i, 0, 1, reply_msg.text)
+								sendM2 = await copyMessage(i, chat_id, reply_id)
 								if sendM2[0] is True:
 									n += 1
 							await editText(chat_id, sendM[1].message_id, 0, langU['sent_to_all'].format(len(LIST), n))
