@@ -2555,7 +2555,7 @@ async def message_process(msg: types.Message):
 			# await bot.leave_chat(chat_id)
 			if msg.via_bot and msg.via_bot.username == gv().botUser and msg.reply_markup:
 				time_data = msg.reply_markup.inline_keyboard[0][0]
-				if time_data.callback_data and 'showN' in time_data.callback_data:
+				if time_data.callback_data and 'showN2' in time_data.callback_data:
 					time_data = time_data.callback_data.split(':')[2]
 					if reply_msg:
 						Uid = reply_msg.from_user.id
@@ -3577,7 +3577,7 @@ async def inline_query_process(msg: types.InlineQuery):
 		ti_me = time()
 		inlineKeys = iMarkup()
 		inlineKeys.add(
-			iButtun(buttuns['show_najva'], callback_data = 'showN:{}:{}'.format(user_id, ti_me))
+			iButtun(buttuns['show_najva'], callback_data = 'showN2:{}:{}'.format(user_id, ti_me))
 				)
 		ads = DataBase.get('have_ads')
 		if ads:
@@ -3752,7 +3752,7 @@ async def inline_query_process(msg: types.InlineQuery):
 					DataBase.delete('najva:{}:{}'.format(from_user, time_data))
 					DataBase.delete('najva_special:{}'.format(from_user))
 			await answerInlineQuery(msg_id, results = [item1,], is_personal = True, cache_time = 3600)
-
+	
 
 async def chosen_inline_process(msg: types.ChosenInlineResult):
 	#{
