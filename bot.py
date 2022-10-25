@@ -3794,6 +3794,12 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 			if DataBase.hget(f'setting_najva:{i}', 'recv'):
 				await sendText(i, 0, 1, langU['you_recv_najva'].format('<a href="tg://user?id={}">{}</a>'.format(user_id, user_name)), 'html')
 		DataBase.incr('stat_najva')
+		for i in najva['users']:
+			if i.isdigit():
+				profiles = await getUserProfilePhotos(i)
+				if profiles[0] and profiles[1].total_count > 0:
+					DataBase.hset('userProfs', i, profiles[1].photos[0][0].file_id)
+				await asyncio.sleep(0.5)
 		del user_steps[user_id]['najva']
 	if re.match(r"^najvaA:(\d+)$", result_id) and 'najva' in user_steps[user_id]:
 		ap = re_matches(r"^najvaA:(\d+)$", result_id)
@@ -3826,7 +3832,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
 		DataBase.hset('najva_special:{}'.format(user_id), 'id', msg.inline_message_id)
 		DataBase.setex('ready_to_recv_special:{}'.format(user_id), 1800, 'True')
-		DataBase.sadd(f'najva_recent:{user_id}', najva['users'])
+		DataBase.sadd(f'najva_recent2:{user_id}', najva['users'])
 		if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
 			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}:{msg.inline_message_id}")
 		DataBase.incr('stat_najva')
@@ -3836,6 +3842,12 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 			iButtun(buttuns['cancel'], callback_data = 'special:cancel:@{}'.format(user_id)),
 		)
 		await sendText(user_id, 0, 1, langU['send_special_najva'], 'html', inlineKeys)
+		for i in najva['users']:
+			if i.isdigit():
+				profiles = await getUserProfilePhotos(i)
+				if profiles[0] and profiles[1].total_count > 0:
+					DataBase.hset('userProfs', i, profiles[1].photos[0][0].file_id)
+				await asyncio.sleep(0.5)
 
 
 async def channel_post_process(msg: types.Message):
