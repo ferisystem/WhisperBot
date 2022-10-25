@@ -1099,6 +1099,14 @@ async def answerInlineQuery(inline_msg_id, results, cache_time = 1, \
 		return False
 
 
+async def getUserProfilePhotos(UserID, offset = 0, limit = 1):
+	try:
+		result = await bot.get_user_profile_photos(UserID, offset, limit)
+		return True, result
+	except Exception as e:
+		return False
+
+
 async def getChatMember(ChatID, UserID):
 	try:
 		return await bot.get_chat_member(ChatID, UserID)
