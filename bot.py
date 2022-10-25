@@ -3774,8 +3774,10 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'text', najva['text'])
 		if len(najva['users']) > 1:
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', str(najva['users']))
+			DataBase.sadd(f'najva_recent:{user_id}', najva['users'])
 		else:
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', najva['users'][0])
+			DataBase.sadd(f'najva_recent:{user_id}', najva['users'][0])
 			# DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
 			# DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
 			if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
@@ -3816,6 +3818,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
 		DataBase.hset('najva_special:{}'.format(user_id), 'id', msg.inline_message_id)
 		DataBase.setex('ready_to_recv_special:{}'.format(user_id), 1800, 'True')
+		DataBase.sadd(f'najva_recent:{user_id}', najva['users'])
 		if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
 			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}:{msg.inline_message_id}")
 		DataBase.incr('stat_najva')
