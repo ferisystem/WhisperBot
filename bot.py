@@ -1344,6 +1344,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 				if 'anon:blo' in input_:
 					ap = re_matches(r'^anon:blo:(\d+):(\d+):@(\d+)$', input_)
 					which_user = int(ap[1])
+					DataBase.incr('stat_anon')
 					if DataBase.sismember('blocks:{}'.format(which_user), user_id):
 						await sendText(chat_id, msg, 1, langU['yare_blocked_anon'], 'md', anonymous_back_keys(user_id))
 						return False
@@ -1492,6 +1493,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 				else:
 					we_have = DataBase.get('link_anon:{}'.format(ap[1]))
 					if we_have:
+						DataBase.incr('stat_anon')
 						if int(we_have) == int(user_id):
 							await sendText(chat_id, msg, 1, "{}\n{}".format(langU['cant_send_self'],
 							langU['enter_id_for_send']), 'md', anonymous_back_keys(user_id))
@@ -2705,11 +2707,12 @@ async def callback_query_process(msg: types.CallbackQuery):
 			if ap[1] == 'block':
 				await editText(chat_id, msg_id, 0, langU['wait'])
 				text = langU['list_block']
-				keys = DataBase.keys("isBan:*")
+				keys = DataBase.smembers("isBanned")
 				n = int(ap[2])
 				for i in keys:
 					n += 1
-					userID = i.split(':')[-1]
+					# userID = i.split(':')[-1]
+					userID = i
 					text = '{}{}- {} | {}\n'.format(
 					text,
 					n,
@@ -2729,23 +2732,15 @@ async def callback_query_process(msg: types.CallbackQuery):
 				inlineKeys.add(
 					iButtun(langU['buttuns']['back'], callback_data = 'backstart:@{}'.format(user_id))
 					)
-				dl_ig_post = DataBase.get('stat_dl_ig_post')
-				dl_ig_story = DataBase.get('stat_dl_ig_story')
-				search_music = DataBase.get('stat_search_music')
-				dl_music = DataBase.get('stat_dl_music')
-				search_youtube = DataBase.get('stat_search_youtube')
-				dl_youtube = DataBase.get('stat_dl_youtube')
-				dl_file = DataBase.get('stat_dl_file')
-				all_users = DataBase.scard('allUsers')
+				stat_users = DataBase.scard('allUsers')
+				stat_block = DataBase.scard('isBanned')
+				stat_najva = DataBase.get('stat_najva')
+				stat_anon = DataBase.get('stat_anon')
 				await editText(chat_id, msg_id, 0, langU['stats'].format(
-				dl_ig_post,
-				dl_ig_story,
-				search_music,
-				dl_music,
-				search_youtube,
-				dl_youtube,
-				dl_file,
-				all_users,
+				stat_users,
+				stat_block,
+				stat_najva,
+				stat_anon,
 				).replace('None', '0'), 'html', inlineKeys)
 		if re.match(r"^anon:@(\d+)$", input):
 			DataBase.delete('ready_to_change_link:{}'.format(user_id))
@@ -3779,12 +3774,14 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		for i in najva['users']:
 			if DataBase.hget(f'setting_najva:{i}', 'recv'):
 				await sendText(i, 0, 1, langU['you_recv_najva'].format('<a href="tg://user?id={}">{}</a>'.format(user_id, user_name)), 'html')
+		DataBase.incr('stat_najva')
 		del user_steps[user_id]['najva']
 	if re.match(r"^najvaA:(\d+)$", result_id) and 'najva' in user_steps[user_id]:
 		ap = re_matches(r"^najvaA:(\d+)$", result_id)
 		najva = user_steps[user_id]['najva']
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'text', najva['text'])
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', 'all')
+		DataBase.incr('stat_najva')
 		del user_steps[user_id]['najva']
 	if re.match(r"^najvaR:(\d+)$", result_id) and 'najva' in user_steps[user_id]:
 		ap = re_matches(r"^najvaR:(\d+)$", result_id)
@@ -3795,6 +3792,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		# DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
 		if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
 			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}:{msg.inline_message_id}")
+		DataBase.incr('stat_najva')
 		del user_steps[user_id]['najva']
 	if re.match(r"^set:(.*):(\d+)$", result_id):
 		ap = re_matches(r"^set:(.*):(\d+)$", result_id)
@@ -3811,6 +3809,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		DataBase.setex('ready_to_recv_special:{}'.format(user_id), 1800, 'True')
 		if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
 			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}:{msg.inline_message_id}")
+		DataBase.incr('stat_najva')
 		del user_steps[user_id]['najva']
 		inlineKeys = iMarkup()
 		inlineKeys.add(
