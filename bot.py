@@ -2866,7 +2866,6 @@ async def callback_query_process(msg: types.CallbackQuery):
 				pass
 			elif ap[1] == 'delall':
 				await answerCallbackQuery(msg, langU['delall'], show_alert = True, cache_time = 3600)
-			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
 		if re.match(r"^najva:help:@(\d+)$", input):
 			await _.delete()
 			await sendText(chat_id, _.reply_to_message, 1, langU['najva_help'], None, najva_help_keys(user_id))
