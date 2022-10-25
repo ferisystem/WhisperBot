@@ -3151,17 +3151,18 @@ async def callback_query_process(msg: types.CallbackQuery):
 			time_data = ap[2]
 			text_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'text')
 			users_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'users')
-			if (username != "" and username in users_data) or str(user_id) in users_data or str(user_id) in from_user or users_data == 'all':
+			is_allow = (username != "" and username in users_data) or str(user_id) in users_data
+			if is_allow or str(user_id) in from_user or users_data == 'all':
 				file_id = DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'file_id')
 				if file_id:
 					return await answerCallbackQuery(msg, url_web = "t.me/{}?start={}_{}".format(gv().botUser, from_user, time_data.replace('.', '_')))
 				await answerCallbackQuery(msg, text_data, show_alert = True, cache_time = 3600)
 				# if not str(user_id) in from_user and DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0
-				if DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0:
+				if DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0 and is_allow:
 					if DataBase.hget(f'setting_najva:{from_user}', 'seen') and users_data != 'all':
 						await sendText(from_user, 0, 1, langU['najva_seened'].format(msg.from_user.first_name))
 					if users_data != 'all':
-						if users_data == 1:
+						if len(users_data) == 1:
 							await bot.edit_message_reply_markup(inline_message_id = msg_id, reply_markup = najva_seen_keys(user_id, from_user, time_data))
 						else:
 							await editText(inline_msg_id = msg_id, text = langU['najva_seened']
