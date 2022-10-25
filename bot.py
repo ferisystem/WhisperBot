@@ -3784,7 +3784,11 @@ async def inline_query_process(msg: types.InlineQuery):
 			input_message_content = input_content,
 		)
 		items.append(item2)
+		count = 0
 		for user in users:
+			count += 1
+			if count > 5:
+				break
 			name_user = user
 			name_user2 = None
 			if DataBase.hget(f'setting_najva:{name_user}', 'noname'):
