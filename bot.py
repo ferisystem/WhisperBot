@@ -1099,6 +1099,14 @@ async def answerInlineQuery(inline_msg_id, results, cache_time = 1, \
 		return False
 
 
+async def getUserProfilePhotos(UserID, offset = 0, limit = 1):
+	try:
+		result = await bot.get_user_profile_photos(UserID, offset, limit)
+		return True, result
+	except Exception as e:
+		return False
+
+
 async def getChatMember(ChatID, UserID):
 	try:
 		return await bot.get_chat_member(ChatID, UserID)
@@ -1344,6 +1352,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 				if 'anon:blo' in input_:
 					ap = re_matches(r'^anon:blo:(\d+):(\d+):@(\d+)$', input_)
 					which_user = int(ap[1])
+					DataBase.incr('stat_anon')
 					if DataBase.sismember('blocks:{}'.format(which_user), user_id):
 						await sendText(chat_id, msg, 1, langU['yare_blocked_anon'], 'md', anonymous_back_keys(user_id))
 						return False
@@ -1492,6 +1501,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 				else:
 					we_have = DataBase.get('link_anon:{}'.format(ap[1]))
 					if we_have:
+						DataBase.incr('stat_anon')
 						if int(we_have) == int(user_id):
 							await sendText(chat_id, msg, 1, "{}\n{}".format(langU['cant_send_self'],
 							langU['enter_id_for_send']), 'md', anonymous_back_keys(user_id))
@@ -1582,13 +1592,14 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 								except:
 									pass
 							await editText(chat_id, sendM[1].message_id, 0, langU['fwdd_to_all'].format(len(LIST), n))
-						elif reply_msg.text:
+						elif reply_msg:
 							LIST = DataBase.smembers('allUsers')
 							sendM = await sendText(chat_id, msg, 1, langU['send_to_all'].format(len(LIST)))
 							n = 0
 							for i in LIST:
-								await asyncio.sleep(0.011)
-								sendM2 = await sendText(i, 0, 1, reply_msg.text)
+								await asyncio.sleep(0.1)
+								# sendM2 = await sendText(i, 0, 1, reply_msg.text)
+								sendM2 = await copyMessage(i, chat_id, reply_id)
 								if sendM2[0] is True:
 									n += 1
 							await editText(chat_id, sendM[1].message_id, 0, langU['sent_to_all'].format(len(LIST), n))
@@ -2544,7 +2555,7 @@ async def message_process(msg: types.Message):
 			# await bot.leave_chat(chat_id)
 			if msg.via_bot and msg.via_bot.username == gv().botUser and msg.reply_markup:
 				time_data = msg.reply_markup.inline_keyboard[0][0]
-				if time_data.callback_data and 'showN' in time_data.callback_data:
+				if time_data.callback_data and 'showN2' in time_data.callback_data:
 					time_data = time_data.callback_data.split(':')[2]
 					if reply_msg:
 						Uid = reply_msg.from_user.id
@@ -2704,11 +2715,12 @@ async def callback_query_process(msg: types.CallbackQuery):
 			if ap[1] == 'block':
 				await editText(chat_id, msg_id, 0, langU['wait'])
 				text = langU['list_block']
-				keys = DataBase.keys("isBan:*")
+				keys = DataBase.smembers("isBanned")
 				n = int(ap[2])
 				for i in keys:
 					n += 1
-					userID = i.split(':')[-1]
+					# userID = i.split(':')[-1]
+					userID = i
 					text = '{}{}- {} | {}\n'.format(
 					text,
 					n,
@@ -2728,23 +2740,15 @@ async def callback_query_process(msg: types.CallbackQuery):
 				inlineKeys.add(
 					iButtun(langU['buttuns']['back'], callback_data = 'backstart:@{}'.format(user_id))
 					)
-				dl_ig_post = DataBase.get('stat_dl_ig_post')
-				dl_ig_story = DataBase.get('stat_dl_ig_story')
-				search_music = DataBase.get('stat_search_music')
-				dl_music = DataBase.get('stat_dl_music')
-				search_youtube = DataBase.get('stat_search_youtube')
-				dl_youtube = DataBase.get('stat_dl_youtube')
-				dl_file = DataBase.get('stat_dl_file')
-				all_users = DataBase.scard('allUsers')
+				stat_users = DataBase.scard('allUsers')
+				stat_block = DataBase.scard('isBanned')
+				stat_najva = DataBase.get('stat_najva')
+				stat_anon = DataBase.get('stat_anon')
 				await editText(chat_id, msg_id, 0, langU['stats'].format(
-				dl_ig_post,
-				dl_ig_story,
-				search_music,
-				dl_music,
-				search_youtube,
-				dl_youtube,
-				dl_file,
-				all_users,
+				stat_users,
+				stat_block,
+				stat_najva,
+				stat_anon,
 				).replace('None', '0'), 'html', inlineKeys)
 		if re.match(r"^anon:@(\d+)$", input):
 			DataBase.delete('ready_to_change_link:{}'.format(user_id))
@@ -2862,6 +2866,14 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await editText(chat_id, msg_id, 0, langU['najva'], None, najva_keys(user_id))
 		if re.match(r"^najva:settings:@(\d+)$", input):
 			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
+		if re.match(r"^najva:settings:(.*):@(\d+)$", input):
+			ap = re_matches(r"^najva:settings:(.*):@(\d+)$", input)
+			if ap[1] == 'recents':
+				pass
+			elif ap[1] == 'blocks':
+				pass
+			elif ap[1] == 'delall':
+				await answerCallbackQuery(msg, langU['delall'], show_alert = True, cache_time = 3600)
 		if re.match(r"^najva:help:@(\d+)$", input):
 			await _.delete()
 			await sendText(chat_id, _.reply_to_message, 1, langU['najva_help'], None, najva_help_keys(user_id))
@@ -3147,17 +3159,18 @@ async def callback_query_process(msg: types.CallbackQuery):
 			time_data = ap[2]
 			text_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'text')
 			users_data = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'users')
-			if (username != "" and username in users_data) or str(user_id) in users_data or str(user_id) in from_user or users_data == 'all':
+			is_allow = (username != "" and username in users_data) or str(user_id) in users_data
+			if is_allow or str(user_id) in from_user or users_data == 'all':
 				file_id = DataBase.hget('najva:{}:{}'.format(user_id, time_data), 'file_id')
 				if file_id:
 					return await answerCallbackQuery(msg, url_web = "t.me/{}?start={}_{}".format(gv().botUser, from_user, time_data.replace('.', '_')))
 				await answerCallbackQuery(msg, text_data, show_alert = True, cache_time = 3600)
 				# if not str(user_id) in from_user and DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0
-				if DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0:
+				if DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0 and is_allow:
 					if DataBase.hget(f'setting_najva:{from_user}', 'seen') and users_data != 'all':
 						await sendText(from_user, 0, 1, langU['najva_seened'].format(msg.from_user.first_name))
 					if users_data != 'all':
-						if users_data == 1:
+						if len(users_data) == 1:
 							await bot.edit_message_reply_markup(inline_message_id = msg_id, reply_markup = najva_seen_keys(user_id, from_user, time_data))
 						else:
 							await editText(inline_msg_id = msg_id, text = langU['najva_seened']
@@ -3564,7 +3577,7 @@ async def inline_query_process(msg: types.InlineQuery):
 		ti_me = time()
 		inlineKeys = iMarkup()
 		inlineKeys.add(
-			iButtun(buttuns['show_najva'], callback_data = 'showN:{}:{}'.format(user_id, ti_me))
+			iButtun(buttuns['show_najva'], callback_data = 'showN2:{}:{}'.format(user_id, ti_me))
 				)
 		ads = DataBase.get('have_ads')
 		if ads:
@@ -3625,6 +3638,7 @@ async def inline_query_process(msg: types.InlineQuery):
 		)
 		if '@' in user:
 			name_user = await userIds(user)
+			user = name_user
 		else:
 			name_user = user
 		name_user2 = None
@@ -3739,6 +3753,75 @@ async def inline_query_process(msg: types.InlineQuery):
 					DataBase.delete('najva:{}:{}'.format(from_user, time_data))
 					DataBase.delete('najva_special:{}'.format(from_user))
 			await answerInlineQuery(msg_id, results = [item1,], is_personal = True, cache_time = 3600)
+	if re.match(r'^\*$', input):
+		users = DataBase.smembers(f'najva_recent2:{user_id}')
+		if len(users) == 0:
+			return False
+		users = list(users)
+		ti_me = time()
+		inlineKeys = iMarkup()
+		inlineKeys.add(
+			iButtun("{} - {}".format(gv().botName, gv().botUser), url = 't.me/{}'.format(gv().botUser))
+			)
+		ads = DataBase.get('have_ads')
+		if ads:
+			inlineKeys.add(
+				iButtun(DataBase.hget('info_ads', 'buttuns'), url = DataBase.hget('info_ads', 'url'))
+			)
+		items = []
+		input_content = InputTextMessageContent(
+			message_text = langU['inline']['text']['najva_havn_text'],
+			parse_mode = 'HTML',
+			disable_web_page_preview = True,
+		)
+		item2 = InlineQueryResultArticle(
+			id = 'null',
+			title = langU['inline']['title']['najva_havn_text'],
+			description = langU['inline']['desc']['najva_havn_text'],
+			thumb_url = pic_cross,
+			thumb_width = 512,
+			thumb_height = 512,
+			input_message_content = input_content,
+		)
+		items.append(item2)
+		for user in users:
+			name_user = user
+			name_user2 = None
+			if DataBase.hget(f'setting_najva:{name_user}', 'noname'):
+				name_user2 = langU['no_name']
+			name_user = await userInfos(name_user, info = "name")
+			input_content = InputTextMessageContent(
+				message_text = langU['inline']['text']['najva_special'].format(name_user2 or name_user),
+				parse_mode = 'HTML',
+				disable_web_page_preview = True,
+			)
+			# have_prof = DataBase.hget('userProfs', user)
+			# if have_prof:
+				# get_file = await bot.get_file(have_prof)
+				# file_path = get_file['file_path']
+				# file_path = f'https://api.telegram.org/file/bot{telegram_datas["botToken"]}/{file_path}'
+			# else:
+				# file_path = pic_user
+			file_path = pic_user
+			item1 = InlineQueryResultArticle(
+				id = f'najvaS:{user_id}:{user}',
+				title = langU['inline']['title']['najva_special'].format(name_user),
+				description = langU['inline']['desc']['najva_special'],
+				thumb_url = file_path,
+				thumb_width = 512,
+				thumb_height = 512,
+				input_message_content = input_content,
+				reply_markup = inlineKeys,
+			)
+			items.append(item1)
+		user_steps[user_id].update({
+		"najva":{
+		"time": ti_me,
+		"text": None,
+		"users": 'x',
+		}
+		})
+		await answerInlineQuery(msg_id, results = items, cache_time = 1)
 
 
 async def chosen_inline_process(msg: types.ChosenInlineResult):
@@ -3769,8 +3852,13 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'text', najva['text'])
 		if len(najva['users']) > 1:
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', str(najva['users']))
+			for i in najva['users']:
+				if i.isdigit():
+					DataBase.sadd(f'najva_recent:{user_id}', i)
 		else:
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', najva['users'][0])
+			if najva['users'][0].isdigit():
+				DataBase.sadd(f'najva_recent:{user_id}', najva['users'][0])
 			# DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
 			# DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
 			if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
@@ -3778,12 +3866,21 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		for i in najva['users']:
 			if DataBase.hget(f'setting_najva:{i}', 'recv'):
 				await sendText(i, 0, 1, langU['you_recv_najva'].format('<a href="tg://user?id={}">{}</a>'.format(user_id, user_name)), 'html')
+		DataBase.incr('stat_najva')
+		for i in najva['users']:
+			if i.isdigit() and not DataBase.get(f'userProfs:{i}'):
+				DataBase.setex(f'userProfs:{i}', 604800, 1)
+				profiles = await getUserProfilePhotos(i)
+				if profiles[0] and profiles[1].total_count > 0:
+					DataBase.hset('userProfs', i, profiles[1].photos[0][-1].file_id)
+				await asyncio.sleep(0.5)
 		del user_steps[user_id]['najva']
 	if re.match(r"^najvaA:(\d+)$", result_id) and 'najva' in user_steps[user_id]:
 		ap = re_matches(r"^najvaA:(\d+)$", result_id)
 		najva = user_steps[user_id]['najva']
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'text', najva['text'])
 		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', 'all')
+		DataBase.incr('stat_najva')
 		del user_steps[user_id]['najva']
 	if re.match(r"^najvaR:(\d+)$", result_id) and 'najva' in user_steps[user_id]:
 		ap = re_matches(r"^najvaR:(\d+)$", result_id)
@@ -3794,6 +3891,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		# DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
 		if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
 			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}:{msg.inline_message_id}")
+		DataBase.incr('stat_najva')
 		del user_steps[user_id]['najva']
 	if re.match(r"^set:(.*):(\d+)$", result_id):
 		ap = re_matches(r"^set:(.*):(\d+)$", result_id)
@@ -3808,14 +3906,50 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
 		DataBase.hset('najva_special:{}'.format(user_id), 'id', msg.inline_message_id)
 		DataBase.setex('ready_to_recv_special:{}'.format(user_id), 1800, 'True')
+		if str(najva['users']).isdigit():
+			DataBase.sadd(f'najva_recent2:{user_id}', najva['users'])
 		if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
 			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}:{msg.inline_message_id}")
+		DataBase.incr('stat_najva')
 		del user_steps[user_id]['najva']
 		inlineKeys = iMarkup()
 		inlineKeys.add(
 			iButtun(buttuns['cancel'], callback_data = 'special:cancel:@{}'.format(user_id)),
 		)
 		await sendText(user_id, 0, 1, langU['send_special_najva'], 'html', inlineKeys)
+		if str(najva['users']).isdigit():
+			i = najva['users']
+			if not DataBase.get(f'userProfs:{i}'):
+				DataBase.setex(f'userProfs:{i}', 604800, 1)
+				profiles = await getUserProfilePhotos(i)
+				if profiles[0] and profiles[1].total_count > 0:
+					DataBase.hset('userProfs', i, profiles[1].photos[0][-1].file_id)
+	if re.match(r"^najvaS:(\d+):(\d+)$", result_id) and 'najva' in user_steps[user_id]:
+		ap = re_matches(r"^najvaS:(\d+):(\d+)$", result_id)
+		najva = user_steps[user_id]['najva']
+		najva['users'] = ap[2]
+		DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', najva['users'])
+		DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
+		DataBase.hset('najva_special:{}'.format(user_id), 'id', msg.inline_message_id)
+		DataBase.setex('ready_to_recv_special:{}'.format(user_id), 1800, 'True')
+		if str(najva['users']).isdigit():
+			DataBase.sadd(f'najva_recent2:{user_id}', najva['users'])
+		if DataBase.hget(f'setting_najva:{user_id}', 'autodel'):
+			DataBase.sadd('najva_autodel', f"{user_id}:{najva['time']}:{msg.inline_message_id}")
+		DataBase.incr('stat_najva')
+		del user_steps[user_id]['najva']
+		inlineKeys = iMarkup()
+		inlineKeys.add(
+			iButtun(buttuns['cancel'], callback_data = 'special:cancel:@{}'.format(user_id)),
+		)
+		await sendText(user_id, 0, 1, langU['send_special_najva'], 'html', inlineKeys)
+		if str(najva['users']).isdigit():
+			i = najva['users']
+			if not DataBase.get(f'userProfs:{i}'):
+				DataBase.setex(f'userProfs:{i}', 604800, 1)
+				profiles = await getUserProfilePhotos(i)
+				if profiles[0] and profiles[1].total_count > 0:
+					DataBase.hset('userProfs', i, profiles[1].photos[0][-1].file_id)
 
 
 async def channel_post_process(msg: types.Message):
