@@ -1953,7 +1953,7 @@ def najva_settings_keys(UserID):
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_block'].
-		format(DataBase.scard(f'blocks_najva:{UserID}')),
+		format(DataBase.scard(f'blocks2:{UserID}')),
 		callback_data = 'najva:settings:blocks{}'.format(hash)),
 		)
 	inlineKeys.add(
