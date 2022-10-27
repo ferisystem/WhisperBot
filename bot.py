@@ -1918,7 +1918,7 @@ def najva_settings_keys(UserID):
 	inlineKeys = iMarkup()
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_recents'].
-		format(DataBase.scard(f'recent_najva:{UserID}')),
+		format(DataBase.scard(f'najva_recent:{UserID}') + DataBase.scard(f'najva_recent2:{UserID}')),
 		callback_data = 'najva:settings:recents{}'.format(hash)),
 		)
 	inlineKeys.add(
@@ -1953,7 +1953,7 @@ def najva_settings_keys(UserID):
 		)
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_block'].
-		format(DataBase.scard(f'blocks_najva:{UserID}')),
+		format(DataBase.scard(f'blocks2:{UserID}')),
 		callback_data = 'najva:settings:blocks{}'.format(hash)),
 		)
 	inlineKeys.add(
@@ -2869,11 +2869,145 @@ async def callback_query_process(msg: types.CallbackQuery):
 		if re.match(r"^najva:settings:(.*):@(\d+)$", input):
 			ap = re_matches(r"^najva:settings:(.*):@(\d+)$", input)
 			if ap[1] == 'recents':
-				pass
+				recent = DataBase.smembers('najva_recent:{}'.format(user_id))
+				recent2 = DataBase.smembers('najva_recent2:{}'.format(user_id))
+				if len(recent) > 0 or len(recent2) > 0:
+					text = langU['recent_list'].format(len(recent) + len(recent2))
+					inlineKeys = iMarkup()
+					count = 0
+					for i in recent:
+						name_user = await userInfos(i, 'name')
+						if 'Deleted' in name_user:
+							DataBase.srem(f'najva_recent:{user_id}', i)
+							DataBase.srem(f'najva_recent2:{user_id}', i)
+						else:
+							count += 1
+							inlineKeys.add(
+								iButtun(f"{count}- {name_user}", callback_data = f'recent:{i}:@{user_id}'),
+							)
+							if count > 22:
+								break
+					for i in recent2:
+						name_user = await userInfos(i, 'name')
+						if 'Deleted' in name_user:
+							DataBase.srem(f'najva_recent:{user_id}', i)
+							DataBase.srem(f'najva_recent2:{user_id}', i)
+						else:
+							count += 1
+							inlineKeys.add(
+								iButtun(f"{count}- {name_user}", callback_data = f'recent:{i}:@{user_id}'),
+							)
+							if count > 22:
+								break
+					inlineKeys.add(
+						iButtun(langU['buttuns']['back_nset'], callback_data = f'najva:settings:@{user_id}'),
+						iButtun(langU['buttuns']['delall'], callback_data = f'recent:all:@{user_id}'),
+					)
+					await editText(chat_id, msg_id, 0, text, None, inlineKeys)
+				else:
+					await answerCallbackQuery(msg, langU['recent_empty'], show_alert = True, cache_time = 10)
 			elif ap[1] == 'blocks':
-				pass
+				blocks2 = DataBase.smembers('blocks2:{}'.format(user_id))
+				if len(blocks2) > 0:
+					text = langU['blocks2_list'].format(len(blocks2))
+					inlineKeys = iMarkup()
+					count = 0
+					for i in blocks2:
+						name_user = await userInfos(i, 'name')
+						if 'Deleted' in name_user:
+							DataBase.srem(f'blocks2:{user_id}', i)
+						else:
+							count += 1
+							inlineKeys.add(
+								iButtun(f"{count}- {name_user}", callback_data = f'blocks2:{i}:@{user_id}'),
+							)
+							if count > 22:
+								break
+					inlineKeys.add(
+						iButtun(langU['buttuns']['back_nset'], callback_data = f'najva:settings:@{user_id}'),
+						iButtun(langU['buttuns']['delall'], callback_data = f'blocks2:all:@{user_id}'),
+					)
+					await editText(chat_id, msg_id, 0, text, None, inlineKeys)
+				else:
+					await answerCallbackQuery(msg, langU['blocks2_empty'], show_alert = True, cache_time = 10)
 			elif ap[1] == 'delall':
 				await answerCallbackQuery(msg, langU['delall'], show_alert = True, cache_time = 3600)
+		if re.match(r"^blocks2:all:@(\d+)$", input):
+			inlineKeys = iMarkup()
+			inlineKeys.add(
+				iButtun(langU['buttuns']['no'], callback_data = f'najva:settings:blocks:@{user_id}'),
+				iButtun(langU['buttuns']['yes'], callback_data = f'blocks2:all:y:@{user_id}'),
+			)
+			await editText(chat_id, msg_id, 0, langU['sure_del_blocks2'], None, inlineKeys)
+		if re.match(r"^blocks2:all:y:@(\d+)$", input):
+			DataBase.delete(f'blocks2:{user_id}')
+			await answerCallbackQuery(msg, langU['delall_y'], show_alert = True)
+			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
+		if re.match(r"^blocks2:(\d+):@(\d+)$", input):
+			ap = re_matches(r"^blocks2:(\d+):@(\d+)$", input)
+			inlineKeys = iMarkup()
+			uname_user = await userInfos(int(ap[1]), info = "username")
+			name_user = await userInfos(int(ap[1]), info = "name")
+			if uname_user:
+				call_url = 'https://t.me/{}'.format(uname_user)
+			else:
+				call_url = 'https://t.me?openmessage?user_id={}'.format(ap[1])
+			inlineKeys.add(
+				iButtun(name_user, call_url),
+			)
+			inlineKeys.add(
+				iButtun(langU['buttuns']['no'], callback_data = f'najva:settings:blocks:@{user_id}'),
+				iButtun(langU['buttuns']['yes'], callback_data = f'blocks2:{ap[1]}:y:@{user_id}'),
+			)
+			await editText(chat_id, msg_id, 0, langU['blocks2_info'].format(ap[1]), 'md', inlineKeys)
+		if re.match(r"^blocks2:(\d+):y:@(\d+)$", input):
+			ap = re_matches(r"^blocks2:(\d+):y:@(\d+)$", input)
+			DataBase.srem(f'blocks2:{user_id}', ap[1])
+			await answerCallbackQuery(msg, langU['blocks2_user_del'], show_alert = True)
+			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))			
+		if re.match(r"^recent:all:@(\d+)$", input):
+			inlineKeys = iMarkup()
+			inlineKeys.add(
+				iButtun(langU['buttuns']['no'], callback_data = f'najva:settings:recents:@{user_id}'),
+				iButtun(langU['buttuns']['yes'], callback_data = f'recent:all:y:@{user_id}'),
+			)
+			await editText(chat_id, msg_id, 0, langU['sure_del_recent'], None, inlineKeys)
+		if re.match(r"^recent:all:y:@(\d+)$", input):
+			DataBase.delete(f'najva_recent:{user_id}')
+			DataBase.delete(f'najva_recent2:{user_id}')
+			await answerCallbackQuery(msg, langU['delall_recent'], show_alert = True)
+			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
+		if re.match(r"^recent:(\d+):@(\d+)$", input):
+			ap = re_matches(r"^recent:(\d+):@(\d+)$", input)
+			inlineKeys = iMarkup()
+			uname_user = await userInfos(int(ap[1]), info = "username")
+			name_user = await userInfos(int(ap[1]), info = "name")
+			if uname_user:
+				call_url = 'https://t.me/{}'.format(uname_user)
+			else:
+				call_url = 'https://t.me?openmessage?user_id={}'.format(ap[1])
+			inlineKeys.add(
+				iButtun(name_user, call_url),
+			)
+			inlineKeys.add(
+				iButtun(langU['buttuns']['block'], callback_data = f'recent:{ap[1]}:b:@{user_id}'),
+			)
+			inlineKeys.add(
+				iButtun(langU['buttuns']['delete'], callback_data = f'recent:{ap[1]}:y:@{user_id}'),
+			)
+			inlineKeys.add(
+				iButtun(langU['buttuns']['back_nrec'], callback_data = f'najva:settings:recents:@{user_id}'),
+			)
+			await editText(chat_id, msg_id, 0, langU['recent_info'].format(ap[1]), 'md', inlineKeys)
+		if re.match(r"^recent:(\d+):y:@(\d+)$", input):
+			ap = re_matches(r"^recent:(\d+):y:@(\d+)$", input)
+			DataBase.srem(f'najva_recent:{user_id}', ap[1])
+			DataBase.srem(f'najva_recent2:{user_id}', ap[1])
+			await answerCallbackQuery(msg, langU['recent_user_del'], show_alert = True)
+			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
+		if re.match(r"^recent:(\d+):b:@(\d+)$", input):
+			ap = re_matches(r"^recent:(\d+):b:@(\d+)$", input)
+			await answerCallbackQuery(msg, langU['block_recent'], show_alert = True, cache_time = 3600)
 		if re.match(r"^najva:help:@(\d+)$", input):
 			await _.delete()
 			await sendText(chat_id, _.reply_to_message, 1, langU['najva_help'], None, najva_help_keys(user_id))
@@ -3784,7 +3918,11 @@ async def inline_query_process(msg: types.InlineQuery):
 			input_message_content = input_content,
 		)
 		items.append(item2)
+		count = 0
 		for user in users:
+			count += 1
+			if count > 5:
+				break
 			name_user = user
 			name_user2 = None
 			if DataBase.hget(f'setting_najva:{name_user}', 'noname'):
@@ -3853,11 +3991,11 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		if len(najva['users']) > 1:
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', str(najva['users']))
 			for i in najva['users']:
-				if i.isdigit():
+				if str(i).isdigit():
 					DataBase.sadd(f'najva_recent:{user_id}', i)
 		else:
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', najva['users'][0])
-			if najva['users'][0].isdigit():
+			if str(najva['users'][0]).isdigit():
 				DataBase.sadd(f'najva_recent:{user_id}', najva['users'][0])
 			# DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
 			# DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
@@ -3868,7 +4006,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 				await sendText(i, 0, 1, langU['you_recv_najva'].format('<a href="tg://user?id={}">{}</a>'.format(user_id, user_name)), 'html')
 		DataBase.incr('stat_najva')
 		for i in najva['users']:
-			if i.isdigit() and not DataBase.get(f'userProfs:{i}'):
+			if str(i).isdigit() and not DataBase.get(f'userProfs:{i}'):
 				DataBase.setex(f'userProfs:{i}', 604800, 1)
 				profiles = await getUserProfilePhotos(i)
 				if profiles[0] and profiles[1].total_count > 0:
