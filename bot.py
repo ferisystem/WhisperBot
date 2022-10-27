@@ -2871,9 +2871,64 @@ async def callback_query_process(msg: types.CallbackQuery):
 			if ap[1] == 'recents':
 				pass
 			elif ap[1] == 'blocks':
-				pass
+				blocks2 = DataBase.smembers('blocks2:{}'.format(user_id))
+				if len(blocks2) > 0:
+					text = langU['blocks2_list'].format(len(blocks2))
+					inlineKeys = iMarkup()
+					count = 0
+					for i in blocks2:
+						name_user = await userInfos(i, 'name')
+						if 'Deleted' in name_user:
+							DataBase.srem(f'blocks2:{user_id}', i)
+						else:
+							count += 1
+							inlineKeys.add(
+								iButtun(f"{count}- {name_user}", callback_data = f'blocks2:{i}:@{user_id}'),
+							)
+							if count > 22:
+								break
+					inlineKeys.add(
+						iButtun(langU['buttuns']['back_nset'], callback_data = f'najva:settings:@{user_id}'),
+						iButtun(langU['buttuns']['delall_blocks2'], callback_data = f'blocks2:all:@{user_id}'),
+					)
+					await editText(chat_id, msg_id, 0, text, None, inlineKeys)
+				else:
+					await answerCallbackQuery(msg, langU['blocks2_empty'], show_alert = True, cache_time = 10)
 			elif ap[1] == 'delall':
 				await answerCallbackQuery(msg, langU['delall'], show_alert = True, cache_time = 3600)
+		if re.match(r"^blocks2:all:@(\d+)$", input):
+			inlineKeys = iMarkup()
+			inlineKeys.add(
+				iButtun(langU['buttuns']['no'], callback_data = f'najva:settings:blocks:@{user_id}'),
+				iButtun(langU['buttuns']['yes'], callback_data = f'blocks2:all:y:@{user_id}'),
+			)
+			await editText(chat_id, msg_id, 0, langU['sure_del_blocks2'], None, inlineKeys)
+		if re.match(r"^blocks2:all:y:@(\d+)$", input):
+			print(DataBase.delete(f'blocks2:{user_id}'))
+			await answerCallbackQuery(msg, langU['delall_y'], show_alert = True)
+			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
+		if re.match(r"^blocks2:(\d+):@(\d+)$", input):
+			ap = re_matches(r"^blocks2:(\d+):@(\d+)$", input)
+			inlineKeys = iMarkup()
+			uname_user = await userInfos(int(ap[1]), info = "username")
+			name_user = await userInfos(int(ap[1]), info = "name")
+			if uname_user:
+				call_url = 'https://t.me/{}'.format(uname_user)
+			else:
+				call_url = 'https://t.me?openmessage?user_id={}'.format(ap[1])
+			inlineKeys.add(
+				iButtun(name_user, call_url),
+			)
+			inlineKeys.add(
+				iButtun(langU['buttuns']['no'], callback_data = f'najva:settings:blocks:@{user_id}'),
+				iButtun(langU['buttuns']['yes'], callback_data = f'blocks2:{ap[1]}:y:@{user_id}'),
+			)
+			await editText(chat_id, msg_id, 0, langU['blocks2_info'].format(ap[1]), 'md', inlineKeys)
+		if re.match(r"^blocks2:(\d+):y:@(\d+)$", input):
+			ap = re_matches(r"^blocks2:(\d+):y:@(\d+)$", input)
+			DataBase.srem(f'blocks2:{user_id}', ap[1])
+			await answerCallbackQuery(msg, langU['blocks2_user_del'], show_alert = True)
+			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))			
 		if re.match(r"^najva:help:@(\d+)$", input):
 			await _.delete()
 			await sendText(chat_id, _.reply_to_message, 1, langU['najva_help'], None, najva_help_keys(user_id))
