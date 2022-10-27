@@ -2872,7 +2872,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 				recent = DataBase.smembers('najva_recent:{}'.format(user_id))
 				recent2 = DataBase.smembers('najva_recent2:{}'.format(user_id))
 				if len(recent) > 0 or len(recent2) > 0:
-					text = langU['recent_list'].format(len(recent))
+					text = langU['recent_list'].format(len(recent) + len(recent2))
 					inlineKeys = iMarkup()
 					count = 0
 					for i in recent:
@@ -2965,6 +2965,49 @@ async def callback_query_process(msg: types.CallbackQuery):
 			DataBase.srem(f'blocks2:{user_id}', ap[1])
 			await answerCallbackQuery(msg, langU['blocks2_user_del'], show_alert = True)
 			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))			
+		if re.match(r"^recent:all:@(\d+)$", input):
+			inlineKeys = iMarkup()
+			inlineKeys.add(
+				iButtun(langU['buttuns']['no'], callback_data = f'najva:settings:recents:@{user_id}'),
+				iButtun(langU['buttuns']['yes'], callback_data = f'recent:all:y:@{user_id}'),
+			)
+			await editText(chat_id, msg_id, 0, langU['sure_del_recent'], None, inlineKeys)
+		if re.match(r"^recent:all:y:@(\d+)$", input):
+			DataBase.delete(f'najva_recent:{user_id}')
+			DataBase.delete(f'najva_recent2:{user_id}')
+			await answerCallbackQuery(msg, langU['delall_recent'], show_alert = True)
+			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
+		if re.match(r"^recent:(\d+):@(\d+)$", input):
+			ap = re_matches(r"^recent:(\d+):@(\d+)$", input)
+			inlineKeys = iMarkup()
+			uname_user = await userInfos(int(ap[1]), info = "username")
+			name_user = await userInfos(int(ap[1]), info = "name")
+			if uname_user:
+				call_url = 'https://t.me/{}'.format(uname_user)
+			else:
+				call_url = 'https://t.me?openmessage?user_id={}'.format(ap[1])
+			inlineKeys.add(
+				iButtun(name_user, call_url),
+			)
+			inlineKeys.add(
+				iButtun(langU['buttuns']['block'], callback_data = f'recent:{ap[1]}:b:@{user_id}'),
+			)
+			inlineKeys.add(
+				iButtun(langU['buttuns']['delete'], callback_data = f'recent:{ap[1]}:y:@{user_id}'),
+			)
+			inlineKeys.add(
+				iButtun(langU['buttuns']['back_nrec'], callback_data = f'najva:settings:recents:@{user_id}'),
+			)
+			await editText(chat_id, msg_id, 0, langU['recent_info'].format(ap[1]), 'md', inlineKeys)
+		if re.match(r"^recent:(\d+):y:@(\d+)$", input):
+			ap = re_matches(r"^recent:(\d+):y:@(\d+)$", input)
+			DataBase.srem(f'najva_recent:{user_id}', ap[1])
+			DataBase.srem(f'najva_recent2:{user_id}', ap[1])
+			await answerCallbackQuery(msg, langU['recent_user_del'], show_alert = True)
+			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
+		if re.match(r"^recent:(\d+):b:@(\d+)$", input):
+			ap = re_matches(r"^recent:(\d+):b:@(\d+)$", input)
+			await answerCallbackQuery(msg, langU['block_recent'], show_alert = True, cache_time = 3600)
 		if re.match(r"^najva:help:@(\d+)$", input):
 			await _.delete()
 			await sendText(chat_id, _.reply_to_message, 1, langU['najva_help'], None, najva_help_keys(user_id))
