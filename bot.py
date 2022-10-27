@@ -2869,7 +2869,43 @@ async def callback_query_process(msg: types.CallbackQuery):
 		if re.match(r"^najva:settings:(.*):@(\d+)$", input):
 			ap = re_matches(r"^najva:settings:(.*):@(\d+)$", input)
 			if ap[1] == 'recents':
-				pass
+				recent = DataBase.smembers('najva_recent:{}'.format(user_id))
+				recent2 = DataBase.smembers('najva_recent2:{}'.format(user_id))
+				if len(recent) > 0 or len(recent2) > 0:
+					text = langU['recent_list'].format(len(recent))
+					inlineKeys = iMarkup()
+					count = 0
+					for i in recent:
+						name_user = await userInfos(i, 'name')
+						if 'Deleted' in name_user:
+							DataBase.srem(f'najva_recent:{user_id}', i)
+							DataBase.srem(f'najva_recent2:{user_id}', i)
+						else:
+							count += 1
+							inlineKeys.add(
+								iButtun(f"{count}- {name_user}", callback_data = f'recent:{i}:@{user_id}'),
+							)
+							if count > 22:
+								break
+					for i in recent2:
+						name_user = await userInfos(i, 'name')
+						if 'Deleted' in name_user:
+							DataBase.srem(f'najva_recent:{user_id}', i)
+							DataBase.srem(f'najva_recent2:{user_id}', i)
+						else:
+							count += 1
+							inlineKeys.add(
+								iButtun(f"{count}- {name_user}", callback_data = f'recent:{i}:@{user_id}'),
+							)
+							if count > 22:
+								break
+					inlineKeys.add(
+						iButtun(langU['buttuns']['back_nset'], callback_data = f'najva:settings:@{user_id}'),
+						iButtun(langU['buttuns']['delall'], callback_data = f'recent:all:@{user_id}'),
+					)
+					await editText(chat_id, msg_id, 0, text, None, inlineKeys)
+				else:
+					await answerCallbackQuery(msg, langU['recent_empty'], show_alert = True, cache_time = 10)
 			elif ap[1] == 'blocks':
 				blocks2 = DataBase.smembers('blocks2:{}'.format(user_id))
 				if len(blocks2) > 0:
