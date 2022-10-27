@@ -3948,7 +3948,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 		if len(najva['users']) > 1:
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', str(najva['users']))
 			for i in najva['users']:
-				if i.isdigit():
+				if str(i).isdigit():
 					DataBase.sadd(f'najva_recent:{user_id}', i)
 		else:
 			DataBase.hset('najva:{}:{}'.format(user_id, najva['time']), 'users', najva['users'][0])
@@ -3963,7 +3963,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 				await sendText(i, 0, 1, langU['you_recv_najva'].format('<a href="tg://user?id={}">{}</a>'.format(user_id, user_name)), 'html')
 		DataBase.incr('stat_najva')
 		for i in najva['users']:
-			if i.isdigit() and not DataBase.get(f'userProfs:{i}'):
+			if str(i).isdigit() and not DataBase.get(f'userProfs:{i}'):
 				DataBase.setex(f'userProfs:{i}', 604800, 1)
 				profiles = await getUserProfilePhotos(i)
 				if profiles[0] and profiles[1].total_count > 0:
