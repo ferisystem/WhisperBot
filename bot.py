@@ -1456,7 +1456,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 						else:
 							show_sender = None
 						await asyncio.sleep(0.5)
-						await copyMessage(user_id, gv().supchat, int(ap[1]), reply_msg = int(ap[4]),
+						await copyMessage(user_id, gv().supchat, int(ap[1]), reply_msg = int(ap[4]), protect_content = False,
 						reply_markup = anonymous_new_message_keys(user_id, ap[2], ap[3], show_sender, ap[5]))
 						if DataBase.get('is_stater:{}'.format(ap[2])):
 							DataBase.setex('is_stater:{}'.format(ap[2]), 86400*7, 'True')
@@ -1487,7 +1487,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 					source_id = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'source_id')
 					msgid = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'msg_id')
 					inlineKeys = await show_speical_najva_keys(user_id, from_user)
-					msg_ = await copyMessage(chat_id, gv().supchat, msgid, reply_markup = inlineKeys)
+					msg_ = await copyMessage(chat_id, gv().supchat, msgid, protect_content = False, reply_markup = inlineKeys)
 					if DataBase.hget(f'setting_najva:{from_user}', 'seen'):
 						await sendText(from_user, source_id, 1, langU['speical_najva_seen'].format(msg.from_user.first_name))
 					await editText(inline_msg_id = special_msgID,
@@ -1599,7 +1599,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 							for i in LIST:
 								await asyncio.sleep(0.1)
 								# sendM2 = await sendText(i, 0, 1, reply_msg.text)
-								sendM2 = await copyMessage(i, chat_id, reply_id)
+								sendM2 = await copyMessage(i, chat_id, reply_id, protect_content = False)
 								if sendM2[0] is True:
 									n += 1
 							await editText(chat_id, sendM[1].message_id, 0, langU['sent_to_all'].format(len(LIST), n))
@@ -3226,7 +3226,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			source_id = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'source_id')
 			msgid = DataBase.hget('najva:{}:{}'.format(from_user, time_data), 'msg_id')
 			inlineKeys = await show_speical_najva_keys(user_id, from_user)
-			msg_ = await copyMessage(chat_id, gv().supchat, msgid, reply_markup = inlineKeys)
+			msg_ = await copyMessage(chat_id, gv().supchat, msgid, protect_content = False, reply_markup = inlineKeys)
 			if DataBase.hget(f'setting_najva:{from_user}', 'seen'):
 				await sendText(from_user, source_id, 1, langU['speical_najva_seen'].format(msg.from_user.first_name))
 			await editText(inline_msg_id = special_msgID,
@@ -3260,7 +3260,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			ap = re_matches(r"^special:report2:(\d+):(\d+):@(\d+)$", input)
 			from_user = ap[1]
 			msg_ID = ap[2]
-			msg_ = await copyMessage(gv().sudoID, chat_id, msg_ID)
+			msg_ = await copyMessage(gv().sudoID, chat_id, msg_ID, protect_content = False)
 			name_user = await userInfos(from_user, info = "name")
 			text = langU['reported_this_user'].format(msg.from_user.first_name, name_user)
 			await sendText(gv().sudoID, msg_[1].message_id, 1, text, 'html', ban_user_keys(from_user, gv().sudoID))
