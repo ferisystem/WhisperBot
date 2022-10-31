@@ -2615,28 +2615,28 @@ async def callback_query_process(msg: types.CallbackQuery):
 	print(colored("Query", "yellow"), colored(input, "white"))
 	print(colored("queryID", "yellow"), colored(msg.id, "white"))
 	print()
-	if re.search(r"@(\d+)", input):
-		ap = re_matches("@(\d+)", input, 's')
-		if int(ap[1]) != user_id:
-			if not DataBase.get('user.alertinline:{}:{}'.format(user_id, msg_id)):
-				DataBase.setex('user.alertinline:{}:{}'.format(user_id, msg_id), 3600, "True")
-				return AnswerCallbackQuery(msg.id, langU['isNot4u'], True, None, 3600)
-			return False
-		if int(ap[1]) == user_id and not DataBase.get('user.alertNotMemberChannel:{}'.format(user_id)):
-			if not re.search(r'insgp(.*)', input) and not re.search(r'ib(.*)', input) and not await is_Channel_Member("@{}".format(IDs_datas['chUsername']), user_id):
-				DataBase.set('user.alertNotMemberChannel2:{}'.format(user_id), "True")
-				await answerCallbackQuery(msg, langU['uNotJoined'].format(IDs_datas['chUsername']), True)
-				inlineKeys = iMarkup()
-				inlineKeys.add = (
-				iButtun(langU['buttuns']['join'], url = 'https://t.me/{}'.format(IDs_datas['chUsername'])),
-				iButtun(langU['buttuns']['joined'], callback_data = input)
-				)
-				await editText(chat_id, msg_id, 1, langU['join_channel'].format(IDs_datas['chUsername']), 'md', inlineKeys)
-				return False
-			if DataBase.get('user.alertNotMemberChannel2:{}'.format(user_id)):
-				DataBase.delete('user.alertNotMemberChannel2:{}'.format(user_id))
-				await answerCallbackQuery(msg, langU['you_accepted'])
-			DataBase.setex('user.alertNotMemberChannel:{}'.format(user_id), 3600, "True")
+	# if re.search(r"@(\d+)", input):
+		# ap = re_matches("@(\d+)", input, 's')
+		# if int(ap[1]) != user_id:
+			# if not DataBase.get('user.alertinline:{}:{}'.format(user_id, msg_id)):
+				# DataBase.setex('user.alertinline:{}:{}'.format(user_id, msg_id), 3600, "True")
+				# return AnswerCallbackQuery(msg.id, langU['isNot4u'], True, None, 3600)
+			# return False
+		# if int(ap[1]) == user_id and not DataBase.get('user.alertNotMemberChannel:{}'.format(user_id)):
+			# if not re.search(r'insgp(.*)', input) and not re.search(r'ib(.*)', input) and not await is_Channel_Member("@{}".format(IDs_datas['chUsername']), user_id):
+				# DataBase.set('user.alertNotMemberChannel2:{}'.format(user_id), "True")
+				# await answerCallbackQuery(msg, langU['uNotJoined'].format(IDs_datas['chUsername']), True)
+				# inlineKeys = iMarkup()
+				# inlineKeys.add = (
+				# iButtun(langU['buttuns']['join'], url = 'https://t.me/{}'.format(IDs_datas['chUsername'])),
+				# iButtun(langU['buttuns']['joined'], callback_data = input)
+				# )
+				# await editText(chat_id, msg_id, 1, langU['join_channel'].format(IDs_datas['chUsername']), 'md', inlineKeys)
+				# return False
+			# if DataBase.get('user.alertNotMemberChannel2:{}'.format(user_id)):
+				# DataBase.delete('user.alertNotMemberChannel2:{}'.format(user_id))
+				# await answerCallbackQuery(msg, langU['you_accepted'])
+			# DataBase.setex('user.alertNotMemberChannel:{}'.format(user_id), 3600, "True")
 	if 'message' in msg:
 		DataBase.incr('amarBot.callmsg')
 		_ = msg.message
