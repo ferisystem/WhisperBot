@@ -256,6 +256,7 @@ class gv: # Global Values
 		self.sudoID = int(DataBase.hget('sudo', 'id') or sudo_id)
 		self.supchat = int(redis.hget(db, 'supchat') or self.sudoID)
 		self.spychat = int(redis.hget(db, 'spychat') or self.sudoID)
+		self.linkyCH = (redis.hget(db, 'linkyCH') or 'None')
 		self.sudoUser = (DataBase.hget('sudo', 'user') or 'None')
 		self.sudo_users = (self.sudoID, self.botID) + sudo_users
 		self.chLink = IDs_datas['chLink']
@@ -2776,6 +2777,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await answerCallbackQuery(msg, langU['message_from'].format(name_user), show_alert = True, cache_time = 86400)
 		if re.match(r"^language:@(\d+)$", input):
 			await editText(chat_id, msg_id, 0, langU['language'], None, settings_keys(user_id))
+		if re.match(r"^adsfree:@(\d+)$", input):
+			await editText(chat_id, msg_id, 0, langU['adsfree'].format(gv().linkyCH), 'html')
 		if re.match(r"^set_(.*)_(.*):@(\d+)$", input):
 			ap = re_matches("^set_(.*)_(.*):@(\d+)$", input)
 			if ap[1] == 'lang':
@@ -4366,6 +4369,17 @@ async def bot_run(app):
 	except:
 		print("Sudo Not Found!!!")
 	# await sendText(gv().sudoID, 0, 1, 'Bot has been Successfully Loaded')
+	# if not redis.hget(db, 'linkyCH'):
+		# status = False
+		# while status != True:
+			# iD = input("Enter LinkyCH Username: ")
+			# if re.match(r'^(@\w+)$', iD):
+				# redis.hset(db, 'linkyCH', re.match(r'^(@\w+)$', iD).group(1))
+				# status = True
+				# break
+			# else:
+				# iD = input("Enter LinkyCH Username: ")
+				# status = False
 	if not redis.hget(db, 'supchat'):
 		status = False
 		while status != True:
