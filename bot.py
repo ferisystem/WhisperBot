@@ -1473,6 +1473,8 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 				ap = re_matches(r"^/start (.*)$", msg.text)
 				if ap[1] == 'set':
 					await sendText(chat_id, msg, 1, langU['najva_settings'], 'md', najva_settings_keys(user_id))
+				elif ap[1] == 'help':
+					await sendText(chat_id, msg, 1, langU['najva_help'], None, najva_help_keys(user_id))
 				elif re.match(r'^(\d+)_(\d+)_(\d+)$', ap[1]):
 					ap = re_matches(r'^(\d+)_(\d+)_(\d+)$', ap[1])
 					from_user = ap[1]
