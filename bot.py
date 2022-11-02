@@ -1446,6 +1446,36 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 							langU['user_connect_4send'].format(DataBase.get('name_anon2:{}'.format(ap[1]))), 'md', inlineKeys)
 					else:
 						await sendText(chat_id, msg, 1, langU['user_404_4send'], 'md', anonymous_back_keys(user_id))
+				elif re.match(r'^(@\w+)$', input):
+					ap = re_matches(r'^(@\w+)$', input)
+					DataBase.delete('ready_to_enter_id:{}'.format(user_id))
+					await bot.delete_message(chat_id, DataBase.get('pre_msgbot:{}'.format(user_id)))
+					userID = await userIds(ap[1])
+					if not str(userID).isdigit():
+						return await sendText(chat_id, msg, 1, langU['user_404_4send'], 'md', anonymous_back_keys(user_id))
+					if DataBase.sismember('allUsers', userID):
+						if int(userID) == int(user_id):
+							await sendText(chat_id, msg, 1, "{}\n{}".format(langU['cant_send_self'],
+							langU['enter_id_for_send']), 'md', anonymous_back_keys(user_id))
+						elif DataBase.sismember('blocks:{}'.format(userID), user_id):
+							await sendText(chat_id, msg, 1, langU['yare_blocked_anon'], 'md', anonymous_back_keys(user_id))
+						else:
+							hash = ':@{}'.format(user_id)
+							langU = lang[user_steps[user_id]['lang']]
+							buttuns = langU['buttuns']
+							inlineKeys = iMarkup()
+							inlineKeys.add(
+								iButtun(buttuns['cancel'], callback_data = 'anon{}'.format(hash))
+								)
+							DataBase.set('who_conneted:{}'.format(user_id), userID)
+							await sendText(chat_id, msg, 1,
+							langU['user_connect_4send'].format(DataBase.get('name_anon2:{}'.format(userID))), 'md', inlineKeys)
+					else:
+						await sendText(chat_id, msg, 1, langU['user_404_4send'], 'md', anonymous_back_keys(user_id))
+				else:
+					DataBase.delete('ready_to_enter_id:{}'.format(user_id))
+					await bot.delete_message(chat_id, DataBase.get('pre_msgbot:{}'.format(user_id)))
+					await sendText(chat_id, msg, 1, langU['user_404_4send'], 'md', anonymous_back_keys(user_id))
 			if re.match(r"/inbox$", input):
 				if DataBase.scard('inbox_user:{}'.format(user_id)) > 0:
 					your_messages = DataBase.smembers('inbox_user:{}'.format(user_id))
