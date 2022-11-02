@@ -1428,7 +1428,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 					DataBase.sadd('links_anon', msg.text)
 					DataBase.delete('ready_to_change_link:{}'.format(user_id))
 					await bot.delete_message(chat_id, DataBase.get('pre_msgbot:{}'.format(user_id)))
-					await sendText(chat_id, msg, 1, "{}\nt.me/{}?start={}".format(langU['customize_link_anon'],
+					await sendText(chat_id, msg, 1, "{}\nt.me/{}?start={}".format(langU['customize_link_anon2'],
 					gv().botUser, DataBase.get('link_anon:{}'.format(user_id))), 'md', anonymous_cus_link_keys(user_id))
 			if DataBase.get('ready_to_change_name:{}'.format(user_id)) and not '/start' in input:
 				if 21 < len(msg.text):
@@ -1704,7 +1704,7 @@ def start_keys(UserID):
 		iButtun(langU['buttuns']['anon_section'], callback_data = 'anon{}'.format(hash))
 		)
 	inlineKeys.add(
-		iButtun(langU['buttuns']['support'], callback_data = 'support{}'.format(hash)), 
+		iButtun(langU['buttuns']['support'], callback_data = 'supp{}'.format(hash)), 
 		iButtun(langU['buttuns']['language'], callback_data = 'language{}'.format(hash))
 		)
 	inlineKeys.add(
@@ -2751,6 +2751,8 @@ async def callback_query_process(msg: types.CallbackQuery):
 			user_steps[user_id].update({"action": "nothing"})
 			deletePreviousData(user_id)
 			await editText(chat_id, msg_id, 0, langU['start'].format(gv().botName), 'html', start_keys(user_id))
+		if re.match(r"^supp:@(\d+)$", input):
+			await editText(chat_id, msg_id, 0, langU['support2'], 'html', support_keys(user_id))
 		if re.match(r"^support:@(\d+)$", input):
 			user_steps[user_id].update({'action': 'support'})
 			await sendText(gv().sudoID, 0, 1, langU['connected_support'].format(menMD(msg)), 'md')
