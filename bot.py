@@ -3213,7 +3213,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 				keyboard = najva_help5_keys(user_id)
 			file = f'Files/helps/vid-{ap[1]}.mp4'
 			with open(file, 'rb') as file:
-				await sendVideo(chat_id, _.reply_to_message, file, langU[f'najva_vid-{ap[1]}'], 'html', supports_streaming = True, reply_markup = keyboard)
+				await sendVideo(chat_id, _.reply_to_message, file, langU[f'najva_vid-{ap[1]}'].format(gv().botUser), 'html', supports_streaming = True, reply_markup = keyboard)
 		if re.match(r"^autodel:(.*):@(\d+)$", input):
 			ap = re_matches(r"^autodel:(.*):@(\d+)$", input)
 			old_autodel_time = DataBase.get('autodel_time:{}'.format(user_id))
