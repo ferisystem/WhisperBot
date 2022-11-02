@@ -1,2 +1,2 @@
-# NajvaBot
-A bot to send anonymous messages and encrypted messages to people in groups
+# WhisperBot
+A bot to send Anonymous messages and Whisper messages to people in groups
