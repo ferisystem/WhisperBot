@@ -1455,7 +1455,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 							buttuns = langU['buttuns']
 							inlineKeys = iMarkup()
 							inlineKeys.add(
-								iButtun(buttuns['cancel'], callback_data = 'anon{}'.format(hash))
+								iButtun(buttuns['cancel'], callback_data = 'backstart{}'.format(hash))
 								)
 							DataBase.set('who_conneted:{}'.format(user_id), ap[1])
 							await sendText(chat_id, msg, 1,
@@ -1481,7 +1481,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 							buttuns = langU['buttuns']
 							inlineKeys = iMarkup()
 							inlineKeys.add(
-								iButtun(buttuns['cancel'], callback_data = 'anon{}'.format(hash))
+								iButtun(buttuns['cancel'], callback_data = 'backstart{}'.format(hash))
 								)
 							DataBase.set('who_conneted:{}'.format(user_id), userID)
 							await sendText(chat_id, msg, 1,
@@ -1561,7 +1561,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 							buttuns = langU['buttuns']
 							inlineKeys = iMarkup()
 							inlineKeys.add(
-								iButtun(buttuns['cancel'], callback_data = 'anon{}'.format(hash))
+								iButtun(buttuns['cancel'], callback_data = 'backstart{}'.format(hash))
 								)
 							DataBase.set('who_conneted:{}'.format(user_id), we_have)
 							DataBase.incr('user.stats_anon:{}'.format(we_have))
@@ -2752,6 +2752,11 @@ async def callback_query_process(msg: types.CallbackQuery):
 			return AnswerCallbackQuery(msg.id, "این پنل قدیمی است دوباره پنل مربوطه را دریافت کنید!\nاگر پنل پرداختی است نگران نباشید :D", True)
 		if re.match(r"^backstart:@(\d+)$", input):
 			DataBase.delete('sup:{}'.format(user_id))
+			DataBase.delete('ready_to_change_link:{}'.format(user_id))
+			DataBase.delete('ready_to_change_name:{}'.format(user_id))
+			DataBase.delete('ready_to_enter_id:{}'.format(user_id))
+			DataBase.delete('ready_to_recv_special:{}'.format(user_id))			
+			DataBase.delete('who_conneted:{}'.format(user_id))
 			user_steps[user_id].update({"action": "nothing"})
 			deletePreviousData(user_id)
 			await editText(chat_id, msg_id, 0, langU['start'].format(gv().botName), 'html', start_keys(user_id))
@@ -2982,7 +2987,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			buttuns = langU['buttuns']
 			inlineKeys = iMarkup()
 			inlineKeys.add(
-				iButtun(buttuns['cancel'], callback_data = 'anon{}'.format(hash))
+				iButtun(buttuns['cancel'], callback_data = 'backstart{}'.format(hash))
 				)
 			DataBase.set('who_conneted:{}'.format(user_id), ap[1])
 			await _.edit_reply_markup()
