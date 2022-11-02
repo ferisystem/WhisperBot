@@ -1600,7 +1600,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 			if re.match(r"^/settings$", input):
 				await sendText(chat_id, msg, 1, langU['najva_settings'], None, najva_settings_keys(user_id))
 			if re.match(r"^/free$", input):
-				await sendText(chat_id, msg, 1, langU['adsfree'], None, adsfree_keys(user_id))
+				await sendText(chat_id, msg, 1, langU['adsfree'], None)
 			if re.match(r"^/lang$", input):
 				await sendText(chat_id, msg, 1, langU['language'], None, settings_keys(user_id))
 			if re.match(r"^/support$", input):
