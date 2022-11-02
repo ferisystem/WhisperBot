@@ -1908,7 +1908,7 @@ def anonymous_cus_name_keys(UserID):
 	buttuns = langU['buttuns']
 	inlineKeys = iMarkup()
 	inlineKeys.add(
-		iButtun(buttuns['back_name_anon'], callback_data = 'anon:name{}'.format(hash))
+		iButtun(buttuns['cancel'], callback_data = 'anon:name{}'.format(hash))
 		)
 	return inlineKeys
 
@@ -2012,9 +2012,13 @@ def najva_settings_keys(UserID):
 		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'dispo'))),
 		callback_data = 'najva:settings1:dispo{}'.format(hash)),
 		)
+	if DataBase.hget(f'setting_najva:{UserID}', 'autodel'):
+		time_del = buttuns['minute'].format(DataBase.get(f'autodel_time:{UserID}') or 10)
+	else:
+		time_del = rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'autodel'))
 	inlineKeys.add(
 		iButtun(buttuns['najva_settings_auto_del'].
-		format(rplac_tick(DataBase.hget(f'setting_najva:{UserID}', 'autodel'))),
+		format(time_del),
 		callback_data = 'najva:settings1:autodel{}'.format(hash)),
 		)
 	inlineKeys.add(
@@ -2437,13 +2441,13 @@ def support_keys(UserID):
 	buttuns = langU['buttuns']
 	inlineKeys = iMarkup()
 	inlineKeys.add(
-		iButtun(buttuns['help'], callback_data = 'najva:help{}'.format(hash))
+		iButtun(buttuns['help_najva'], callback_data = 'najva:help{}'.format(hash))
 	)
 	inlineKeys.add(
-		iButtun(buttuns['help_my_anon'], callback_data = 'anon:help{}'.format(hash))
+		iButtun(buttuns['help_my_anon2'], callback_data = 'anon:help{}'.format(hash))
 	)
 	inlineKeys.add(
-		iButtun(buttuns['support'], callback_data = 'support{}'.format(hash))
+		iButtun(buttuns['support2'], callback_data = 'support{}'.format(hash))
 	)
 	inlineKeys.add(
 		iButtun(buttuns['back'], callback_data = 'backstart{}'.format(hash))
