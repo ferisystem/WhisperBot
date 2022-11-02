@@ -1575,6 +1575,20 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 				)
 				await sendText(chat_id, msg, 1, langU['force_join'].format(IDs_datas['chUsername']), 'md', inlineKeys)
 				return False
+			if re.match(r"^/najva$", input):
+				await sendText(chat_id, msg, 1, langU['najva_help'], None, najva_help_keys(user_id))				
+			if re.match(r"^/nashenas$", input):
+				await sendText(chat_id, msg, 1, langU['anon'], None, anonymous_keys(user_id))				
+			if re.match(r"^/help$", input):
+				await sendText(chat_id, msg, 1, langU['najva_help'], None, najva_help_keys(user_id))
+			if re.match(r"^/settings$", input):
+				await sendText(chat_id, msg, 1, langU['najva_settings'], None, najva_settings_keys(user_id))
+			if re.match(r"^/free$", input):
+				await sendText(chat_id, msg, 1, langU['adsfree'], None, adsfree_keys(user_id))
+			if re.match(r"^/lang$", input):
+				await sendText(chat_id, msg, 1, langU['language'], None, settings_keys(user_id))
+			if re.match(r"^/support$", input):
+				await sendText(chat_id, msg, 1, langU['support'], None, support_keys(user_id))
 			if re.match(r"^/start$", input) or re.match(r"^{}$".format(langU['buttuns']['back_menu']), input):
 				user_steps[user_id].update({'action': "nothing"})
 				sendM = await sendText(chat_id, msg, 1, ".", None, ())
@@ -1585,7 +1599,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 						await bot.forward_message(chat_id = chat_id, from_chat_id = int(DataBase.get('fwdChat')), message_id = int(DataBase.get('fwdID')))
 					except:
 						await sendText(gv().sudoID, 0, 1, "Error in FwdID2")
-				await sendText(chat_id, msg, 1, langU['start'], 'md', start_keys(user_id))
+				await sendText(chat_id, msg, 1, langU['start'].format(gv().botName), 'html', start_keys(user_id))
 			if re.match(r"^قطع ارتباط$", input) or re.match(r"^disconnect$", input) or re.match(r"^قطع الاتصال$", input):
 				if DataBase.get('sup:{}'.format(user_id)):
 					DataBase.delete('sup:{}'.format(user_id))
@@ -2404,6 +2418,26 @@ def ban_user_keys(UserID, user_id):
 	inlineKeys.add(
 		iButtun(which_one,
 		callback_data = 'banuser:{}'.format(UserID)),
+	)
+	return inlineKeys
+
+
+def support_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['help'], callback_data = 'najva:help{}'.format(hash))
+	)
+	inlineKeys.add(
+		iButtun(buttuns['help_my_anon'], callback_data = 'anon:help{}'.format(hash))
+	)
+	inlineKeys.add(
+		iButtun(buttuns['support'], callback_data = 'support{}'.format(hash))
+	)
+	inlineKeys.add(
+		iButtun(buttuns['back'], callback_data = 'backstart{}'.format(hash))
 	)
 	return inlineKeys
 
