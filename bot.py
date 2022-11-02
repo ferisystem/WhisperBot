@@ -1867,11 +1867,11 @@ def anonymous_new_message_keys(UserID, TO_USER, MSG_ID, SHOW_SENDER, SENT_TIME):
 		)
 	if SHOW_SENDER:
 		inlineKeys.add(
-			iButtun("{} {}".format(buttuns['from_who'], DataBase.get('name_anon2:{}'.format(SHOW_SENDER))), callback_data = 'none')
+			iButtun("{} {}".format(buttuns['from_who'], DataBase.get('name_anon2:{}'.format(SHOW_SENDER))), callback_data = 'none:yes')
 		)
 	else:
 		inlineKeys.add(
-			iButtun(buttuns['from_who2'], callback_data = 'none')
+			iButtun(buttuns['from_who2'], callback_data = 'none:no')
 		)
 	inlineKeys.add(
 		iButtun(buttuns['sent_time'], callback_data = 'anon:stime{}'.format(hash))
@@ -2825,8 +2825,13 @@ async def callback_query_process(msg: types.CallbackQuery):
 			else:
 				DataBase.sadd('blocks:{}'.format(user_id), ap[1])
 				text = langU['user_blocked']
+			input_ = _.reply_markup.inline_keyboard[1][0].callback_data
+			if input_ == 'none:no':
+				SHOW_SENDER = False
+			else:
+				SHOW_SENDER = ap[1]
 			await answerCallbackQuery(msg, text, show_alert = True, cache_time = 2)
-			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = anonymous_new_message_keys(user_id, ap[1], ap[2], ap[3]))
+			await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = anonymous_new_message_keys(user_id, ap[1], ap[2], SHOW_SENDER, ap[3]))
 		if re.match(r"^anon:rep:(\d+):(\d+):(\d+):@(\d+)$", input):
 			ap = re_matches(r"^anon:rep:(\d+):(\d+):(\d+):@(\d+)$", input)
 			await answerCallbackQuery(msg, langU['help_reply_anon'], show_alert = True, cache_time = 3600)
