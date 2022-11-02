@@ -1518,7 +1518,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 			if re.search(r"^/start (.*)$", input):
 				ap = re_matches(r"^/start (.*)$", msg.text)
 				if ap[1] == 'set':
-					await sendText(chat_id, msg, 1, langU['najva_settings'], 'md', najva_settings_keys(user_id))
+					await sendText(chat_id, msg, 1, langU['najva_settings'].format(gv().botName), 'html', najva_settings_keys(user_id))
 				elif ap[1] == 'help':
 					await sendText(chat_id, msg, 1, langU['najva_help'], None, najva_help_keys(user_id))
 				elif re.match(r'^(\d+)_(\d+)_(\d+)$', ap[1]):
@@ -1594,11 +1594,11 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 			if re.match(r"^/najva$", input):
 				await sendText(chat_id, msg, 1, langU['najva_help'], None, najva_help_keys(user_id))				
 			if re.match(r"^/nashenas$", input):
-				await sendText(chat_id, msg, 1, langU['anon'], None, anonymous_keys(user_id))				
+				await sendText(chat_id, msg, 1, langU['anon'].format(gv().botName), 'html', anonymous_keys(user_id))				
 			if re.match(r"^/help$", input):
 				await sendText(chat_id, msg, 1, langU['najva_help'], None, najva_help_keys(user_id))
 			if re.match(r"^/settings$", input):
-				await sendText(chat_id, msg, 1, langU['najva_settings'], None, najva_settings_keys(user_id))
+				await sendText(chat_id, msg, 1, langU['najva_settings'].format(gv().botName), 'html', najva_settings_keys(user_id))
 			if re.match(r"^/free$", input):
 				await sendText(chat_id, msg, 1, langU['adsfree'], None)
 			if re.match(r"^/lang$", input):
@@ -1793,15 +1793,15 @@ def anonymous_my_link_keys(UserID):
 	hash = ':@{}'.format(UserID)
 	langU = lang[user_steps[UserID]['lang']]
 	buttuns = langU['buttuns']
+	share_text_anon = langU['share_text_anon'].format(gv().botName)
+	link_anon = DataBase.get('link_anon:{}'.format(UserID))
 	inlineKeys = iMarkup()
 	inlineKeys.add(
 		iButtun(buttuns['customize_link_anon'], callback_data = 'anon:cus{}'.format(hash)),
-		iButtun(buttuns['share_link_anon'],
-		url = 'https://t.me/share/url?text={}&url=t.me/{}?start={}'.format(
-			langU['share_text_anon'],
-			gv().botUser,
-			DataBase.get('link_anon:{}'.format(UserID))
-			))
+		iButtun(
+			buttuns['share_link_anon'],
+			url = f'https://t.me/share/url?text={share_text_anon}&url=t.me/{gv().botUser}?start={link_anon}'
+			)
 		)
 	inlineKeys.add(
 		iButtun(buttuns['insta_link_anon'], callback_data = 'anon:insta{}'.format(hash))
@@ -2750,7 +2750,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			DataBase.delete('sup:{}'.format(user_id))
 			user_steps[user_id].update({"action": "nothing"})
 			deletePreviousData(user_id)
-			await editText(chat_id, msg_id, 0, langU['start'], None, start_keys(user_id))
+			await editText(chat_id, msg_id, 0, langU['start'].format(gv().botName), 'html', start_keys(user_id))
 		if re.match(r"^support:@(\d+)$", input):
 			user_steps[user_id].update({'action': 'support'})
 			await sendText(gv().sudoID, 0, 1, langU['connected_support'].format(menMD(msg)), 'md')
@@ -2863,7 +2863,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await editText(chat_id, msg_id, 0, langU['anon'], None, anonymous_keys(user_id))
 		if re.match(r"^anon:link:@(\d+)$", input):
 			DataBase.delete('ready_to_change_link:{}'.format(user_id))
-			await editText(chat_id, msg_id, 0, langU['my_link_anon'], None, anonymous_my_link_keys(user_id))
+			await editText(chat_id, msg_id, 0, langU['my_link_anon'].format(gv().botName, gv().botUser, DataBase.get('link_anon:{}'.format(user_id))), 'html', anonymous_my_link_keys(user_id))
 		if re.match(r"^anon:cus:@(\d+)$", input):
 			DataBase.setex('ready_to_change_link:{}'.format(user_id), 3600, 'True')
 			DataBase.set('pre_msgbot:{}'.format(user_id), msg.message.message_id)
@@ -2887,8 +2887,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 		if re.match(r"^anon:insta:@(\d+)$", input):
 			link_picture = '<a href="https://s6.uupload.ir/files/photo_2022-09-01_18-03-08_s3qf.jpg">مشاهده عکس آموزشی</a>'
 			await editText(chat_id, msg_id, 0,
-			'{}\n{}\n<code>https://t.me/{}?start={}</code>'
-			.format(link_picture, langU['insta_link_anon'], gv().botUser, DataBase.get('link_anon:{}'.format(user_id))),
+			langU['insta_link_anon'].format(gv().botUser, DataBase.get('link_anon:{}'.format(user_id))),
 			parse_mode = 'html', reply_markup = anonymous_insta_link_keys(user_id))
 		if re.match(r"^anon:help:@(\d+)$", input):
 			await editText(chat_id, msg_id, 0, langU['help_anon'], None, anonymous_help_keys(user_id))
@@ -2901,7 +2900,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			inlineKeys.add(
 				iButtun(buttuns['back_help_anon'], callback_data = 'anon:help{}'.format(hash))
 				)
-			await editText(chat_id, msg_id, 0, langU['help{}_anon'.format(ap[1])], None, inlineKeys)
+			await editText(chat_id, msg_id, 0, langU['help{}_anon'.format(ap[1])].format(gv().botName), None, inlineKeys)
 		if re.match(r"^anon:stats:@(\d+)$", input):
 			await answerCallbackQuery(msg, langU['stats_anon'].format(int(DataBase.get('user.stats_anon:{}'.format(user_id)) or 0)), show_alert = True, cache_time = 90)
 		if re.match(r"^anon:name:@(\d+)$", input):
@@ -2984,9 +2983,9 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await sendText(chat_id, 0, 1,
 			langU['user_connect_4send'].format(DataBase.get('name_anon2:{}'.format(ap[1]))), 'md', inlineKeys)
 		if re.match(r"^najva:@(\d+)$", input):
-			await editText(chat_id, msg_id, 0, langU['najva'], None, najva_keys(user_id))
+			await editText(chat_id, msg_id, 0, langU['najva'].format(gv().botUser, gv().botName), 'html', najva_keys(user_id))
 		if re.match(r"^najva:settings:@(\d+)$", input):
-			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
+			await editText(chat_id, msg_id, 0, langU['najva_settings'].format(gv().botName), 'html', najva_settings_keys(user_id))
 		if re.match(r"^najva:settings:(.*):@(\d+)$", input):
 			ap = re_matches(r"^najva:settings:(.*):@(\d+)$", input)
 			if ap[1] == 'recents':
@@ -3063,7 +3062,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 		if re.match(r"^blocks2:all:y:@(\d+)$", input):
 			DataBase.delete(f'blocks2:{user_id}')
 			await answerCallbackQuery(msg, langU['delall_y'], show_alert = True)
-			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
+			await editText(chat_id, msg_id, 0, langU['najva_settings'].format(gv().botName), 'html', najva_settings_keys(user_id))
 		if re.match(r"^blocks2:(\d+):@(\d+)$", input):
 			ap = re_matches(r"^blocks2:(\d+):@(\d+)$", input)
 			inlineKeys = iMarkup()
@@ -3085,7 +3084,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			ap = re_matches(r"^blocks2:(\d+):y:@(\d+)$", input)
 			DataBase.srem(f'blocks2:{user_id}', ap[1])
 			await answerCallbackQuery(msg, langU['blocks2_user_del'], show_alert = True)
-			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))			
+			await editText(chat_id, msg_id, 0, langU['najva_settings'].format(gv().botName), 'html', najva_settings_keys(user_id))			
 		if re.match(r"^recent:all:@(\d+)$", input):
 			inlineKeys = iMarkup()
 			inlineKeys.add(
@@ -3097,7 +3096,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			DataBase.delete(f'najva_recent:{user_id}')
 			DataBase.delete(f'najva_recent2:{user_id}')
 			await answerCallbackQuery(msg, langU['delall_recent'], show_alert = True)
-			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
+			await editText(chat_id, msg_id, 0, langU['najva_settings'].format(gv().botName), 'html', najva_settings_keys(user_id))
 		if re.match(r"^recent:(\d+):@(\d+)$", input):
 			ap = re_matches(r"^recent:(\d+):@(\d+)$", input)
 			inlineKeys = iMarkup()
@@ -3125,7 +3124,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 			DataBase.srem(f'najva_recent:{user_id}', ap[1])
 			DataBase.srem(f'najva_recent2:{user_id}', ap[1])
 			await answerCallbackQuery(msg, langU['recent_user_del'], show_alert = True)
-			await editText(chat_id, msg_id, 0, langU['najva_settings'], None, najva_settings_keys(user_id))
+			await editText(chat_id, msg_id, 0, langU['najva_settings'].format(gv().botName), 'html', najva_settings_keys(user_id))
 		if re.match(r"^recent:(\d+):b:@(\d+)$", input):
 			ap = re_matches(r"^recent:(\d+):b:@(\d+)$", input)
 			await answerCallbackQuery(msg, langU['block_recent'], show_alert = True, cache_time = 3600)
@@ -3134,7 +3133,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 				await _.delete()
 			except:
 				pass
-			await sendText(chat_id, _.reply_to_message, 1, langU['najva_help'], None, najva_help_keys(user_id))
+			await sendText(chat_id, _.reply_to_message, 1, langU['najva_help'], 'html', najva_help_keys(user_id))
 		if re.match(r"^najva:settings1:(.*):@(\d+)$", input):
 			ap = re_matches(r"^najva:settings1:(.*):@(\d+)$", input)
 			if ap[1] == 'autodel':
@@ -3174,31 +3173,31 @@ async def callback_query_process(msg: types.CallbackQuery):
 			if ap[1] == 'send':
 				file = 'Files/helps/help_media.jpg'
 				with open(file, 'rb') as file:
-					await sendPhoto(chat_id, file, langU['najva_help_send'], 'html', _.reply_to_message, reply_markup = najva_help1_keys(user_id))
+					await sendPhoto(chat_id, file, langU['najva_help_send'].format(gv().botUser), 'html', _.reply_to_message, reply_markup = najva_help1_keys(user_id))
 			elif ap[1] == 'media':
 				file = 'Files/helps/help_media.jpg'
 				with open(file, 'rb') as file:
-					await sendPhoto(chat_id, file, langU['najva_help_media'], 'html', _.reply_to_message, reply_markup = najva_help2_keys(user_id))
+					await sendPhoto(chat_id, file, langU['najva_help_media'].format(gv().botUser), 'html', _.reply_to_message, reply_markup = najva_help2_keys(user_id))
 			elif ap[1] == 'group':
 				file = 'Files/helps/help_group.jpg'
 				with open(file, 'rb') as file:
-					await sendPhoto(chat_id, file, langU['najva_help_group'], 'html', _.reply_to_message, reply_markup = najva_help3_keys(user_id))
+					await sendPhoto(chat_id, file, langU['najva_help_group'].format(gv().botUser), 'html', _.reply_to_message, reply_markup = najva_help3_keys(user_id))
 			elif ap[1] == 'bd':
 				file = 'Files/helps/help_bd.jpg'
 				with open(file, 'rb') as file:
-					await sendPhoto(chat_id, file, langU['najva_help_bd'], 'html', _.reply_to_message, reply_markup = najva_help4_keys(user_id))
+					await sendPhoto(chat_id, file, langU['najva_help_bd'].format(gv().botUser), 'html', _.reply_to_message, reply_markup = najva_help4_keys(user_id))
 			elif ap[1] == 'noid':
 				file = 'Files/helps/help_noid.mp4'
 				with open(file, 'rb') as file:
-					await sendVideo(chat_id, _.reply_to_message, file, langU['najva_help_noid'], 'html', supports_streaming = True, reply_markup = najva_help5_keys(user_id))
+					await sendVideo(chat_id, _.reply_to_message, file, langU['najva_help_noid'].format(gv().botUser), 'html', supports_streaming = True, reply_markup = najva_help5_keys(user_id))
 			elif ap[1] == 'shset':
 				file = 'Files/helps/help_shset.jpg'
 				with open(file, 'rb') as file:
-					await sendPhoto(chat_id, file, langU['najva_help_shset'], 'html', _.reply_to_message, reply_markup = najva_help6_keys(user_id))
+					await sendPhoto(chat_id, file, langU['najva_help_shset'].format(gv().botUser), 'html', _.reply_to_message, reply_markup = najva_help6_keys(user_id))
 			elif ap[1] == 'prob':
 				file = 'Files/helps/help_prob.mp4'
 				with open(file, 'rb') as file:
-					await sendVideo(chat_id, _.reply_to_message, file, langU['najva_help_prob'], 'html', supports_streaming = True, reply_markup = najva_help7_keys(user_id))
+					await sendVideo(chat_id, _.reply_to_message, file, langU['najva_help_prob'].format(gv().botUser), 'html', supports_streaming = True, reply_markup = najva_help7_keys(user_id))
 			elif ap[1] == 'examp':
 				await sendText(chat_id, _.reply_to_message, 1, langU['najva_help_examp'], 'html', najva_help8_keys(user_id))
 		if re.match(r"^najva:vid:(\d+):@(\d+)$", input):
