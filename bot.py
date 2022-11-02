@@ -1330,6 +1330,25 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 				DataBase.setex('user.alertBlocked:{}'.format(user_id), 120, "True")
 				await sendText(chat_id, 0, 1, langU['u_are_blocked'])
 			return False
+		if user_steps[user_id]['action'] == 'support':
+			inlineKeys = iMarkup()
+			inlineKeys.add(
+				iButtun(langU['buttuns']['disconnect'], callback_data = 'backstart:@{}'.format(user_id))
+				)
+			inlineKeys2 = iMarkup()
+			inlineKeys2.add(
+				iButtun(langU['buttuns']['notice'], callback_data = f'from_who:{user_id}:{msg_id}')
+				)
+			msg_ = None
+			if 'text' in msg:
+				if msg.entities and msg.entities[0].type == 'bot_command':
+					user_steps[user_id].update({'action': "nothing"})
+				else:
+					await copyMessage(gv().sudoID, chat_id, msg_id, reply_markup = inlineKeys2)
+					await sendText(chat_id, msg, 1, langU['sent_wait'], None, inlineKeys)
+			else:
+				await copyMessage(gv().sudoID, chat_id, msg_id, reply_markup = inlineKeys2)
+				await sendText(chat_id, msg, 1, langU['sent_wait'], None, inlineKeys)
 		if DataBase.get('who_conneted:{}'.format(user_id)) and not '/start' in msg.text:
 			which_user = DataBase.get('who_conneted:{}'.format(user_id))
 			DataBase.delete('who_conneted:{}'.format(user_id))
@@ -1372,6 +1391,15 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 					else:
 						DataBase.sadd('inbox_user:{}'.format(which_user), f"{msg_.message_id}:{user_id}:{msg_id}:{ap[2]}:{int(time())}:no")
 					await sendText(which_user, 0, 1, langU['new_message'].format(msg_.message_id))
+				if 'from_who' in input_:
+					ap = re_matches(r'^from_who:(\d+):(\d+)$', input_)
+					which_user = int(ap[1])
+					msgID = int(ap[2])
+					sendM = await copyMessage(which_user, chat_id, msg_id, reply_msg = msgID)
+					if sendM[0] is True:
+						await sendText(chat_id, msg, 1, "✅‌")
+					else:
+						await sendText(chat_id, msg, 1, "❌‌\n{}".format(sendM))
 		if DataBase.get('ready_to_recv_special:{}'.format(user_id)):
 			if msg.text and (re.match(r"^این$", msg.text) or re.match(r"^this$", msg.text)) and reply_msg:
 				data_msg = reply_msg
@@ -1594,11 +1622,6 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 				sendM = await sendText(chat_id, msg, 1, ".", None, ())
 				await sendM[1].delete()
 				DataBase.delete('sup:{}'.format(user_id))
-				if DataBase.get('fwdID'):
-					try:
-						await bot.forward_message(chat_id = chat_id, from_chat_id = int(DataBase.get('fwdChat')), message_id = int(DataBase.get('fwdID')))
-					except:
-						await sendText(gv().sudoID, 0, 1, "Error in FwdID2")
 				await sendText(chat_id, msg, 1, langU['start'].format(gv().botName), 'html', start_keys(user_id))
 			if re.match(r"^قطع ارتباط$", input) or re.match(r"^disconnect$", input) or re.match(r"^قطع الاتصال$", input):
 				if DataBase.get('sup:{}'.format(user_id)):
@@ -1651,8 +1674,6 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 							await editText(chat_id, sendM[1].message_id, 0, langU['sent_to_all'].format(len(LIST), n))
 					else:
 						await sendText(chat_id, msg, 1, langU['just_reply'])
-		if isUserSteps(user_id):
-			pass
 
 
 def saveUsername(msg, mode = "message"):
@@ -2493,6 +2514,10 @@ def isUserSteps(user_id):
 
 
 def setupUserSteps(msg, user_id):
+	if user_id in user_steps and 'action' in user_steps[user_id]:
+		action = user_steps[user_id]['action']
+	else:
+		action = 'nothing'
 	try:
 		if not DataBase.get('link_anon:{}'.format(user_id)):
 			DataBase.hset(f'setting_najva:{user_id}', 'seen', 1)
@@ -2512,10 +2537,12 @@ def setupUserSteps(msg, user_id):
 		elif name_anon2 != user_name:
 			DataBase.set('name_anon2:{}'.format(user_id), user_name)
 		user_steps[user_id].update({
+		"action": action,
 		"lang": (DataBase.get('user.lang:{}'.format(user_id)) or echoLangCode(msg.from_user)),
 		})
 	except:
 		user_steps.update({user_id: {
+		"action": action,
 		"lang": (DataBase.get('user.lang:{}'.format(user_id)) or echoLangCode(msg.from_user)),
 		}})
 
@@ -2736,6 +2763,18 @@ async def callback_query_process(msg: types.CallbackQuery):
 			user_steps[user_id].update({"action": "nothing"})
 			deletePreviousData(user_id)
 			await editText(chat_id, msg_id, 0, langU['start'], None, start_keys(user_id))
+		if re.match(r"^support:@(\d+)$", input):
+			user_steps[user_id].update({'action': 'support'})
+			await sendText(gv().sudoID, 0, 1, langU['connected_support'].format(menMD(msg)), 'md')
+			inlineKeys = iMarkup()
+			inlineKeys.add(
+				iButtun(langU['buttuns']['disconnect'], callback_data = 'backstart:@{}'.format(user_id))
+				)
+			await editText(chat_id, msg_id, 0, langU['support'], 'html', inlineKeys)
+		if re.match(r"^from_who:(\d+):(\d+)$", input):
+			ap = re_matches(r"^from_who:(\d+):(\d+)$", input)
+			name_user = await userInfos(ap[1], 'name')
+			await answerCallbackQuery(msg, langU['message_from'].format(name_user), show_alert = True, cache_time = 86400)
 		if re.match(r"^language:@(\d+)$", input):
 			await editText(chat_id, msg_id, 0, langU['language'], None, settings_keys(user_id))
 		if re.match(r"^set_(.*)_(.*):@(\d+)$", input):
