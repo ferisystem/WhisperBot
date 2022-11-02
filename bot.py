@@ -1722,6 +1722,16 @@ def start_keys(UserID):
 	return inlineKeys
 
 
+def back_keys(UserID):
+	hash = ':@{}'.format(UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(langU['buttuns']['back'], callback_data = 'backstart{}'.format(hash)),
+		)
+	return inlineKeys
+
+
 def settings_keys(UserID, arg2 = None):
 	hash = ':@{}'.format(UserID)
 	langU = lang[user_steps[UserID]['lang']]
@@ -2778,7 +2788,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 		if re.match(r"^language:@(\d+)$", input):
 			await editText(chat_id, msg_id, 0, langU['language'], None, settings_keys(user_id))
 		if re.match(r"^adsfree:@(\d+)$", input):
-			await editText(chat_id, msg_id, 0, langU['adsfree'].format(gv().linkyCH), 'html')
+			await editText(chat_id, msg_id, 0, langU['adsfree'].format(gv().linkyCH), 'html', back_keys(user_id))
 		if re.match(r"^set_(.*)_(.*):@(\d+)$", input):
 			ap = re_matches("^set_(.*)_(.*):@(\d+)$", input)
 			if ap[1] == 'lang':
@@ -2854,10 +2864,6 @@ async def callback_query_process(msg: types.CallbackQuery):
 				await editText(chat_id, msg_id, 0, langU['blocklist_sent'], None, inlineKeys) 
 				os.system('rm Files/list_block.txt')
 			elif ap[1] == 'stats':
-				inlineKeys = iMarkup()
-				inlineKeys.add(
-					iButtun(langU['buttuns']['back'], callback_data = 'backstart:@{}'.format(user_id))
-					)
 				stat_users = DataBase.scard('allUsers')
 				stat_block = DataBase.scard('isBanned')
 				stat_najva = DataBase.get('stat_najva')
@@ -2867,7 +2873,7 @@ async def callback_query_process(msg: types.CallbackQuery):
 				stat_block,
 				stat_najva,
 				stat_anon,
-				).replace('None', '0'), 'html', inlineKeys)
+				).replace('None', '0'), 'html', back_keys(user_id))
 		if re.match(r"^anon:@(\d+)$", input):
 			DataBase.delete('ready_to_change_link:{}'.format(user_id))
 			DataBase.delete('ready_to_change_name:{}'.format(user_id))
