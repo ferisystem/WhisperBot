@@ -1350,7 +1350,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 			if 'reply_markup' in reply_msg:
 				input_ = reply_msg.reply_markup.inline_keyboard[0][0].callback_data
 				if 'anon:blo' in input_:
-					ap = re_matches(r'^anon:blo:(\d+):(\d+):@(\d+)$', input_)
+					ap = re_matches(r'^anon:blo:(\d+):(\d+):(\d+):@(\d+)$', input_)
 					which_user = int(ap[1])
 					DataBase.incr('stat_anon')
 					if DataBase.sismember('blocks:{}'.format(which_user), user_id):
