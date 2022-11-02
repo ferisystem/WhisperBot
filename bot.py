@@ -33,8 +33,6 @@ import re
 import os
 stroge = redis.Redis(host = 'localhost', port = 6379, db = 3, decode_responses = False, encoding = 'utf-8')
 session = RedisSession(db, stroge)
-# print(session)
-# print(db)
 client = TelegramClient(
 session, 
 api_id = telegram_datas['api_id'], 
@@ -574,11 +572,9 @@ async def sendAudio(chat_id, reply_msg, audio, caption = None, parse_mode = None
 	try:
 		if DataBase.get('typing'):
 			await bot.send_chat_action(chat_id, 'upload_audio')
-		print(1111111111)
 		result = await bot.send_audio(chat_id, audio, caption, parse_mode, duration, performer,\
 		title, thumb, dis_notif, reply_msgs,\
 		reply_markup)
-		print(1323)
 		return True, result
 	except expts.ChatNotFound as a:
 		return a.args
@@ -753,7 +749,6 @@ async def sendVideo(chat_id, reply_msg, video, caption = None, parse_mode = None
 		reply_to_message_id  = reply_msgs,\
 		allow_sending_without_reply = allow_no_reply,\
 		reply_markup = reply_markup)
-		# print(result)
 		return True, result
 	except expts.ChatNotFound as a:
 		return a.args
@@ -893,7 +888,6 @@ async def sendMediaGroup(chat_id, reply_msg, dis_notif, media):
 	else:
 		reply_msgs = None
 	try:
-		# print(media)
 		result = await bot.send_media_group(chat_id = chat_id, media = media, disable_notification = dis_notif, reply_to_message_id = reply_msgs, allow_sending_without_reply = True)
 		return True, result
 	except expts.ChatNotFound as a:
@@ -1279,7 +1273,6 @@ async def newUser(msg):
 
 
 async def memberCommands(msg, input, gp_id, is_super, is_fwd):
-	# print(msg)
 	# text:
 	# {"message_id": 33036,
 	# "from": {"id": 139946685, "is_bot": false, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "language_code": "de"},
@@ -1376,13 +1369,8 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 						await sendText(chat_id, msg, 1, langU['yare_blocked_anon'], 'md', anonymous_back_keys(user_id))
 						return False
 					if not msg.text:
-						# msg_ = await copyMessage(which_user, chat_id, msg_id, caption = msg.caption,\
-						# caption_entities = msg.caption_entities, reply_msg = None,\
-						 # reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
 						msg_ = await msg.forward(gv().supchat)
 					elif not '/start' in msg.text:
-						# msg_ = await copyMessage(which_user, chat_id, msg_id, reply_msg = None,
-						# reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
 						msg_ = await msg.forward(gv().supchat)
 					await sendText(chat_id, msg, 1, langU['your_msg_sent'], 'md', anonymous_back_keys(user_id))
 					# DataBase.setex('msg_from:{}'.format(msg_id), 86400*30, user_id)
