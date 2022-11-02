@@ -1341,7 +1341,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
 				# msg_ = await copyMessage(which_user, chat_id, msg_id, reply_msg = None,
 				# reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
 			msg_ = await msg.forward(gv().supchat)
-			await sendText(chat_id, msg, 1, langU['your_msg_sent'], 'md', anonymous_back_keys(user_id))
+			await sendText(chat_id, msg, 1, langU['your_msg_sent'], 'md', anonymous_send_again_keys(user_id, which_user))
 			# DataBase.setex('msg_from:{}'.format(msg_id), 86400*30, user_id)
 			DataBase.sadd('inbox_user:{}'.format(which_user), f"{msg_.message_id}:{user_id}:{msg_id}:0:{int(time())}:no")
 			DataBase.setex('is_stater:{}'.format(user_id), 86400*7, 'True')
@@ -1847,6 +1847,17 @@ def anonymous_back_keys(UserID):
 	inlineKeys = iMarkup()
 	inlineKeys.add(
 		iButtun(buttuns['back_anon'], callback_data = 'anon{}'.format(hash))
+		)
+	return inlineKeys
+
+
+def anonymous_send_again_keys(UserID, which_user):
+	hash = ':{}:@{}'.format(which_user, UserID)
+	langU = lang[user_steps[UserID]['lang']]
+	buttuns = langU['buttuns']
+	inlineKeys = iMarkup()
+	inlineKeys.add(
+		iButtun(buttuns['send_more'], callback_data = 'anon:sendmore{}'.format(hash))
 		)
 	return inlineKeys
 
@@ -2898,6 +2909,19 @@ async def callback_query_process(msg: types.CallbackQuery):
 			DataBase.delete('blocks:{}'.format(user_id))
 			await answerCallbackQuery(msg, langU['blocks_clear_anon'], show_alert = True, cache_time = 2)
 			await editText(chat_id, msg_id, 0, langU['anon'], None, anonymous_keys(user_id))
+		if re.match(r"^anon:sendmore:(\d+):@(\d+)$", input):
+			ap = re_matches(r"^anon:sendmore:(\d+):@(\d+)$", input)
+			hash = ':@{}'.format(user_id)
+			langU = lang[user_steps[user_id]['lang']]
+			buttuns = langU['buttuns']
+			inlineKeys = iMarkup()
+			inlineKeys.add(
+				iButtun(buttuns['cancel'], callback_data = 'anon{}'.format(hash))
+				)
+			DataBase.set('who_conneted:{}'.format(user_id), ap[1])
+			await _.edit_reply_markup()
+			await sendText(chat_id, 0, 1,
+			langU['user_connect_4send'].format(DataBase.get('name_anon2:{}'.format(ap[1]))), 'md', inlineKeys)
 		if re.match(r"^najva:@(\d+)$", input):
 			await editText(chat_id, msg_id, 0, langU['najva'], None, najva_keys(user_id))
 		if re.match(r"^najva:settings:@(\d+)$", input):
