@@ -3011,7 +3011,10 @@ async def callback_query_process(msg: types.CallbackQuery):
 			ap = re_matches(r"^recent:(\d+):b:@(\d+)$", input)
 			await answerCallbackQuery(msg, langU['block_recent'], show_alert = True, cache_time = 3600)
 		if re.match(r"^najva:help:@(\d+)$", input):
-			await _.delete()
+			try:
+				await _.delete()
+			except:
+				pass
 			await sendText(chat_id, _.reply_to_message, 1, langU['najva_help'], None, najva_help_keys(user_id))
 		if re.match(r"^najva:settings1:(.*):@(\d+)$", input):
 			ap = re_matches(r"^najva:settings1:(.*):@(\d+)$", input)
@@ -3045,7 +3048,10 @@ async def callback_query_process(msg: types.CallbackQuery):
 				await bot.edit_message_reply_markup(chat_id, msg_id, reply_markup = najva_autodel2_keys(user_id))
 		if re.match(r"^najva:help:(.*):@(\d+)$", input):
 			ap = re_matches(r"^najva:help:(.*):@(\d+)$", input)
-			await _.delete()
+			try:
+				await _.delete()
+			except:
+				pass
 			if ap[1] == 'send':
 				file = 'Files/helps/help_media.jpg'
 				with open(file, 'rb') as file:
@@ -3078,7 +3084,10 @@ async def callback_query_process(msg: types.CallbackQuery):
 				await sendText(chat_id, _.reply_to_message, 1, langU['najva_help_examp'], 'html', najva_help8_keys(user_id))
 		if re.match(r"^najva:vid:(\d+):@(\d+)$", input):
 			ap = re_matches(r"^najva:vid:(\d+):@(\d+)$", input)
-			await _.delete()
+			try:
+				await _.delete()
+			except:
+				pass
 			keyboard = najva_help7_keys(user_id)
 			if ap[1] == '5':
 				keyboard = najva_help9_keys(user_id)
@@ -3103,7 +3112,10 @@ async def callback_query_process(msg: types.CallbackQuery):
 			DataBase.delete('ready_to_recv_special:{}'.format(user_id))
 			DataBase.srem('najva_autodel', f"{user_id}:{time_data}:{special_msgID}")
 			await editText(inline_msg_id = special_msgID, text = langU['special_najva_cancel'])
-			await _.delete()
+			try:
+				await _.delete()
+			except:
+				pass
 			await answerCallbackQuery(msg, langU['canceled'], cache_time = 3600)
 		if re.match(r"^special:antisave:@(\d+)", input):
 			await answerCallbackQuery(msg, langU['anti_save'], show_alert = True, cache_time = 3600)
@@ -3215,7 +3227,10 @@ async def callback_query_process(msg: types.CallbackQuery):
 				await editText(chat_id, msg_id, 0, langU['error_reg_najva'])
 		if re.match(r"^showpv:(\d+):([-+]?\d*\.\d+|\d+)$", input):
 			ap = re_matches(r"^showpv:(\d+):([-+]?\d*\.\d+|\d+)$", input)
-			await _.delete()
+			try:
+				await _.delete()
+			except:
+				pass
 			from_user = ap[1]
 			time_data = ap[2]
 			DataBase.set('najva_seen_time:{}:{}'.format(from_user, time_data), int(time()))
@@ -3256,7 +3271,10 @@ async def callback_query_process(msg: types.CallbackQuery):
 			await sendText(chat_id, _, 1, langU['report_special_najva'], 'html', report_najva_keys(user_id, ap[1], msg_id))
 		if re.match(r"^report:cancel:(\d+)@(\d+)$", input):
 			ap = re_matches(r"^report:cancel:(\d+)@(\d+)$", input)
-			await _.delete()
+			try:
+				await _.delete()
+			except:
+				pass
 			await answerCallbackQuery(msg, langU['canceled'], cache_time = 3600)
 		if re.match(r"^special:report2:(\d+):(\d+):@(\d+)$", input):
 			ap = re_matches(r"^special:report2:(\d+):(\d+):@(\d+)$", input)
