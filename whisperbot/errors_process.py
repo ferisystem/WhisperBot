@@ -1,7 +1,7 @@
 import telethon.errors.rpcerrorlist as telethonErrors
 import aiogram.utils.exceptions as expts
 from core_file import GlobalValues, log
-from Files.main_func import sendText
+from whisperbot.main_func import sendText
 
 
 async def errors_handlers(update, exception):
