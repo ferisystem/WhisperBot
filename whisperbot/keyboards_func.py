@@ -14,7 +14,7 @@ from config_bot2 import (
 	IDs_datas,
 	db
 )
-from Files.lateral_func import isSudo
+from whisperbot.lateral_func import isSudo
 
 
 class GlobalValues:  # Global Values
