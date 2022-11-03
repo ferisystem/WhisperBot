@@ -125,7 +125,7 @@ def lang_user(UserID):
 		return user_steps[UserID]['lang']
 	else:
 		user_steps.update({UserID: {
-		"lang": (DataBase.get('user.lang:{}'.format(UserID)) or 'en'),
+		"lang": (DataBase.get('user.lang:{}'.format(UserID)) or 'fa'),
 		}})
 		return user_steps[UserID]['lang']
 
