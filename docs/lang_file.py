@@ -1,4 +1,4 @@
-{
+lang = {
 "set_fa": "زبان ربات فارسی شد",
 "set_en": "bot language set on english",
 "en":
