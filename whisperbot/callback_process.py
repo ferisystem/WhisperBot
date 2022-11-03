@@ -151,6 +151,14 @@ async def callback_query_process(msg: types.CallbackQuery):
             ap = re_matches("^set_(.*)_(.*):@(\d+)$", input)
             if ap[1] == "lang":
                 DataBase.set("user.lang:{}".format(user_id), ap[2])
+                if user_id in user_steps:
+                    user_steps[user_id].update(
+                        {
+                            "lang": ap[2],
+                        }
+                    )
+                else:
+                    setupUserSteps(msg, user_id)
                 try:
                     await editText(
                         chat_id,
