@@ -6,7 +6,7 @@ from core_file import *
 
 
 async def message_process(msg: types.Message):
-	if int(msg.date.timestamp()) < (int(time()) - 60):
+    if int(msg.date.timestamp()) < (int(time()) - 60):
         cPrint("{} Old Message Skipped".format(msg.date), 2, textColor="cyan")
         return False
     data = CheckMsg(msg)
