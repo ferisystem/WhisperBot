@@ -56,7 +56,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
                     i,
                     0,
                     1,
-                    langU["you_recv_najva"].format(
+                    lang[lang_user(i)]["you_recv_najva"].format(
                         '<a href="tg://user?id={}">{}</a>'.format(
                             user_id, user_name
                         )
