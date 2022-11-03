@@ -10,6 +10,27 @@ from config_bot2 import sudo_users
 from aiogram import types
 
 
+def isBlock(UserID):
+    if DataBase.get("isBan:{}".format(UserID)):
+        return True
+    else:
+        return False
+
+
+async def newUser(msg):
+    DataBase.sadd("allUsers", msg.from_user.id)
+    await sendText(
+        GlobalValues().sudoID,
+        0,
+        1,
+        "#NewUser\n{} > `{}`\nType: {}\nStatus: Active✅".format(
+            menMD(msg), msg.from_user.id, msg.text
+        ),
+        "md",
+        blockKeys(msg.from_user.id),
+    )
+
+
 def find_media_id(msg):
     can_hide = False
     if msg.photo:
