@@ -1,5 +1,5 @@
 *.pem
-config_bot2.py
+config_bot.py
 :memory:.session
 .cache
 __pycache__
