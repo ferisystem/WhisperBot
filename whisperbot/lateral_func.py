@@ -11,6 +11,7 @@ from aiogram import types
 
 
 def lang_user(UserID):
+	UserID = int(UserID)
 	if UserID in user_steps and 'lang' in user_steps[UserID]:
 		return user_steps[UserID]['lang']
 	else:
