@@ -1,9 +1,9 @@
-from Files.callback_process import callback_query_process
-from Files.chosen_process import chosen_inline_process
-from Files.channel_process import channel_post_process
-from Files.inline_process import inline_query_process
-from Files.messages_process import message_process
-from Files.errors_process import errors_handlers
+from whisperbot.callback_process import callback_query_process
+from whisperbot.chosen_process import chosen_inline_process
+from whisperbot.channel_process import channel_post_process
+from whisperbot.inline_process import inline_query_process
+from whisperbot.messages_process import message_process
+from whisperbot.errors_process import errors_handlers
 from core_file import (
     GlobalValues,
     DataBase,
@@ -16,7 +16,7 @@ from core_file import (
     dp,
     re
 )
-from Files.main_func import sendText
+from whisperbot.main_func import sendText
 from config_bot2 import *
 
 
