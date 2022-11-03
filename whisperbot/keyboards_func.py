@@ -340,10 +340,7 @@ def anonymous_new_message_keys(
     UserID, TO_USER, MSG_ID, SHOW_SENDER, SENT_TIME
 ):
     hash = ":{}:{}:{}:@{}".format(TO_USER, MSG_ID, SENT_TIME, UserID)
-    try:
-        langU = lang[lang_user(UserID)]
-    except:
-        langU = lang["fa"]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     if DataBase.sismember("blocks:{}".format(UserID), TO_USER):
         buttun1 = buttuns["unblock"]
@@ -817,7 +814,7 @@ def najva_autodel2_keys(UserID):
 
 def najva_seen_keys(UserID, from_user, time_data):
     hash = ":{}:{}".format(from_user, time_data)
-    langU = lang[lang_user(UserID)]
+    langU = lang[lang_user(from_user)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup(row_width=3)
     inlineKeys.add(
@@ -841,7 +838,7 @@ def najva_seen2_keys(UserID, from_user, time_data):
 
 def najva_seen3_keys(from_user, time_data):
     hash = ":{}:{}".format(from_user, time_data)
-    langU = lang[user_steps[int(from_user)]["lang"]]
+    langU = lang[lang_user(from_user)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -941,8 +938,8 @@ def report_najva_keys(UserID, from_user, reply_id):
     return inlineKeys
 
 
-def ban_user_keys(UserID, user_id):
-    langU = lang[user_steps[int(user_id)]["lang"]]
+def ban_user_keys(UserID, user_ID):
+    langU = lang[lang_user(user_ID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     if DataBase.sismember("isBanned", UserID):
