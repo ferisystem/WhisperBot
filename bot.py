@@ -16,7 +16,10 @@ from aiogram.types import (
     InlineKeyboardButton as iButtun,
     InlineQueryResultPhoto,
 )
-from aiogram.dispatcher.webhook import AnswerCallbackQuery, get_new_configured_app
+from aiogram.dispatcher.webhook import (
+    AnswerCallbackQuery,
+    get_new_configured_app,
+)
 import telethon.errors.rpcerrorlist as telethonErrors
 from aiogram.dispatcher import Dispatcher
 from telethon.sync import TelegramClient
@@ -245,7 +248,9 @@ class CheckMsg:
 class gv:  # Global Values
     def __init__(self):
         self.ipAdd = server_datas["ip"]
-        self.ipAdD = "http://{}:{}".format(self.ipAdd, server_datas["port_server"])
+        self.ipAdD = "http://{}:{}".format(
+            self.ipAdd, server_datas["port_server"]
+        )
         self.WEBHOOK_URL_PATH = "/{}".format(telegram_datas["botToken"])
         self.port = server_datas["port_tg"]
         self.WEBHOOK_URL = "https://{}:{}{}".format(
@@ -319,16 +324,28 @@ async def userInfos(userID, info="name"):
                     if "title" in b:
                         if re.match(r"^100(\d+)", userID):
                             redis.hset(
-                                "userInfo:-{}".format(userID), "name", b["title"]
+                                "userInfo:-{}".format(userID),
+                                "name",
+                                b["title"],
                             )
                         elif re.match(r"^-100(\d+)", userID):
-                            redis.hset("userInfo:{}".format(userID), "name", b["title"])
+                            redis.hset(
+                                "userInfo:{}".format(userID),
+                                "name",
+                                b["title"],
+                            )
                         else:
-                            redis.hset("userInfo:{}".format(userID), "name", b["title"])
+                            redis.hset(
+                                "userInfo:{}".format(userID),
+                                "name",
+                                b["title"],
+                            )
                         return b["title"]
                     elif "first_name" in b:
                         redis.hset(
-                            "userInfo:{}".format(userID), "name", b["first_name"]
+                            "userInfo:{}".format(userID),
+                            "name",
+                            b["first_name"],
                         )
                         return b["first_name"]
                     elif b["first_name"] == "":
@@ -338,7 +355,9 @@ async def userInfos(userID, info="name"):
                 elif info == "username":
                     if "username" in b:
                         redis.hset(
-                            "userInfo:{}".format(userID), "username", b["username"]
+                            "userInfo:{}".format(userID),
+                            "username",
+                            b["username"],
                         )
                         if "title" in b or "megagroup" in b:
                             if re.match(r"^100(\d+)", userID):
@@ -349,10 +368,14 @@ async def userInfos(userID, info="name"):
                                 )
                             elif re.match(r"^-100(\d+)", userID):
                                 redis.hset(
-                                    "UsernamesIds", b["username"].lower(), userID
+                                    "UsernamesIds",
+                                    b["username"].lower(),
+                                    userID,
                                 )
                         else:
-                            redis.hset("UsernamesIds", b["username"].lower(), userID)
+                            redis.hset(
+                                "UsernamesIds", b["username"].lower(), userID
+                            )
                         return b["username"]
                     else:
                         return False
@@ -376,14 +399,18 @@ async def userIds(username):
         try:
             getC = await client.get_input_entity(username)
             redis.hset(
-                "UsernamesIds", username.lower(), "-100{}".format(getC.channel_id)
+                "UsernamesIds",
+                username.lower(),
+                "-100{}".format(getC.channel_id),
             )
             return int("-100{}".format(getC.channel_id))
         except:
             try:
                 getC = await client.get_entity(username)
                 redis.hset(
-                    "UsernamesIds", username.lower(), "-100{}".format(getC.channel_id)
+                    "UsernamesIds",
+                    username.lower(),
+                    "-100{}".format(getC.channel_id),
                 )
                 return int("-100{}".format(getC.channel_id))
             except:
@@ -402,7 +429,9 @@ async def userIds(username):
                             )
                             return int("-100{}".format(getC.id))
                         else:
-                            redis.hset("UsernamesIds", username.lower(), getC.id)
+                            redis.hset(
+                                "UsernamesIds", username.lower(), getC.id
+                            )
                             return int(getC.id)
                     except:
                         return False
@@ -468,7 +497,9 @@ async def sendText(
     except expts.RetryAfter as a:
         # log.error(f"Target [ID:{chat_id}]: Flood limit is exceeded. Sleep {e.timeout} seconds.")
         await asyncio.sleep(a.timeout)
-        return await sendText(chat_id, reply_msgs, 1, text, parse_mode, reply_markup)
+        return await sendText(
+            chat_id, reply_msgs, 1, text, parse_mode, reply_markup
+        )
     except expts.UserDeactivated as a:
         # log.error(f"Target [ID:{chat_id}]: user is deactivated")
         return a.args
@@ -1386,7 +1417,8 @@ async def editText(
             return True, result
     except expts.BadRequest as a:
         await bot.send_message(
-            chat_id=gv().sudoID, text="Chat ID: {}\nError: {}".format(chat_id, a.args)
+            chat_id=gv().sudoID,
+            text="Chat ID: {}\nError: {}".format(chat_id, a.args),
         )
         return a.args
     except Exception as e:
@@ -1426,7 +1458,8 @@ async def editMessageMedia(
             return True, result
     except expts.BadRequest as a:
         await bot.send_message(
-            chat_id=gv().sudoID, text="Chat ID: {}\nError: {}".format(chat_id, a.args)
+            chat_id=gv().sudoID,
+            text="Chat ID: {}\nError: {}".format(chat_id, a.args),
         )
         return a.args
     except Exception as e:
@@ -1538,7 +1571,9 @@ def isBlock(UserID):
 
 
 def menMD(msg):
-    return "[{}](tg://user?id={})".format(msg.from_user.first_name, msg.from_user.id)
+    return "[{}](tg://user?id={})".format(
+        msg.from_user.first_name, msg.from_user.id
+    )
 
 
 def menHTML(msg):
@@ -1718,7 +1753,9 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
     else:
         if isBlock(user_id):
             if not DataBase.get("user.alertBlocked:{}".format(user_id)):
-                DataBase.setex("user.alertBlocked:{}".format(user_id), 120, "True")
+                DataBase.setex(
+                    "user.alertBlocked:{}".format(user_id), 120, "True"
+                )
                 await sendText(chat_id, 0, 1, langU["u_are_blocked"])
             return False
         if user_steps[user_id]["action"] == "support":
@@ -1751,8 +1788,13 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                 await copyMessage(
                     gv().sudoID, chat_id, msg_id, reply_markup=inlineKeys2
                 )
-                await sendText(chat_id, msg, 1, langU["sent_wait"], None, inlineKeys)
-        if DataBase.get("who_conneted:{}".format(user_id)) and not "/start" in msg.text:
+                await sendText(
+                    chat_id, msg, 1, langU["sent_wait"], None, inlineKeys
+                )
+        if (
+            DataBase.get("who_conneted:{}".format(user_id))
+            and not "/start" in msg.text
+        ):
             which_user = DataBase.get("who_conneted:{}".format(user_id))
             DataBase.delete("who_conneted:{}".format(user_id))
             # if not msg.text:
@@ -1782,12 +1824,18 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
             )
         if reply_msg:
             if "reply_markup" in reply_msg:
-                input_ = reply_msg.reply_markup.inline_keyboard[0][0].callback_data
+                input_ = reply_msg.reply_markup.inline_keyboard[0][
+                    0
+                ].callback_data
                 if "anon:blo" in input_:
-                    ap = re_matches(r"^anon:blo:(\d+):(\d+):(\d+):@(\d+)$", input_)
+                    ap = re_matches(
+                        r"^anon:blo:(\d+):(\d+):(\d+):@(\d+)$", input_
+                    )
                     which_user = int(ap[1])
                     DataBase.incr("stat_anon")
-                    if DataBase.sismember("blocks:{}".format(which_user), user_id):
+                    if DataBase.sismember(
+                        "blocks:{}".format(which_user), user_id
+                    ):
                         await sendText(
                             chat_id,
                             msg,
@@ -1821,7 +1869,10 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                             f"{msg_.message_id}:{user_id}:{msg_id}:{ap[2]}:{int(time())}:no",
                         )
                     await sendText(
-                        which_user, 0, 1, langU["new_message"].format(msg_.message_id)
+                        which_user,
+                        0,
+                        1,
+                        langU["new_message"].format(msg_.message_id),
                     )
                 if "from_who" in input_:
                     ap = re_matches(r"^from_who:(\d+):(\d+)$", input_)
@@ -1837,13 +1888,21 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
         if DataBase.get("ready_to_recv_special:{}".format(user_id)):
             if (
                 msg.text
-                and (re.match(r"^این$", msg.text) or re.match(r"^this$", msg.text))
+                and (
+                    re.match(r"^این$", msg.text)
+                    or re.match(r"^this$", msg.text)
+                )
                 and reply_msg
             ):
                 data_msg = reply_msg
             else:
                 data_msg = msg
-            if data_msg.text or data_msg.photo or data_msg.voice or data_msg.video:
+            if (
+                data_msg.text
+                or data_msg.photo
+                or data_msg.voice
+                or data_msg.video
+            ):
                 allow = True
             elif data_msg.animation or data_msg.audio or data_msg.sticker:
                 allow = True
@@ -1852,7 +1911,9 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
             elif data_msg.venue or data_msg.location:
                 allow = True
             if allow:
-                time_data = DataBase.hget("najva_special:{}".format(user_id), "time")
+                time_data = DataBase.hget(
+                    "najva_special:{}".format(user_id), "time"
+                )
                 users_data = DataBase.hget(
                     "najva:{}:{}".format(user_id, time_data), "users"
                 )
@@ -1896,7 +1957,9 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                         anonymous_cus_link_keys(user_id),
                     )
                 else:
-                    link_previous = DataBase.get("link_anon:{}".format(user_id))
+                    link_previous = DataBase.get(
+                        "link_anon:{}".format(user_id)
+                    )
                     DataBase.delete("link_anon:{}".format(link_previous))
                     DataBase.srem("links_anon", link_previous)
                     DataBase.set("link_anon:{}".format(user_id), msg.text)
@@ -1923,7 +1986,9 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                 and not "/start" in input
             ):
                 if 21 < len(msg.text):
-                    await sendText(chat_id, msg, 1, langU["rules_cus_name_anon"], "md")
+                    await sendText(
+                        chat_id, msg, 1, langU["rules_cus_name_anon"], "md"
+                    )
                 else:
                     DataBase.set("name_anon:{}".format(user_id), msg.text)
                     DataBase.delete("ready_to_change_name:{}".format(user_id))
@@ -1955,12 +2020,15 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                                 msg,
                                 1,
                                 "{}\n{}".format(
-                                    langU["cant_send_self"], langU["enter_id_for_send"]
+                                    langU["cant_send_self"],
+                                    langU["enter_id_for_send"],
                                 ),
                                 "md",
                                 anonymous_back_keys(user_id),
                             )
-                        elif DataBase.sismember("blocks:{}".format(ap[1]), user_id):
+                        elif DataBase.sismember(
+                            "blocks:{}".format(ap[1]), user_id
+                        ):
                             await sendText(
                                 chat_id,
                                 msg,
@@ -1980,7 +2048,9 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                                     callback_data="backstart{}".format(hash),
                                 )
                             )
-                            DataBase.set("who_conneted:{}".format(user_id), ap[1])
+                            DataBase.set(
+                                "who_conneted:{}".format(user_id), ap[1]
+                            )
                             await sendText(
                                 chat_id,
                                 msg,
@@ -2023,12 +2093,15 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                                 msg,
                                 1,
                                 "{}\n{}".format(
-                                    langU["cant_send_self"], langU["enter_id_for_send"]
+                                    langU["cant_send_self"],
+                                    langU["enter_id_for_send"],
                                 ),
                                 "md",
                                 anonymous_back_keys(user_id),
                             )
-                        elif DataBase.sismember("blocks:{}".format(userID), user_id):
+                        elif DataBase.sismember(
+                            "blocks:{}".format(userID), user_id
+                        ):
                             await sendText(
                                 chat_id,
                                 msg,
@@ -2048,13 +2121,17 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                                     callback_data="backstart{}".format(hash),
                                 )
                             )
-                            DataBase.set("who_conneted:{}".format(user_id), userID)
+                            DataBase.set(
+                                "who_conneted:{}".format(user_id), userID
+                            )
                             await sendText(
                                 chat_id,
                                 msg,
                                 1,
                                 langU["user_connect_4send"].format(
-                                    DataBase.get("name_anon2:{}".format(userID))
+                                    DataBase.get(
+                                        "name_anon2:{}".format(userID)
+                                    )
                                 ),
                                 "md",
                                 inlineKeys,
@@ -2083,9 +2160,13 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                     )
             if re.match(r"/inbox$", input):
                 if DataBase.scard("inbox_user:{}".format(user_id)) > 0:
-                    your_messages = DataBase.smembers("inbox_user:{}".format(user_id))
+                    your_messages = DataBase.smembers(
+                        "inbox_user:{}".format(user_id)
+                    )
                     for i in your_messages:
-                        ap = re_matches(r"^(\d+):(\d+):(\d+):(\d+):(\d+):(yes|no)$", i)
+                        ap = re_matches(
+                            r"^(\d+):(\d+):(\d+):(\d+):(\d+):(yes|no)$", i
+                        )
                         if ap[6] == "yes":
                             show_sender = int(ap[2])
                         else:
@@ -2105,11 +2186,16 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                             DataBase.setex(
                                 "is_stater:{}".format(ap[2]), 86400 * 7, "True"
                             )
-                            user_name = DataBase.get("name_anon2:{}".format(user_id))
+                            user_name = DataBase.get(
+                                "name_anon2:{}".format(user_id)
+                            )
                         else:
                             user_name = langU["anonymous"]
                         await sendText(
-                            ap[2], ap[3], 1, langU["your_msg_seen"].format(user_name)
+                            ap[2],
+                            ap[3],
+                            1,
+                            langU["your_msg_seen"].format(user_name),
                         )
                         DataBase.srem("inbox_user:{}".format(user_id), i)
                 else:
@@ -2144,9 +2230,12 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                         "najva_seen_time:{}:{}".format(from_user, time_data),
                         int(time()),
                     )
-                    DataBase.incr("najva_seen_count:{}:{}".format(from_user, time_data))
+                    DataBase.incr(
+                        "najva_seen_count:{}:{}".format(from_user, time_data)
+                    )
                     DataBase.sadd(
-                        "najva_seened:{}:{}".format(from_user, time_data), user_id
+                        "najva_seened:{}:{}".format(from_user, time_data),
+                        user_id,
                     )
                     special_msgID = DataBase.hget(
                         "najva_special:{}".format(from_user), "id"
@@ -2166,7 +2255,9 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                     msgid = DataBase.hget(
                         "najva:{}:{}".format(from_user, time_data), "msg_id"
                     )
-                    inlineKeys = await show_speical_najva_keys(user_id, from_user)
+                    inlineKeys = await show_speical_najva_keys(
+                        user_id, from_user
+                    )
                     msg_ = await copyMessage(
                         chat_id,
                         gv().supchat,
@@ -2192,10 +2283,13 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                         reply_markup=najva_seen3_keys(from_user, time_data),
                     )
                     if DataBase.hget(f"setting_najva:{from_user}", "dispo"):
-                        DataBase.delete("najva:{}:{}".format(from_user, time_data))
+                        DataBase.delete(
+                            "najva:{}:{}".format(from_user, time_data)
+                        )
                         DataBase.delete("najva_special:{}".format(from_user))
                         DataBase.srem(
-                            "najva_autodel", f"{from_user}:{time_data}:{special_msgID}"
+                            "najva_autodel",
+                            f"{from_user}:{time_data}:{special_msgID}",
                         )
                     DataBase.hset(
                         "najva:{}:{}".format(from_user, time_data),
@@ -2212,12 +2306,15 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                                 msg,
                                 1,
                                 "{}\n{}".format(
-                                    langU["cant_send_self"], langU["enter_id_for_send"]
+                                    langU["cant_send_self"],
+                                    langU["enter_id_for_send"],
                                 ),
                                 "md",
                                 anonymous_back_keys(user_id),
                             )
-                        elif DataBase.sismember("blocks:{}".format(we_have), user_id):
+                        elif DataBase.sismember(
+                            "blocks:{}".format(we_have), user_id
+                        ):
                             await sendText(
                                 chat_id,
                                 msg,
@@ -2237,20 +2334,26 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                                     callback_data="backstart{}".format(hash),
                                 )
                             )
-                            DataBase.set("who_conneted:{}".format(user_id), we_have)
+                            DataBase.set(
+                                "who_conneted:{}".format(user_id), we_have
+                            )
                             DataBase.incr("user.stats_anon:{}".format(we_have))
                             await sendText(
                                 chat_id,
                                 msg,
                                 1,
                                 langU["user_connect_4send"].format(
-                                    DataBase.get("name_anon2:{}".format(we_have))
+                                    DataBase.get(
+                                        "name_anon2:{}".format(we_have)
+                                    )
                                 ),
                                 "md",
                                 inlineKeys,
                             )
                     else:
-                        await sendText(chat_id, msg, 1, langU["link_expire_anon"], "md")
+                        await sendText(
+                            chat_id, msg, 1, langU["link_expire_anon"], "md"
+                        )
             if not re.search(r"^/start p(\d+)$", input):
                 if not DataBase.sismember("allUsers", user_id):
                     await newUser(msg)
@@ -2264,7 +2367,11 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                         msg,
                         1,
                         langU["ban_flood"].format(
-                            name, user_id, gv().botName, gv().botUser, gv().sudoUser
+                            name,
+                            user_id,
+                            gv().botName,
+                            gv().botUser,
+                            gv().sudoUser,
                         ),
                         "html",
                     )
@@ -2281,7 +2388,9 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                     "md",
                 )
                 return False
-            if not re.search(r"^[!/#]start", input) and not await is_Channel_Member(
+            if not re.search(
+                r"^[!/#]start", input
+            ) and not await is_Channel_Member(
                 "@{}".format(IDs_datas["chUsername"]), user_id
             ):
                 inlineKeys = iMarkup()
@@ -2306,7 +2415,12 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                 return False
             if re.match(r"^/najva$", input):
                 await sendText(
-                    chat_id, msg, 1, langU["najva_help"], None, najva_help_keys(user_id)
+                    chat_id,
+                    msg,
+                    1,
+                    langU["najva_help"],
+                    None,
+                    najva_help_keys(user_id),
                 )
             if re.match(r"^/nashenas$", input):
                 await sendText(
@@ -2319,7 +2433,12 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                 )
             if re.match(r"^/help$", input):
                 await sendText(
-                    chat_id, msg, 1, langU["najva_help"], None, najva_help_keys(user_id)
+                    chat_id,
+                    msg,
+                    1,
+                    langU["najva_help"],
+                    None,
+                    najva_help_keys(user_id),
                 )
             if re.match(r"^/settings$", input):
                 await sendText(
@@ -2334,11 +2453,21 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                 await sendText(chat_id, msg, 1, langU["adsfree"], None)
             if re.match(r"^/lang$", input):
                 await sendText(
-                    chat_id, msg, 1, langU["language"], None, settings_keys(user_id)
+                    chat_id,
+                    msg,
+                    1,
+                    langU["language"],
+                    None,
+                    settings_keys(user_id),
                 )
             if re.match(r"^/support$", input):
                 await sendText(
-                    chat_id, msg, 1, langU["support"], None, support_keys(user_id)
+                    chat_id,
+                    msg,
+                    1,
+                    langU["support"],
+                    None,
+                    support_keys(user_id),
                 )
             if re.match(r"^/start$", input) or re.match(
                 r"^{}$".format(langU["buttuns"]["back_menu"]), input
@@ -2365,7 +2494,9 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                     text = langU["disconnect"]
                 else:
                     text = langU["not_connect"]
-                await sendText(chat_id, msg, 1, text, "md", start_keys(user_id))
+                await sendText(
+                    chat_id, msg, 1, text, "md", start_keys(user_id)
+                )
             if isSudo(user_id):
                 if re.match(r"/block (\d+)$", input):
                     ap = re_matches("/block (\d+)$", input)
@@ -2385,10 +2516,16 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                     await sendText(chat_id, msg, 1, alerttext)
                 if re.match(r"^/send2all$", input):
                     if reply_msg:
-                        if reply_msg.forward_from or reply_msg.forward_from_chat:
+                        if (
+                            reply_msg.forward_from
+                            or reply_msg.forward_from_chat
+                        ):
                             LIST = DataBase.smembers("allUsers")
                             sendM = await sendText(
-                                chat_id, msg, 1, langU["fwd_to_all"].format(len(LIST))
+                                chat_id,
+                                msg,
+                                1,
+                                langU["fwd_to_all"].format(len(LIST)),
                             )
                             n = 0
                             for i in LIST:
@@ -2407,7 +2544,10 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                         elif reply_msg:
                             LIST = DataBase.smembers("allUsers")
                             sendM = await sendText(
-                                chat_id, msg, 1, langU["send_to_all"].format(len(LIST))
+                                chat_id,
+                                msg,
+                                1,
+                                langU["send_to_all"].format(len(LIST)),
                             )
                             n = 0
                             for i in LIST:
@@ -2436,7 +2576,9 @@ def saveUsername(msg, mode="message"):
         fn = u.first_name
         redis.hset("userInfo:{}".format(u.id), "name", fn)
         us = u.username
-        if us and int(redis.hget("UsernamesIds", us.lower()) or "0") != int(uid):
+        if us and int(redis.hget("UsernamesIds", us.lower()) or "0") != int(
+            uid
+        ):
             redis.hset("UsernamesIds", us.lower(), uid)
             cPrint("@{} [{}] Saved".format(us, uid), 2, None, "magenta")
     elif mode == "inline" or mode == "callback":
@@ -2445,7 +2587,9 @@ def saveUsername(msg, mode="message"):
         fn = u.first_name
         redis.hset("userInfo:{}".format(u.id), "name", fn)
         us = u.username
-        if us and int(redis.hget("UsernamesIds", us.lower()) or "0") != int(uid):
+        if us and int(redis.hget("UsernamesIds", us.lower()) or "0") != int(
+            uid
+        ):
             redis.hset("UsernamesIds", us.lower(), uid)
             cPrint("@{} [{}] Saved".format(us, uid), 2, None, "magenta")
 
@@ -2465,16 +2609,27 @@ def start_keys(UserID):
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            langU["buttuns"]["najva_section"], callback_data="najva{}".format(hash)
+            langU["buttuns"]["najva_section"],
+            callback_data="najva{}".format(hash),
         ),
-        iButtun(langU["buttuns"]["anon_section"], callback_data="anon{}".format(hash)),
+        iButtun(
+            langU["buttuns"]["anon_section"],
+            callback_data="anon{}".format(hash),
+        ),
     )
     inlineKeys.add(
-        iButtun(langU["buttuns"]["support"], callback_data="supp{}".format(hash)),
-        iButtun(langU["buttuns"]["language"], callback_data="language{}".format(hash)),
+        iButtun(
+            langU["buttuns"]["support"], callback_data="supp{}".format(hash)
+        ),
+        iButtun(
+            langU["buttuns"]["language"],
+            callback_data="language{}".format(hash),
+        ),
     )
     inlineKeys.add(
-        iButtun(langU["buttuns"]["adsfree"], callback_data="adsfree{}".format(hash)),
+        iButtun(
+            langU["buttuns"]["adsfree"], callback_data="adsfree{}".format(hash)
+        ),
     )
     if isSudo(UserID):
         inlineKeys.add(
@@ -2483,7 +2638,8 @@ def start_keys(UserID):
                 callback_data="list:block:0{}".format(hash),
             ),
             iButtun(
-                langU["buttuns"]["stats"], callback_data="list:stats:0{}".format(hash)
+                langU["buttuns"]["stats"],
+                callback_data="list:stats:0{}".format(hash),
             ),
         )
     inlineKeys.add(
@@ -2500,7 +2656,9 @@ def back_keys(UserID):
     langU = lang[user_steps[UserID]["lang"]]
     inlineKeys = iMarkup()
     inlineKeys.add(
-        iButtun(langU["buttuns"]["back"], callback_data="backstart{}".format(hash)),
+        iButtun(
+            langU["buttuns"]["back"], callback_data="backstart{}".format(hash)
+        ),
     )
     return inlineKeys
 
@@ -2521,16 +2679,19 @@ def settings_keys(UserID, arg2=None):
         status2 = ""
     inlineKeys.add(
         iButtun(
-            "{}English🇺🇸".format(status2), callback_data="set_lang_en{}".format(hash)
+            "{}English🇺🇸".format(status2),
+            callback_data="set_lang_en{}".format(hash),
         ),
         iButtun(
-            "{}پارسی🇮🇷".format(status1), callback_data="set_lang_fa{}".format(hash)
+            "{}پارسی🇮🇷".format(status1),
+            callback_data="set_lang_fa{}".format(hash),
         ),
     )
     if arg2:
         inlineKeys.add(
             iButtun(
-                lang[arg2]["buttuns"]["back"], callback_data="backstart{}".format(hash)
+                lang[arg2]["buttuns"]["back"],
+                callback_data="backstart{}".format(hash),
             )
         )
     else:
@@ -2554,18 +2715,29 @@ def anonymous_keys(UserID):
     inlineKeys = iMarkup()
     if status_receive == "✅":
         inlineKeys.add(
-            iButtun(buttuns["link_my_anon"], callback_data="anon:link{}".format(hash)),
-            iButtun(buttuns["help_my_anon"], callback_data="anon:help{}".format(hash)),
-        )
-        inlineKeys.add(
             iButtun(
-                buttuns["stats_my_anon"], callback_data="anon:stats{}".format(hash)
+                buttuns["link_my_anon"],
+                callback_data="anon:link{}".format(hash),
             ),
-            iButtun(buttuns["name_my_anon"], callback_data="anon:name{}".format(hash)),
+            iButtun(
+                buttuns["help_my_anon"],
+                callback_data="anon:help{}".format(hash),
+            ),
         )
         inlineKeys.add(
             iButtun(
-                buttuns["send_persion_anon"], callback_data="anon:send{}".format(hash)
+                buttuns["stats_my_anon"],
+                callback_data="anon:stats{}".format(hash),
+            ),
+            iButtun(
+                buttuns["name_my_anon"],
+                callback_data="anon:name{}".format(hash),
+            ),
+        )
+        inlineKeys.add(
+            iButtun(
+                buttuns["send_persion_anon"],
+                callback_data="anon:send{}".format(hash),
             ),
         )
     inlineKeys.add(
@@ -2581,7 +2753,9 @@ def anonymous_keys(UserID):
                 callback_data="anon:myblock{}".format(hash),
             ),
         )
-    inlineKeys.add(iButtun(buttuns["back"], callback_data="backstart{}".format(hash)))
+    inlineKeys.add(
+        iButtun(buttuns["back"], callback_data="backstart{}".format(hash))
+    )
     return inlineKeys
 
 
@@ -2594,7 +2768,8 @@ def anonymous_my_link_keys(UserID):
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            buttuns["customize_link_anon"], callback_data="anon:cus{}".format(hash)
+            buttuns["customize_link_anon"],
+            callback_data="anon:cus{}".format(hash),
         ),
         iButtun(
             buttuns["share_link_anon"],
@@ -2602,12 +2777,19 @@ def anonymous_my_link_keys(UserID):
         ),
     )
     inlineKeys.add(
-        iButtun(buttuns["insta_link_anon"], callback_data="anon:insta{}".format(hash))
+        iButtun(
+            buttuns["insta_link_anon"],
+            callback_data="anon:insta{}".format(hash),
+        )
     )
     inlineKeys.add(
-        iButtun(buttuns["telg_link_anon"], callback_data="anon:telg{}".format(hash)),
+        iButtun(
+            buttuns["telg_link_anon"], callback_data="anon:telg{}".format(hash)
+        ),
     )
-    inlineKeys.add(iButtun(buttuns["back_anon"], callback_data="anon{}".format(hash)))
+    inlineKeys.add(
+        iButtun(buttuns["back_anon"], callback_data="anon{}".format(hash))
+    )
     return inlineKeys
 
 
@@ -2618,11 +2800,14 @@ def anonymous_cus_link_keys(UserID):
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            buttuns["default_link_anon"], callback_data="anon:change{}".format(hash)
+            buttuns["default_link_anon"],
+            callback_data="anon:change{}".format(hash),
         ),
     )
     inlineKeys.add(
-        iButtun(buttuns["back_link_anon"], callback_data="anon:link{}".format(hash))
+        iButtun(
+            buttuns["back_link_anon"], callback_data="anon:link{}".format(hash)
+        )
     )
     return inlineKeys
 
@@ -2633,7 +2818,9 @@ def anonymous_insta_link_keys(UserID):
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
-        iButtun(buttuns["back_link_anon"], callback_data="anon:link{}".format(hash))
+        iButtun(
+            buttuns["back_link_anon"], callback_data="anon:link{}".format(hash)
+        )
     )
     return inlineKeys
 
@@ -2644,18 +2831,28 @@ def anonymous_help_keys(UserID):
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
-        iButtun(buttuns["help1_anon"], callback_data="anon:help1{}".format(hash)),
+        iButtun(
+            buttuns["help1_anon"], callback_data="anon:help1{}".format(hash)
+        ),
     )
     inlineKeys.add(
-        iButtun(buttuns["help2_anon"], callback_data="anon:help2{}".format(hash)),
+        iButtun(
+            buttuns["help2_anon"], callback_data="anon:help2{}".format(hash)
+        ),
     )
     inlineKeys.add(
-        iButtun(buttuns["help3_anon"], callback_data="anon:help3{}".format(hash)),
+        iButtun(
+            buttuns["help3_anon"], callback_data="anon:help3{}".format(hash)
+        ),
     )
     inlineKeys.add(
-        iButtun(buttuns["help4_anon"], callback_data="anon:help4{}".format(hash)),
+        iButtun(
+            buttuns["help4_anon"], callback_data="anon:help4{}".format(hash)
+        ),
     )
-    inlineKeys.add(iButtun(buttuns["back_anon"], callback_data="anon{}".format(hash)))
+    inlineKeys.add(
+        iButtun(buttuns["back_anon"], callback_data="anon{}".format(hash))
+    )
     return inlineKeys
 
 
@@ -2664,7 +2861,9 @@ def anonymous_back_keys(UserID):
     langU = lang[user_steps[UserID]["lang"]]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
-    inlineKeys.add(iButtun(buttuns["back_anon"], callback_data="anon{}".format(hash)))
+    inlineKeys.add(
+        iButtun(buttuns["back_anon"], callback_data="anon{}".format(hash))
+    )
     return inlineKeys
 
 
@@ -2674,7 +2873,9 @@ def anonymous_send_again_keys(UserID, which_user):
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
-        iButtun(buttuns["send_more"], callback_data="anon:sendmore{}".format(hash))
+        iButtun(
+            buttuns["send_more"], callback_data="anon:sendmore{}".format(hash)
+        )
     )
     return inlineKeys
 
@@ -2685,7 +2886,10 @@ def anonymous_name_keys(UserID):
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
-        iButtun(buttuns["cus_name_anon"], callback_data="anon:cus_name{}".format(hash)),
+        iButtun(
+            buttuns["cus_name_anon"],
+            callback_data="anon:cus_name{}".format(hash),
+        ),
     )
     inlineKeys.add(
         iButtun(
@@ -2693,7 +2897,9 @@ def anonymous_name_keys(UserID):
             callback_data="anon:default_name{}".format(hash),
         ),
     )
-    inlineKeys.add(iButtun(buttuns["back_anon"], callback_data="anon{}".format(hash)))
+    inlineKeys.add(
+        iButtun(buttuns["back_anon"], callback_data="anon{}".format(hash))
+    )
     return inlineKeys
 
 
@@ -2702,11 +2908,15 @@ def anonymous_cus_name_keys(UserID):
     langU = lang[user_steps[UserID]["lang"]]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
-    inlineKeys.add(iButtun(buttuns["cancel"], callback_data="anon:name{}".format(hash)))
+    inlineKeys.add(
+        iButtun(buttuns["cancel"], callback_data="anon:name{}".format(hash))
+    )
     return inlineKeys
 
 
-def anonymous_new_message_keys(UserID, TO_USER, MSG_ID, SHOW_SENDER, SENT_TIME):
+def anonymous_new_message_keys(
+    UserID, TO_USER, MSG_ID, SHOW_SENDER, SENT_TIME
+):
     hash = ":{}:{}:{}:@{}".format(TO_USER, MSG_ID, SENT_TIME, UserID)
     try:
         langU = lang[user_steps[UserID]["lang"]]
@@ -2735,7 +2945,9 @@ def anonymous_new_message_keys(UserID, TO_USER, MSG_ID, SHOW_SENDER, SENT_TIME):
     else:
         inlineKeys.add(iButtun(buttuns["from_who2"], callback_data="none:no"))
     inlineKeys.add(
-        iButtun(buttuns["sent_time"], callback_data="anon:stime{}".format(hash))
+        iButtun(
+            buttuns["sent_time"], callback_data="anon:stime{}".format(hash)
+        )
     )
     return inlineKeys
 
@@ -2749,7 +2961,9 @@ def anonymous_delete_blocks_keys(UserID):
         iButtun(buttuns["yes"], callback_data="anon:delblocks{}".format(hash)),
         iButtun(buttuns["no"], callback_data="anon{}".format(hash)),
     )
-    inlineKeys.add(iButtun(buttuns["back_anon"], callback_data="anon{}".format(hash)))
+    inlineKeys.add(
+        iButtun(buttuns["back_anon"], callback_data="anon{}".format(hash))
+    )
     return inlineKeys
 
 
@@ -2759,15 +2973,21 @@ def najva_keys(UserID):
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
-        iButtun(buttuns["settings"], callback_data="najva:settings{}".format(hash)),
+        iButtun(
+            buttuns["settings"], callback_data="najva:settings{}".format(hash)
+        ),
         iButtun(buttuns["help"], callback_data="najva:help{}".format(hash)),
     )
-    inlineKeys.add(iButtun(buttuns["back"], callback_data="backstart{}".format(hash)))
+    inlineKeys.add(
+        iButtun(buttuns["back"], callback_data="backstart{}".format(hash))
+    )
     return inlineKeys
 
 
 def rplac_tick(text):
-    return str(text).replace("None", "❌").replace("True", "✅").replace("1", "✅")
+    return (
+        str(text).replace("None", "❌").replace("True", "✅").replace("1", "✅")
+    )
 
 
 def najva_settings_keys(UserID):
@@ -2829,7 +3049,9 @@ def najva_settings_keys(UserID):
             DataBase.get(f"autodel_time:{UserID}") or 10
         )
     else:
-        time_del = rplac_tick(DataBase.hget(f"setting_najva:{UserID}", "autodel"))
+        time_del = rplac_tick(
+            DataBase.hget(f"setting_najva:{UserID}", "autodel")
+        )
     inlineKeys.add(
         iButtun(
             buttuns["najva_settings_auto_del"].format(time_del),
@@ -2838,7 +3060,9 @@ def najva_settings_keys(UserID):
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_settings_block"].format(DataBase.scard(f"blocks2:{UserID}")),
+            buttuns["najva_settings_block"].format(
+                DataBase.scard(f"blocks2:{UserID}")
+            ),
             callback_data="najva:settings:blocks{}".format(hash),
         ),
     )
@@ -2848,7 +3072,9 @@ def najva_settings_keys(UserID):
             callback_data="najva:settings:delall{}".format(hash),
         ),
     )
-    inlineKeys.add(iButtun(buttuns["back_najva"], callback_data="najva{}".format(hash)))
+    inlineKeys.add(
+        iButtun(buttuns["back_najva"], callback_data="najva{}".format(hash))
+    )
     return inlineKeys
 
 
@@ -2859,17 +3085,20 @@ def najva_help_keys(UserID):
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_send"], callback_data="najva:help:send{}".format(hash)
+            buttuns["najva_help_send"],
+            callback_data="najva:help:send{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_media"], callback_data="najva:help:media{}".format(hash)
+            buttuns["najva_help_media"],
+            callback_data="najva:help:media{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_group"], callback_data="najva:help:group{}".format(hash)
+            buttuns["najva_help_group"],
+            callback_data="najva:help:group{}".format(hash),
         ),
     )
     inlineKeys.add(
@@ -2880,7 +3109,8 @@ def najva_help_keys(UserID):
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_noid"], callback_data="najva:help:noid{}".format(hash)
+            buttuns["najva_help_noid"],
+            callback_data="najva:help:noid{}".format(hash),
         ),
     )
     inlineKeys.add(
@@ -2891,15 +3121,19 @@ def najva_help_keys(UserID):
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_prob"], callback_data="najva:help:prob{}".format(hash)
+            buttuns["najva_help_prob"],
+            callback_data="najva:help:prob{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_examp"], callback_data="najva:help:examp{}".format(hash)
+            buttuns["najva_help_examp"],
+            callback_data="najva:help:examp{}".format(hash),
         ),
     )
-    inlineKeys.add(iButtun(buttuns["back_najva"], callback_data="najva{}".format(hash)))
+    inlineKeys.add(
+        iButtun(buttuns["back_najva"], callback_data="najva{}".format(hash))
+    )
     return inlineKeys
 
 
@@ -2910,11 +3144,14 @@ def najva_help1_keys(UserID):
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_noid"], callback_data="najva:help:noid{}".format(hash)
+            buttuns["najva_help_noid"],
+            callback_data="najva:help:noid{}".format(hash),
         )
     )
     inlineKeys.add(
-        iButtun(buttuns["helper_video"], callback_data="najva:vid:1{}".format(hash))
+        iButtun(
+            buttuns["helper_video"], callback_data="najva:vid:1{}".format(hash)
+        )
     )
     inlineKeys.add(
         iButtun(
@@ -2923,7 +3160,10 @@ def najva_help1_keys(UserID):
         )
     )
     inlineKeys.add(
-        iButtun(buttuns["back_help_najva"], callback_data="najva:help{}".format(hash))
+        iButtun(
+            buttuns["back_help_najva"],
+            callback_data="najva:help{}".format(hash),
+        )
     )
     return inlineKeys
 
@@ -2934,11 +3174,18 @@ def najva_help2_keys(UserID):
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
-        iButtun(buttuns["helper_video"], callback_data="najva:vid:2{}".format(hash))
+        iButtun(
+            buttuns["helper_video"], callback_data="najva:vid:2{}".format(hash)
+        )
     )
-    inlineKeys.add(iButtun(buttuns["example"], switch_inline_query="{}".format(UserID)))
     inlineKeys.add(
-        iButtun(buttuns["back_help_najva"], callback_data="najva:help{}".format(hash))
+        iButtun(buttuns["example"], switch_inline_query="{}".format(UserID))
+    )
+    inlineKeys.add(
+        iButtun(
+            buttuns["back_help_najva"],
+            callback_data="najva:help{}".format(hash),
+        )
     )
     return inlineKeys
 
@@ -2957,7 +3204,10 @@ def najva_help3_keys(UserID):
         )
     )
     inlineKeys.add(
-        iButtun(buttuns["back_help_najva"], callback_data="najva:help{}".format(hash))
+        iButtun(
+            buttuns["back_help_najva"],
+            callback_data="najva:help{}".format(hash),
+        )
     )
     return inlineKeys
 
@@ -2969,11 +3219,15 @@ def najva_help4_keys(UserID):
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            buttuns["example"], switch_inline_query="@All {}".format(buttuns["example"])
+            buttuns["example"],
+            switch_inline_query="@All {}".format(buttuns["example"]),
         )
     )
     inlineKeys.add(
-        iButtun(buttuns["back_help_najva"], callback_data="najva:help{}".format(hash))
+        iButtun(
+            buttuns["back_help_najva"],
+            callback_data="najva:help{}".format(hash),
+        )
     )
     return inlineKeys
 
@@ -2984,10 +3238,15 @@ def najva_help5_keys(UserID):
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
-        iButtun(buttuns["helper_reply"], callback_data="najva:vid:5{}".format(hash))
+        iButtun(
+            buttuns["helper_reply"], callback_data="najva:vid:5{}".format(hash)
+        )
     )
     inlineKeys.add(
-        iButtun(buttuns["back_help_najva"], callback_data="najva:help{}".format(hash))
+        iButtun(
+            buttuns["back_help_najva"],
+            callback_data="najva:help{}".format(hash),
+        )
     )
     return inlineKeys
 
@@ -2999,7 +3258,10 @@ def najva_help6_keys(UserID):
     inlineKeys = iMarkup()
     inlineKeys.add(iButtun(buttuns["example"], switch_inline_query="set"))
     inlineKeys.add(
-        iButtun(buttuns["back_help_najva"], callback_data="najva:help{}".format(hash))
+        iButtun(
+            buttuns["back_help_najva"],
+            callback_data="najva:help{}".format(hash),
+        )
     )
     return inlineKeys
 
@@ -3010,7 +3272,10 @@ def najva_help7_keys(UserID):
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
-        iButtun(buttuns["back_help_najva"], callback_data="najva:help{}".format(hash))
+        iButtun(
+            buttuns["back_help_najva"],
+            callback_data="najva:help{}".format(hash),
+        )
     )
     return inlineKeys
 
@@ -3034,11 +3299,18 @@ def najva_help8_keys(UserID):
             ),
         )
     )
-    inlineKeys.add(iButtun(buttuns["example_special"], switch_inline_query=UserID))
-    inlineKeys.add(iButtun(buttuns["example_myid"], switch_inline_query="me"))
-    inlineKeys.add(iButtun(buttuns["example_set_shcut"], switch_inline_query="set"))
     inlineKeys.add(
-        iButtun(buttuns["back_help_najva"], callback_data="najva:help{}".format(hash))
+        iButtun(buttuns["example_special"], switch_inline_query=UserID)
+    )
+    inlineKeys.add(iButtun(buttuns["example_myid"], switch_inline_query="me"))
+    inlineKeys.add(
+        iButtun(buttuns["example_set_shcut"], switch_inline_query="set")
+    )
+    inlineKeys.add(
+        iButtun(
+            buttuns["back_help_najva"],
+            callback_data="najva:help{}".format(hash),
+        )
     )
     return inlineKeys
 
@@ -3049,10 +3321,16 @@ def najva_help9_keys(UserID):
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
-        iButtun(buttuns["helper_install"], callback_data="najva:vid:6{}".format(hash))
+        iButtun(
+            buttuns["helper_install"],
+            callback_data="najva:vid:6{}".format(hash),
+        )
     )
     inlineKeys.add(
-        iButtun(buttuns["back_help_najva"], callback_data="najva:help{}".format(hash))
+        iButtun(
+            buttuns["back_help_najva"],
+            callback_data="najva:help{}".format(hash),
+        )
     )
     return inlineKeys
 
@@ -3071,7 +3349,9 @@ def najva_autodel_keys(UserID):
         )
     )
     inlineKeys.add(
-        iButtun(buttuns["back_nset"], callback_data="najva:settings{}".format(hash))
+        iButtun(
+            buttuns["back_nset"], callback_data="najva:settings{}".format(hash)
+        )
     )
     return inlineKeys
 
@@ -3091,7 +3371,9 @@ def najva_autodel2_keys(UserID):
     )
     inlineKeys.add(
         iButtun(
-            buttuns["autodel_status"].format(DataBase.get(f"autodel_time:{UserID}")),
+            buttuns["autodel_status"].format(
+                DataBase.get(f"autodel_time:{UserID}")
+            ),
             callback_data="none",
         )
     )
@@ -3104,7 +3386,9 @@ def najva_autodel2_keys(UserID):
         iButtun("+10", callback_data="autodel:+10{}".format(hash)),
     )
     inlineKeys.add(
-        iButtun(buttuns["back_nset"], callback_data="najva:settings{}".format(hash)),
+        iButtun(
+            buttuns["back_nset"], callback_data="najva:settings{}".format(hash)
+        ),
     )
     return inlineKeys
 
@@ -3161,20 +3445,30 @@ def register_special_keys(UserID):
     inlineKeys.add(
         iButtun(
             buttuns["anti_save"].format(
-                rplac_tick(DataBase.hget(f"setting_najva:{UserID}", "antisave"))
+                rplac_tick(
+                    DataBase.hget(f"setting_najva:{UserID}", "antisave")
+                )
             ),
             callback_data="special:antisave{}".format(hash),
         )
     )
     inlineKeys.add(
-        iButtun(buttuns["send_pv"], callback_data="special:sendpv{}".format(hash)),
+        iButtun(
+            buttuns["send_pv"], callback_data="special:sendpv{}".format(hash)
+        ),
     )
     inlineKeys.add(
-        iButtun(buttuns["reg_najva"], callback_data="special:reg1{}".format(hash)),
-        iButtun(buttuns["reg2_najva"], callback_data="special:reg2{}".format(hash)),
+        iButtun(
+            buttuns["reg_najva"], callback_data="special:reg1{}".format(hash)
+        ),
+        iButtun(
+            buttuns["reg2_najva"], callback_data="special:reg2{}".format(hash)
+        ),
     )
     inlineKeys.add(
-        iButtun(buttuns["cancel"], callback_data="special:cancel{}".format(hash)),
+        iButtun(
+            buttuns["cancel"], callback_data="special:cancel{}".format(hash)
+        ),
     )
     return inlineKeys
 
@@ -3199,7 +3493,9 @@ async def show_speical_najva_keys(UserID, from_user):
         iButtun(name_user, url=call_url),
     )
     inlineKeys.add(
-        iButtun(buttuns["report"], callback_data="special:report{}".format(hash2)),
+        iButtun(
+            buttuns["report"], callback_data="special:report{}".format(hash2)
+        ),
         iButtun(which_one, callback_data="special:block{}".format(hash2)),
     )
     return inlineKeys
@@ -3211,10 +3507,14 @@ def report_najva_keys(UserID, from_user, reply_id):
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
-        iButtun(buttuns["report"], callback_data="special:report2{}".format(hash2)),
+        iButtun(
+            buttuns["report"], callback_data="special:report2{}".format(hash2)
+        ),
     )
     inlineKeys.add(
-        iButtun(buttuns["cancel"], callback_data="report:cancel{}".format(hash2)),
+        iButtun(
+            buttuns["cancel"], callback_data="report:cancel{}".format(hash2)
+        ),
     )
     return inlineKeys
 
@@ -3239,13 +3539,21 @@ def support_keys(UserID):
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
-        iButtun(buttuns["help_najva"], callback_data="najva:help{}".format(hash))
+        iButtun(
+            buttuns["help_najva"], callback_data="najva:help{}".format(hash)
+        )
     )
     inlineKeys.add(
-        iButtun(buttuns["help_my_anon2"], callback_data="anon:help{}".format(hash))
+        iButtun(
+            buttuns["help_my_anon2"], callback_data="anon:help{}".format(hash)
+        )
     )
-    inlineKeys.add(iButtun(buttuns["support2"], callback_data="support{}".format(hash)))
-    inlineKeys.add(iButtun(buttuns["back"], callback_data="backstart{}".format(hash)))
+    inlineKeys.add(
+        iButtun(buttuns["support2"], callback_data="support{}".format(hash))
+    )
+    inlineKeys.add(
+        iButtun(buttuns["back"], callback_data="backstart{}".format(hash))
+    )
     return inlineKeys
 
 
@@ -3394,7 +3702,9 @@ def generate_uniqid():
         if not DataBase.sismember("file_ids", text):
             DataBase.sadd("file_ids", text)
             break
-        text = "".join(random.choices(string.ascii_letters + string.digits, k=29))
+        text = "".join(
+            random.choices(string.ascii_letters + string.digits, k=29)
+        )
     return text
 
 
@@ -3461,19 +3771,26 @@ async def message_process(msg: types.Message):
                 and msg.reply_markup
             ):
                 time_data = msg.reply_markup.inline_keyboard[0][0]
-                if time_data.callback_data and "showN2" in time_data.callback_data:
+                if (
+                    time_data.callback_data
+                    and "showN2" in time_data.callback_data
+                ):
                     time_data = time_data.callback_data.split(":")[2]
                     if reply_msg:
                         Uid = reply_msg.from_user.id
                         Uname = reply_msg.from_user.first_name
                         DataBase.hset(
-                            "najva:{}:{}".format(user_id, time_data), "users", Uid
+                            "najva:{}:{}".format(user_id, time_data),
+                            "users",
+                            Uid,
                         )
                         await editText(
                             chat_id,
                             msg_id,
                             0,
-                            langU["inline"]["text"]["najva_person"].format(Uname),
+                            langU["inline"]["text"]["najva_person"].format(
+                                Uname
+                            ),
                             "HTML",
                             msg.reply_markup,
                         )
@@ -3492,12 +3809,17 @@ async def message_process(msg: types.Message):
                     else:
                         if (
                             DataBase.hget(
-                                "najva:{}:{}".format(user_id, time_data), "users"
+                                "najva:{}:{}".format(user_id, time_data),
+                                "users",
                             )
                             == "reply"
                         ):
                             await editText(
-                                chat_id, msg_id, 0, langU["didnt_enter_user"], "HTML"
+                                chat_id,
+                                msg_id,
+                                0,
+                                langU["didnt_enter_user"],
+                                "HTML",
                             )
     if isGroup(msg):
         await bot.leave_chat(chat_id)
@@ -3580,7 +3902,9 @@ async def callback_query_process(msg: types.CallbackQuery):
         else:
             return False
         if int(_.date.timestamp()) < (int(time()) - 86400):
-            cPrint("{} Old Callback Skipped".format(_.date), 2, textColor="cyan")
+            cPrint(
+                "{} Old Callback Skipped".format(_.date), 2, textColor="cyan"
+            )
             try:
                 await _.edit_reply_markup()
             except:
@@ -3609,12 +3933,21 @@ async def callback_query_process(msg: types.CallbackQuery):
             )
         if re.match(r"^supp:@(\d+)$", input):
             await editText(
-                chat_id, msg_id, 0, langU["support2"], "html", support_keys(user_id)
+                chat_id,
+                msg_id,
+                0,
+                langU["support2"],
+                "html",
+                support_keys(user_id),
             )
         if re.match(r"^support:@(\d+)$", input):
             user_steps[user_id].update({"action": "support"})
             await sendText(
-                gv().sudoID, 0, 1, langU["connected_support"].format(menMD(msg)), "md"
+                gv().sudoID,
+                0,
+                1,
+                langU["connected_support"].format(menMD(msg)),
+                "md",
             )
             inlineKeys = iMarkup()
             inlineKeys.add(
@@ -3623,7 +3956,9 @@ async def callback_query_process(msg: types.CallbackQuery):
                     callback_data="backstart:@{}".format(user_id),
                 )
             )
-            await editText(chat_id, msg_id, 0, langU["support"], "html", inlineKeys)
+            await editText(
+                chat_id, msg_id, 0, langU["support"], "html", inlineKeys
+            )
         if re.match(r"^from_who:(\d+):(\d+)$", input):
             ap = re_matches(r"^from_who:(\d+):(\d+)$", input)
             name_user = await userInfos(ap[1], "name")
@@ -3635,7 +3970,12 @@ async def callback_query_process(msg: types.CallbackQuery):
             )
         if re.match(r"^language:@(\d+)$", input):
             await editText(
-                chat_id, msg_id, 0, langU["language"], None, settings_keys(user_id)
+                chat_id,
+                msg_id,
+                0,
+                langU["language"],
+                None,
+                settings_keys(user_id),
             )
         if re.match(r"^adsfree:@(\d+)$", input):
             await editText(
@@ -3676,7 +4016,9 @@ async def callback_query_process(msg: types.CallbackQuery):
                 await _.edit_reply_markup()
             except:
                 pass
-            await sendText(chat_id, 0, 1, langU["start"], None, start_keys(user_id))
+            await sendText(
+                chat_id, 0, 1, langU["start"], None, start_keys(user_id)
+            )
         if re.match(r"^blockuser:(\d+)$", input):
             ap = re_matches("^blockuser:(\d+)$", input)
             if DataBase.get("isBan:{}".format(ap[1])):
@@ -3759,7 +4101,9 @@ async def callback_query_process(msg: types.CallbackQuery):
                         await userInfos(userID),
                         userID,
                     )
-                with open("Files/list_block.txt", mode="a", encoding="utf-8") as file:
+                with open(
+                    "Files/list_block.txt", mode="a", encoding="utf-8"
+                ) as file:
                     file.write(text)
                 await sendDocument(
                     chat_id, open("Files/list_block.txt", encoding="utf-8")
@@ -3771,7 +4115,12 @@ async def callback_query_process(msg: types.CallbackQuery):
                     ),
                 )
                 await editText(
-                    chat_id, msg_id, 0, langU["blocklist_sent"], None, inlineKeys
+                    chat_id,
+                    msg_id,
+                    0,
+                    langU["blocklist_sent"],
+                    None,
+                    inlineKeys,
                 )
                 os.system("rm Files/list_block.txt")
             elif ap[1] == "stats":
@@ -3801,7 +4150,12 @@ async def callback_query_process(msg: types.CallbackQuery):
             DataBase.delete("ready_to_recv_special:{}".format(user_id))
             DataBase.delete("who_conneted:{}".format(user_id))
             await editText(
-                chat_id, msg_id, 0, langU["anon"], None, anonymous_keys(user_id)
+                chat_id,
+                msg_id,
+                0,
+                langU["anon"],
+                None,
+                anonymous_keys(user_id),
             )
         if re.match(r"^anon:link:@(\d+)$", input):
             DataBase.delete("ready_to_change_link:{}".format(user_id))
@@ -3818,8 +4172,12 @@ async def callback_query_process(msg: types.CallbackQuery):
                 anonymous_my_link_keys(user_id),
             )
         if re.match(r"^anon:cus:@(\d+)$", input):
-            DataBase.setex("ready_to_change_link:{}".format(user_id), 3600, "True")
-            DataBase.set("pre_msgbot:{}".format(user_id), msg.message.message_id)
+            DataBase.setex(
+                "ready_to_change_link:{}".format(user_id), 3600, "True"
+            )
+            DataBase.set(
+                "pre_msgbot:{}".format(user_id), msg.message.message_id
+            )
             await editText(
                 chat_id,
                 msg_id,
@@ -3898,7 +4256,8 @@ async def callback_query_process(msg: types.CallbackQuery):
             inlineKeys = iMarkup()
             inlineKeys.add(
                 iButtun(
-                    buttuns["back_help_anon"], callback_data="anon:help{}".format(hash)
+                    buttuns["back_help_anon"],
+                    callback_data="anon:help{}".format(hash),
                 )
             )
             await editText(
@@ -3913,7 +4272,9 @@ async def callback_query_process(msg: types.CallbackQuery):
             await answerCallbackQuery(
                 msg,
                 langU["stats_anon"].format(
-                    int(DataBase.get("user.stats_anon:{}".format(user_id)) or 0)
+                    int(
+                        DataBase.get("user.stats_anon:{}".format(user_id)) or 0
+                    )
                 ),
                 show_alert=True,
                 cache_time=90,
@@ -3932,8 +4293,12 @@ async def callback_query_process(msg: types.CallbackQuery):
                 anonymous_name_keys(user_id),
             )
         if re.match(r"^anon:cus_name:@(\d+)$", input):
-            DataBase.setex("ready_to_change_name:{}".format(user_id), 3600, "True")
-            DataBase.set("pre_msgbot:{}".format(user_id), msg.message.message_id)
+            DataBase.setex(
+                "ready_to_change_name:{}".format(user_id), 3600, "True"
+            )
+            DataBase.set(
+                "pre_msgbot:{}".format(user_id), msg.message.message_id
+            )
             await editText(
                 chat_id,
                 msg_id,
@@ -3959,8 +4324,12 @@ async def callback_query_process(msg: types.CallbackQuery):
                 anonymous_name_keys(user_id),
             )
         if re.match(r"^anon:send:@(\d+)$", input):
-            DataBase.setex("ready_to_enter_id:{}".format(user_id), 3600, "True")
-            DataBase.set("pre_msgbot:{}".format(user_id), msg.message.message_id)
+            DataBase.setex(
+                "ready_to_enter_id:{}".format(user_id), 3600, "True"
+            )
+            DataBase.set(
+                "pre_msgbot:{}".format(user_id), msg.message.message_id
+            )
             await editText(
                 chat_id,
                 msg_id,
@@ -4020,7 +4389,9 @@ async def callback_query_process(msg: types.CallbackQuery):
                     int(ti_me[5]),
                     int(ti_me[6]),
                 )
-            await answerCallbackQuery(msg, sent_time, show_alert=True, cache_time=180)
+            await answerCallbackQuery(
+                msg, sent_time, show_alert=True, cache_time=180
+            )
         if re.match(r"^anon:receive:@(\d+)$", input):
             ap = re_matches(r"^anon:receive:@(\d+)$", input)
             if DataBase.get("dont_receive_anon:{}".format(user_id)):
@@ -4045,7 +4416,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                 )
             else:
                 await answerCallbackQuery(
-                    msg, langU["blocks_empty_anon"], show_alert=True, cache_time=10
+                    msg,
+                    langU["blocks_empty_anon"],
+                    show_alert=True,
+                    cache_time=10,
                 )
         if re.match(r"^anon:delblocks:@(\d+)$", input):
             DataBase.delete("blocks:{}".format(user_id))
@@ -4053,7 +4427,12 @@ async def callback_query_process(msg: types.CallbackQuery):
                 msg, langU["blocks_clear_anon"], show_alert=True, cache_time=2
             )
             await editText(
-                chat_id, msg_id, 0, langU["anon"], None, anonymous_keys(user_id)
+                chat_id,
+                msg_id,
+                0,
+                langU["anon"],
+                None,
+                anonymous_keys(user_id),
             )
         if re.match(r"^anon:sendmore:(\d+):@(\d+)$", input):
             ap = re_matches(r"^anon:sendmore:(\d+):@(\d+)$", input)
@@ -4062,7 +4441,9 @@ async def callback_query_process(msg: types.CallbackQuery):
             buttuns = langU["buttuns"]
             inlineKeys = iMarkup()
             inlineKeys.add(
-                iButtun(buttuns["cancel"], callback_data="backstart{}".format(hash))
+                iButtun(
+                    buttuns["cancel"], callback_data="backstart{}".format(hash)
+                )
             )
             DataBase.set("who_conneted:{}".format(user_id), ap[1])
             await _.edit_reply_markup()
@@ -4100,7 +4481,9 @@ async def callback_query_process(msg: types.CallbackQuery):
                 recent = DataBase.smembers("najva_recent:{}".format(user_id))
                 recent2 = DataBase.smembers("najva_recent2:{}".format(user_id))
                 if len(recent) > 0 or len(recent2) > 0:
-                    text = langU["recent_list"].format(len(recent) + len(recent2))
+                    text = langU["recent_list"].format(
+                        len(recent) + len(recent2)
+                    )
                     inlineKeys = iMarkup()
                     count = 0
                     for i in recent:
@@ -4146,7 +4529,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                     await editText(chat_id, msg_id, 0, text, None, inlineKeys)
                 else:
                     await answerCallbackQuery(
-                        msg, langU["recent_empty"], show_alert=True, cache_time=10
+                        msg,
+                        langU["recent_empty"],
+                        show_alert=True,
+                        cache_time=10,
                     )
             elif ap[1] == "blocks":
                 blocks2 = DataBase.smembers("blocks2:{}".format(user_id))
@@ -4181,7 +4567,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                     await editText(chat_id, msg_id, 0, text, None, inlineKeys)
                 else:
                     await answerCallbackQuery(
-                        msg, langU["blocks2_empty"], show_alert=True, cache_time=10
+                        msg,
+                        langU["blocks2_empty"],
+                        show_alert=True,
+                        cache_time=10,
                     )
             elif ap[1] == "delall":
                 await answerCallbackQuery(
@@ -4195,7 +4584,8 @@ async def callback_query_process(msg: types.CallbackQuery):
                     callback_data=f"najva:settings:blocks:@{user_id}",
                 ),
                 iButtun(
-                    langU["buttuns"]["yes"], callback_data=f"blocks2:all:y:@{user_id}"
+                    langU["buttuns"]["yes"],
+                    callback_data=f"blocks2:all:y:@{user_id}",
                 ),
             )
             await editText(
@@ -4245,7 +4635,9 @@ async def callback_query_process(msg: types.CallbackQuery):
         if re.match(r"^blocks2:(\d+):y:@(\d+)$", input):
             ap = re_matches(r"^blocks2:(\d+):y:@(\d+)$", input)
             DataBase.srem(f"blocks2:{user_id}", ap[1])
-            await answerCallbackQuery(msg, langU["blocks2_user_del"], show_alert=True)
+            await answerCallbackQuery(
+                msg, langU["blocks2_user_del"], show_alert=True
+            )
             await editText(
                 chat_id,
                 msg_id,
@@ -4262,7 +4654,8 @@ async def callback_query_process(msg: types.CallbackQuery):
                     callback_data=f"najva:settings:recents:@{user_id}",
                 ),
                 iButtun(
-                    langU["buttuns"]["yes"], callback_data=f"recent:all:y:@{user_id}"
+                    langU["buttuns"]["yes"],
+                    callback_data=f"recent:all:y:@{user_id}",
                 ),
             )
             await editText(
@@ -4271,7 +4664,9 @@ async def callback_query_process(msg: types.CallbackQuery):
         if re.match(r"^recent:all:y:@(\d+)$", input):
             DataBase.delete(f"najva_recent:{user_id}")
             DataBase.delete(f"najva_recent2:{user_id}")
-            await answerCallbackQuery(msg, langU["delall_recent"], show_alert=True)
+            await answerCallbackQuery(
+                msg, langU["delall_recent"], show_alert=True
+            )
             await editText(
                 chat_id,
                 msg_id,
@@ -4311,13 +4706,20 @@ async def callback_query_process(msg: types.CallbackQuery):
                 ),
             )
             await editText(
-                chat_id, msg_id, 0, langU["recent_info"].format(ap[1]), "md", inlineKeys
+                chat_id,
+                msg_id,
+                0,
+                langU["recent_info"].format(ap[1]),
+                "md",
+                inlineKeys,
             )
         if re.match(r"^recent:(\d+):y:@(\d+)$", input):
             ap = re_matches(r"^recent:(\d+):y:@(\d+)$", input)
             DataBase.srem(f"najva_recent:{user_id}", ap[1])
             DataBase.srem(f"najva_recent2:{user_id}", ap[1])
-            await answerCallbackQuery(msg, langU["recent_user_del"], show_alert=True)
+            await answerCallbackQuery(
+                msg, langU["recent_user_del"], show_alert=True
+            )
             await editText(
                 chat_id,
                 msg_id,
@@ -4347,7 +4749,9 @@ async def callback_query_process(msg: types.CallbackQuery):
         if re.match(r"^najva:settings1:(.*):@(\d+)$", input):
             ap = re_matches(r"^najva:settings1:(.*):@(\d+)$", input)
             if ap[1] == "autodel":
-                if DataBase.hget("setting_najva:{}".format(user_id), "autodel"):
+                if DataBase.hget(
+                    "setting_najva:{}".format(user_id), "autodel"
+                ):
                     await editText(
                         chat_id,
                         msg_id,
@@ -4372,7 +4776,9 @@ async def callback_query_process(msg: types.CallbackQuery):
                 else:
                     DataBase.hset("setting_najva:{}".format(user_id), ap[1], 1)
                     text = langU["najva_seton_{}".format(ap[1])]
-                await answerCallbackQuery(msg, text, show_alert=True, cache_time=2)
+                await answerCallbackQuery(
+                    msg, text, show_alert=True, cache_time=2
+                )
                 await bot.edit_message_reply_markup(
                     chat_id, msg_id, reply_markup=najva_settings_keys(user_id)
                 )
@@ -4522,14 +4928,22 @@ async def callback_query_process(msg: types.CallbackQuery):
                     chat_id, msg_id, reply_markup=najva_autodel2_keys(user_id)
                 )
             else:
-                await answerCallbackQuery(msg, langU["autodel_must_1"], cache_time=2)
+                await answerCallbackQuery(
+                    msg, langU["autodel_must_1"], cache_time=2
+                )
         if re.match(r"^special:cancel:@(\d+)", input):
-            time_data = DataBase.hget("najva_special:{}".format(user_id), "time")
-            special_msgID = DataBase.hget("najva_special:{}".format(user_id), "id")
+            time_data = DataBase.hget(
+                "najva_special:{}".format(user_id), "time"
+            )
+            special_msgID = DataBase.hget(
+                "najva_special:{}".format(user_id), "id"
+            )
             DataBase.delete("najva:{}:{}".format(user_id, time_data))
             DataBase.delete("najva_special:{}".format(user_id))
             DataBase.delete("ready_to_recv_special:{}".format(user_id))
-            DataBase.srem("najva_autodel", f"{user_id}:{time_data}:{special_msgID}")
+            DataBase.srem(
+                "najva_autodel", f"{user_id}:{time_data}:{special_msgID}"
+            )
             await editText(
                 inline_msg_id=special_msgID, text=langU["special_najva_cancel"]
             )
@@ -4546,24 +4960,37 @@ async def callback_query_process(msg: types.CallbackQuery):
             try:
                 msg_ = await reply_msg.forward(gv().supchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
-                time_data = DataBase.hget("najva_special:{}".format(user_id), "time")
-                special_msgID = DataBase.hget("najva_special:{}".format(user_id), "id")
+                time_data = DataBase.hget(
+                    "najva_special:{}".format(user_id), "time"
+                )
+                special_msgID = DataBase.hget(
+                    "najva_special:{}".format(user_id), "id"
+                )
                 DataBase.delete("ready_to_recv_special:{}".format(user_id))
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data), "file_id", find_ID
+                    "najva:{}:{}".format(user_id, time_data),
+                    "file_id",
+                    find_ID,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data), "file_type", find_type
+                    "najva:{}:{}".format(user_id, time_data),
+                    "file_type",
+                    find_type,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data), "source_id", reply_id
+                    "najva:{}:{}".format(user_id, time_data),
+                    "source_id",
+                    reply_id,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data), "msg_id", msg_.message_id
+                    "najva:{}:{}".format(user_id, time_data),
+                    "msg_id",
+                    msg_.message_id,
                 )
                 if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
                     DataBase.sadd(
-                        "najva_autodel", f"{user_id}:{time_data}:{special_msgID}"
+                        "najva_autodel",
+                        f"{user_id}:{time_data}:{special_msgID}",
                     )
                 inlineKeys = iMarkup()
                 inlineKeys.add(
@@ -4599,28 +5026,44 @@ async def callback_query_process(msg: types.CallbackQuery):
                 find_ID, find_type, can_hide = find_media_id(reply_msg)
                 if not can_hide:
                     return await answerCallbackQuery(
-                        msg, langU["cant_hide"], show_alert=True, cache_time=3600
+                        msg,
+                        langU["cant_hide"],
+                        show_alert=True,
+                        cache_time=3600,
                     )
                 msg_ = await reply_msg.forward(gv().supchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
-                time_data = DataBase.hget("najva_special:{}".format(user_id), "time")
-                special_msgID = DataBase.hget("najva_special:{}".format(user_id), "id")
+                time_data = DataBase.hget(
+                    "najva_special:{}".format(user_id), "time"
+                )
+                special_msgID = DataBase.hget(
+                    "najva_special:{}".format(user_id), "id"
+                )
                 DataBase.delete("ready_to_recv_special:{}".format(user_id))
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data), "file_id", find_ID
+                    "najva:{}:{}".format(user_id, time_data),
+                    "file_id",
+                    find_ID,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data), "file_type", find_type
+                    "najva:{}:{}".format(user_id, time_data),
+                    "file_type",
+                    find_type,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data), "source_id", reply_id
+                    "najva:{}:{}".format(user_id, time_data),
+                    "source_id",
+                    reply_id,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data), "msg_id", msg_.message_id
+                    "najva:{}:{}".format(user_id, time_data),
+                    "msg_id",
+                    msg_.message_id,
                 )
                 if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
                     DataBase.sadd(
-                        "najva_autodel", f"{user_id}:{time_data}:{special_msgID}"
+                        "najva_autodel",
+                        f"{user_id}:{time_data}:{special_msgID}",
                     )
                 inlineKeys = iMarkup()
                 inlineKeys.add(
@@ -4657,29 +5100,44 @@ async def callback_query_process(msg: types.CallbackQuery):
             try:
                 msg_ = await reply_msg.forward(gv().supchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
-                time_data = DataBase.hget("najva_special:{}".format(user_id), "time")
-                special_msgID = DataBase.hget("najva_special:{}".format(user_id), "id")
-                DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data), "file_id", find_ID
+                time_data = DataBase.hget(
+                    "najva_special:{}".format(user_id), "time"
+                )
+                special_msgID = DataBase.hget(
+                    "najva_special:{}".format(user_id), "id"
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data), "file_type", find_type
+                    "najva:{}:{}".format(user_id, time_data),
+                    "file_id",
+                    find_ID,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data), "source_id", reply_id
+                    "najva:{}:{}".format(user_id, time_data),
+                    "file_type",
+                    find_type,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data), "msg_id", msg_.message_id
+                    "najva:{}:{}".format(user_id, time_data),
+                    "source_id",
+                    reply_id,
+                )
+                DataBase.hset(
+                    "najva:{}:{}".format(user_id, time_data),
+                    "msg_id",
+                    msg_.message_id,
                 )
                 if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
                     DataBase.sadd(
-                        "najva_autodel", f"{user_id}:{time_data}:{special_msgID}"
+                        "najva_autodel",
+                        f"{user_id}:{time_data}:{special_msgID}",
                     )
                 inlineKeys = iMarkup()
                 inlineKeys.add(
                     iButtun(
                         langU["buttuns"]["show_najva"],
-                        callback_data="showpv:{}:{}".format(user_id, time_data),
+                        callback_data="showpv:{}:{}".format(
+                            user_id, time_data
+                        ),
                     )
                 )
                 users_data = DataBase.hget(
@@ -4712,7 +5170,9 @@ async def callback_query_process(msg: types.CallbackQuery):
                     id_user,
                     0,
                     1,
-                    langU["receive_new_najva_pv"].format(msg.from_user.first_name),
+                    langU["receive_new_najva_pv"].format(
+                        msg.from_user.first_name
+                    ),
                     "html",
                     inlineKeys,
                 )
@@ -4721,7 +5181,9 @@ async def callback_query_process(msg: types.CallbackQuery):
                     msg_id,
                     0,
                     langU["sent_najva_pv"].format(
-                        '<a href="tg://user?id={}">{}</a>'.format(id_user, name_user)
+                        '<a href="tg://user?id={}">{}</a>'.format(
+                            id_user, name_user
+                        )
                     ),
                     "html",
                 )
@@ -4736,11 +5198,18 @@ async def callback_query_process(msg: types.CallbackQuery):
             from_user = ap[1]
             time_data = ap[2]
             DataBase.set(
-                "najva_seen_time:{}:{}".format(from_user, time_data), int(time())
+                "najva_seen_time:{}:{}".format(from_user, time_data),
+                int(time()),
             )
-            DataBase.incr("najva_seen_count:{}:{}".format(from_user, time_data))
-            DataBase.sadd("najva_seened:{}:{}".format(from_user, time_data), user_id)
-            special_msgID = DataBase.hget("najva_special:{}".format(from_user), "id")
+            DataBase.incr(
+                "najva_seen_count:{}:{}".format(from_user, time_data)
+            )
+            DataBase.sadd(
+                "najva_seened:{}:{}".format(from_user, time_data), user_id
+            )
+            special_msgID = DataBase.hget(
+                "najva_special:{}".format(from_user), "id"
+            )
             users_data = DataBase.hget(
                 "najva:{}:{}".format(from_user, time_data), "users"
             )
@@ -4753,7 +5222,9 @@ async def callback_query_process(msg: types.CallbackQuery):
             source_id = DataBase.hget(
                 "najva:{}:{}".format(from_user, time_data), "source_id"
             )
-            msgid = DataBase.hget("najva:{}:{}".format(from_user, time_data), "msg_id")
+            msgid = DataBase.hget(
+                "najva:{}:{}".format(from_user, time_data), "msg_id"
+            )
             inlineKeys = await show_speical_najva_keys(user_id, from_user)
             msg_ = await copyMessage(
                 chat_id,
@@ -4767,11 +5238,15 @@ async def callback_query_process(msg: types.CallbackQuery):
                     from_user,
                     source_id,
                     1,
-                    langU["speical_najva_seen"].format(msg.from_user.first_name),
+                    langU["speical_najva_seen"].format(
+                        msg.from_user.first_name
+                    ),
                 )
             await editText(
                 inline_msg_id=special_msgID,
-                text=langU["speical_najva_seen2"].format(msg.from_user.first_name),
+                text=langU["speical_najva_seen2"].format(
+                    msg.from_user.first_name
+                ),
                 parse_mode="html",
                 reply_markup=najva_seen3_keys(from_user, time_data),
             )
@@ -4884,7 +5359,9 @@ async def callback_query_process(msg: types.CallbackQuery):
                     return await answerCallbackQuery(
                         msg,
                         url_web="t.me/{}?start={}_{}".format(
-                            gv().botUser, from_user, time_data.replace(".", "_")
+                            gv().botUser,
+                            from_user,
+                            time_data.replace(".", "_"),
                         ),
                     )
                 await answerCallbackQuery(
@@ -4892,7 +5369,9 @@ async def callback_query_process(msg: types.CallbackQuery):
                 )
                 # if not str(user_id) in from_user and DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0
                 if (
-                    DataBase.scard("najva_seened:{}:{}".format(from_user, time_data))
+                    DataBase.scard(
+                        "najva_seened:{}:{}".format(from_user, time_data)
+                    )
                     == 0
                     and is_allow
                 ):
@@ -4904,7 +5383,9 @@ async def callback_query_process(msg: types.CallbackQuery):
                             from_user,
                             0,
                             1,
-                            langU["najva_seened"].format(msg.from_user.first_name),
+                            langU["najva_seened"].format(
+                                msg.from_user.first_name
+                            ),
                         )
                     if users_data != "all":
                         if len(users_data) == 1:
@@ -4928,31 +5409,47 @@ async def callback_query_process(msg: types.CallbackQuery):
                                 ),
                             )
                         DataBase.sadd(
-                            "najva_seened:{}:{}".format(from_user, time_data), user_id
+                            "najva_seened:{}:{}".format(from_user, time_data),
+                            user_id,
                         )
                     if str(users_data).isdigit() and not DataBase.get(
                         "najva_seen_time:{}:{}".format(from_user, time_data)
                     ):
                         DataBase.set(
-                            "najva_seen_time:{}:{}".format(from_user, time_data),
+                            "najva_seen_time:{}:{}".format(
+                                from_user, time_data
+                            ),
                             int(time()),
                         )
                 # if not str(user_id) in from_user:
-                DataBase.incr("najva_seen_count:{}:{}".format(from_user, time_data))
+                DataBase.incr(
+                    "najva_seen_count:{}:{}".format(from_user, time_data)
+                )
             else:
-                DataBase.sadd("najva_nosy:{}:{}".format(from_user, time_data), user_id)
+                DataBase.sadd(
+                    "najva_nosy:{}:{}".format(from_user, time_data), user_id
+                )
                 await answerCallbackQuery(
-                    msg, langU["najva_not_for_you"], show_alert=True, cache_time=3600
+                    msg,
+                    langU["najva_not_for_you"],
+                    show_alert=True,
+                    cache_time=3600,
                 )
         if re.match(r"^delnajva:(\d+):([-+]?\d*\.\d+|\d+)$", input):
             ap = re_matches(r"^delnajva:(\d+):([-+]?\d*\.\d+|\d+)$", input)
             if user_id == int(ap[1]):
-                seen_id = DataBase.hget("najva:{}:{}".format(ap[1], ap[2]), "seen_id")
+                seen_id = DataBase.hget(
+                    "najva:{}:{}".format(ap[1], ap[2]), "seen_id"
+                )
                 if seen_id:
                     seen_id = seen_id.split(":")
                     await bot.delete_message(seen_id[0], seen_id)
-                special_msgID = DataBase.hget("najva_special:{}".format(ap[1]), "id")
-                DataBase.srem("najva_autodel", f"{ap[1]}:{ap[2]}:{special_msgID}")
+                special_msgID = DataBase.hget(
+                    "najva_special:{}".format(ap[1]), "id"
+                )
+                DataBase.srem(
+                    "najva_autodel", f"{ap[1]}:{ap[2]}:{special_msgID}"
+                )
                 DataBase.delete("najva:{}:{}".format(ap[1], ap[2]))
                 DataBase.delete("najva_special:{}".format(ap[1]))
                 await answerCallbackQuery(msg, langU["najva_deleted"])
@@ -4969,7 +5466,10 @@ async def callback_query_process(msg: types.CallbackQuery):
             from_user, time_data = ap[1], ap[2]
             if user_id != int(from_user):
                 await answerCallbackQuery(
-                    msg, langU["must_be_owner_najva"], show_alert=True, cache_time=3600
+                    msg,
+                    langU["must_be_owner_najva"],
+                    show_alert=True,
+                    cache_time=3600,
                 )
                 return False
             seen_time = DataBase.get(
@@ -4988,7 +5488,9 @@ async def callback_query_process(msg: types.CallbackQuery):
                 nosy_users_text = ""
                 for i in nosy_users:
                     name_user = await userInfos(i, info="name")
-                    nosy_users_text = "{}\n{}".format(name_user, nosy_users_text)
+                    nosy_users_text = "{}\n{}".format(
+                        name_user, nosy_users_text
+                    )
             else:
                 nosy_users_text = langU["nobody_nosy"]
             if not seen_count:
@@ -4999,27 +5501,33 @@ async def callback_query_process(msg: types.CallbackQuery):
                 if seen_time:
                     ti_me = datetime.fromtimestamp(int(seen_time))
                     ti_me = ti_me.strftime("%Y-%m-%d %H:%M:%S")
-                    ti_me = re_matches(r"(\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+)", ti_me)
+                    ti_me = re_matches(
+                        r"(\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+)", ti_me
+                    )
                     if user_steps[user_id]["lang"] == "fa":
                         ti_me2 = gregorian_to_jalali(
                             int(ti_me[1]), int(ti_me[2]), int(ti_me[3])
                         )
-                        seen_time = "{:04d}/{}/{:02d} - {:02d}:{:02d}:{:02d}".format(
-                            ti_me2[0],
-                            echoMonth(ti_me2[1], True),
-                            ti_me2[2],
-                            int(ti_me[4]),
-                            int(ti_me[5]),
-                            int(ti_me[6]),
+                        seen_time = (
+                            "{:04d}/{}/{:02d} - {:02d}:{:02d}:{:02d}".format(
+                                ti_me2[0],
+                                echoMonth(ti_me2[1], True),
+                                ti_me2[2],
+                                int(ti_me[4]),
+                                int(ti_me[5]),
+                                int(ti_me[6]),
+                            )
                         )
                     else:
-                        seen_time = "{:04d}/{}/{:02d} - {:02d}:{:02d}:{:02d}".format(
-                            int(ti_me[1]),
-                            echoMonth(ti_me[2], False),
-                            int(ti_me[3]),
-                            int(ti_me[4]),
-                            int(ti_me[5]),
-                            int(ti_me[6]),
+                        seen_time = (
+                            "{:04d}/{}/{:02d} - {:02d}:{:02d}:{:02d}".format(
+                                int(ti_me[1]),
+                                echoMonth(ti_me[2], False),
+                                int(ti_me[3]),
+                                int(ti_me[4]),
+                                int(ti_me[5]),
+                                int(ti_me[6]),
+                            )
                         )
                     name_user = list(
                         DataBase.smembers(
@@ -5099,7 +5607,10 @@ async def inline_query_process(msg: types.InlineQuery):
         )
         inlineKeys = iMarkup()
         inlineKeys.add(
-            iButtun(buttuns["help_comp"], url="t.me/{}?start=help".format(gv().botUser))
+            iButtun(
+                buttuns["help_comp"],
+                url="t.me/{}?start=help".format(gv().botUser),
+            )
         )
         item1 = InlineQueryResultArticle(
             id=f"help:{user_id}",
@@ -5213,8 +5724,12 @@ async def inline_query_process(msg: types.InlineQuery):
             )
             item1 = InlineQueryResultArticle(
                 id=f"najvaP:{user_id}",
-                title=langU["inline"]["title"]["najva_group"].format(len(users)),
-                description=langU["inline"]["desc"]["najva_group"].format(len(text)),
+                title=langU["inline"]["title"]["najva_group"].format(
+                    len(users)
+                ),
+                description=langU["inline"]["desc"]["najva_group"].format(
+                    len(text)
+                ),
                 thumb_url=pic_group,
                 thumb_width=512,
                 thumb_height=512,
@@ -5239,8 +5754,12 @@ async def inline_query_process(msg: types.InlineQuery):
             )
             item1 = InlineQueryResultArticle(
                 id=f"najvaP:{user_id}",
-                title=langU["inline"]["title"]["najva_person"].format(name_user),
-                description=langU["inline"]["desc"]["najva_person"].format(len(text)),
+                title=langU["inline"]["title"]["najva_person"].format(
+                    name_user
+                ),
+                description=langU["inline"]["desc"]["najva_person"].format(
+                    len(text)
+                ),
                 thumb_url=pic_message,
                 thumb_width=512,
                 thumb_height=512,
@@ -5272,7 +5791,8 @@ async def inline_query_process(msg: types.InlineQuery):
         inlineKeys = iMarkup()
         inlineKeys.add(
             iButtun(
-                buttuns["stats"], callback_data="showS:{}:{}".format(user_id, ti_me)
+                buttuns["stats"],
+                callback_data="showS:{}:{}".format(user_id, ti_me),
             ),
             iButtun(
                 buttuns["show_najva"],
@@ -5310,7 +5830,9 @@ async def inline_query_process(msg: types.InlineQuery):
         item2 = InlineQueryResultArticle(
             id=f"najvaA2:{user_id}",
             title=langU["inline"]["title"]["najva_all"],
-            description=langU["inline"]["desc"]["najva_all2"].format(len(text)),
+            description=langU["inline"]["desc"]["najva_all2"].format(
+                len(text)
+            ),
             thumb_url=pic_all,
             thumb_width=512,
             thumb_height=512,
@@ -5376,7 +5898,9 @@ async def inline_query_process(msg: types.InlineQuery):
         dispo = set_desc["najva_dispo"].format(dispo)
         inlineKeys = iMarkup()
         inlineKeys.add(
-            iButtun(buttuns["quick_set"], switch_inline_query_current_chat="set")
+            iButtun(
+                buttuns["quick_set"], switch_inline_query_current_chat="set"
+            )
         )
         input_content = InputTextMessageContent(
             message_text=langU["inline"]["text"]["setting_changed"],
@@ -5573,8 +6097,12 @@ async def inline_query_process(msg: types.InlineQuery):
         ap = re_matches(r"sp(\d+)\.(\d+)\.(\d+)", input)
         from_user = ap[1]
         time_data = float(f"{ap[2]}.{ap[3]}")
-        special_msgID = DataBase.hget("najva_special:{}".format(from_user), "id")
-        users_data = DataBase.hget("najva:{}:{}".format(from_user, time_data), "users")
+        special_msgID = DataBase.hget(
+            "najva_special:{}".format(from_user), "id"
+        )
+        users_data = DataBase.hget(
+            "najva:{}:{}".format(from_user, time_data), "users"
+        )
         if not str(user_id) in users_data and not str(username) in users_data:
             if special_msgID:
                 return DataBase.sadd(
@@ -5604,14 +6132,18 @@ async def inline_query_process(msg: types.InlineQuery):
                 ],
                 cache_time=3600,
             )
-        file_id = DataBase.hget("najva:{}:{}".format(from_user, time_data), "file_id")
+        file_id = DataBase.hget(
+            "najva:{}:{}".format(from_user, time_data), "file_id"
+        )
         file_type = DataBase.hget(
             "najva:{}:{}".format(from_user, time_data), "file_type"
         )
         source_id = DataBase.hget(
             "najva:{}:{}".format(from_user, time_data), "source_id"
         )
-        msg_ID = DataBase.hget("najva:{}:{}".format(from_user, time_data), "msg_id")
+        msg_ID = DataBase.hget(
+            "najva:{}:{}".format(from_user, time_data), "msg_id"
+        )
         input_content = InputTextMessageContent(
             message_text=langU["cant_send_hide"],
             parse_mode="HTML",
@@ -5651,26 +6183,37 @@ async def inline_query_process(msg: types.InlineQuery):
                 input_message_content=input_content,
             )
         if item1:
-            if DataBase.hget(f"setting_najva:{from_user}", "seen") and not DataBase.get(
+            if DataBase.hget(
+                f"setting_najva:{from_user}", "seen"
+            ) and not DataBase.get(
                 "notif_before:{}:{}".format(from_user, time_data)
             ):
-                DataBase.set("notif_before:{}:{}".format(from_user, time_data), 1)
+                DataBase.set(
+                    "notif_before:{}:{}".format(from_user, time_data), 1
+                )
                 await sendText(
                     from_user,
                     source_id,
                     1,
-                    langU["speical_najva_seen"].format(msg.from_user.first_name),
+                    langU["speical_najva_seen"].format(
+                        msg.from_user.first_name
+                    ),
                 )
                 await editText(
                     inline_msg_id=special_msgID,
-                    text=langU["speical_najva_seen2"].format(msg.from_user.first_name),
+                    text=langU["speical_najva_seen2"].format(
+                        msg.from_user.first_name
+                    ),
                     parse_mode="html",
                     reply_markup=najva_seen3_keys(from_user, time_data),
                 )
                 DataBase.set(
-                    "najva_seen_time:{}:{}".format(from_user, time_data), int(time())
+                    "najva_seen_time:{}:{}".format(from_user, time_data),
+                    int(time()),
                 )
-                DataBase.incr("najva_seen_count:{}:{}".format(from_user, time_data))
+                DataBase.incr(
+                    "najva_seen_count:{}:{}".format(from_user, time_data)
+                )
                 DataBase.sadd(
                     "najva_seened:{}:{}".format(from_user, time_data), user_id
                 )
@@ -5679,7 +6222,8 @@ async def inline_query_process(msg: types.InlineQuery):
                         "najva_special:{}".format(from_user), "id"
                     )
                     DataBase.srem(
-                        "najva_autodel", f"{from_user}:{time_data}:{special_msgID}"
+                        "najva_autodel",
+                        f"{from_user}:{time_data}:{special_msgID}",
                     )
                     DataBase.delete("najva:{}:{}".format(from_user, time_data))
                     DataBase.delete("najva_special:{}".format(from_user))
@@ -5755,7 +6299,9 @@ async def inline_query_process(msg: types.InlineQuery):
             file_path = pic_user
             item1 = InlineQueryResultArticle(
                 id=f"najvaS:{user_id}:{user}",
-                title=langU["inline"]["title"]["najva_special"].format(name_user),
+                title=langU["inline"]["title"]["najva_special"].format(
+                    name_user
+                ),
                 description=langU["inline"]["desc"]["najva_special"],
                 thumb_url=file_path,
                 thumb_width=512,
@@ -5798,7 +6344,10 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
     print(colored("Query", "yellow"), colored(input, "white"))
     print(colored("resultID", "yellow"), colored(result_id, "white"))
     print()
-    if re.match(r"^najvaP:(\d+)$", result_id) and "najva" in user_steps[user_id]:
+    if (
+        re.match(r"^najvaP:(\d+)$", result_id)
+        and "najva" in user_steps[user_id]
+    ):
         ap = re_matches(r"^najvaP:(\d+)$", result_id)
         najva = user_steps[user_id]["najva"]
         DataBase.hset(
@@ -5815,7 +6364,9 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
                     DataBase.sadd(f"najva_recent:{user_id}", i)
         else:
             DataBase.hset(
-                "najva:{}:{}".format(user_id, najva["time"]), "users", najva["users"][0]
+                "najva:{}:{}".format(user_id, najva["time"]),
+                "users",
+                najva["users"][0],
             )
             if str(najva["users"][0]).isdigit():
                 DataBase.sadd(f"najva_recent:{user_id}", najva["users"][0])
@@ -5833,7 +6384,9 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
                     0,
                     1,
                     langU["you_recv_najva"].format(
-                        '<a href="tg://user?id={}">{}</a>'.format(user_id, user_name)
+                        '<a href="tg://user?id={}">{}</a>'.format(
+                            user_id, user_name
+                        )
                     ),
                     "html",
                 )
@@ -5843,30 +6396,43 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
                 DataBase.setex(f"userProfs:{i}", 604800, 1)
                 profiles = await getUserProfilePhotos(i)
                 if profiles[0] and profiles[1].total_count > 0:
-                    DataBase.hset("userProfs", i, profiles[1].photos[0][-1].file_id)
+                    DataBase.hset(
+                        "userProfs", i, profiles[1].photos[0][-1].file_id
+                    )
                 await asyncio.sleep(0.5)
         del user_steps[user_id]["najva"]
-    if re.match(r"^najvaA:(\d+)$", result_id) and "najva" in user_steps[user_id]:
+    if (
+        re.match(r"^najvaA:(\d+)$", result_id)
+        and "najva" in user_steps[user_id]
+    ):
         ap = re_matches(r"^najvaA:(\d+)$", result_id)
         najva = user_steps[user_id]["najva"]
         DataBase.hset(
             "najva:{}:{}".format(user_id, najva["time"]), "text", najva["text"]
         )
-        DataBase.hset("najva:{}:{}".format(user_id, najva["time"]), "users", "all")
+        DataBase.hset(
+            "najva:{}:{}".format(user_id, najva["time"]), "users", "all"
+        )
         DataBase.incr("stat_najva")
         del user_steps[user_id]["najva"]
-    if re.match(r"^najvaR:(\d+)$", result_id) and "najva" in user_steps[user_id]:
+    if (
+        re.match(r"^najvaR:(\d+)$", result_id)
+        and "najva" in user_steps[user_id]
+    ):
         ap = re_matches(r"^najvaR:(\d+)$", result_id)
         najva = user_steps[user_id]["najva"]
         DataBase.hset(
             "najva:{}:{}".format(user_id, najva["time"]), "text", najva["text"]
         )
-        DataBase.hset("najva:{}:{}".format(user_id, najva["time"]), "users", "reply")
+        DataBase.hset(
+            "najva:{}:{}".format(user_id, najva["time"]), "users", "reply"
+        )
         # DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
         # DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
         if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
             DataBase.sadd(
-                "najva_autodel", f"{user_id}:{najva['time']}:{msg.inline_message_id}"
+                "najva_autodel",
+                f"{user_id}:{najva['time']}:{msg.inline_message_id}",
             )
         DataBase.incr("stat_najva")
         del user_steps[user_id]["najva"]
@@ -5876,75 +6442,109 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
             DataBase.hdel(f"setting_najva:{user_id}", ap[1])
         else:
             DataBase.hset(f"setting_najva:{user_id}", ap[1], 1)
-    if re.match(r"^najvaS:(\d+)$", result_id) and "najva" in user_steps[user_id]:
+    if (
+        re.match(r"^najvaS:(\d+)$", result_id)
+        and "najva" in user_steps[user_id]
+    ):
         ap = re_matches(r"^najvaS:(\d+)$", result_id)
         najva = user_steps[user_id]["najva"]
         DataBase.hset(
-            "najva:{}:{}".format(user_id, najva["time"]), "users", najva["users"]
+            "najva:{}:{}".format(user_id, najva["time"]),
+            "users",
+            najva["users"],
         )
-        DataBase.hset("najva_special:{}".format(user_id), "time", najva["time"])
-        DataBase.hset("najva_special:{}".format(user_id), "id", msg.inline_message_id)
-        DataBase.setex("ready_to_recv_special:{}".format(user_id), 1800, "True")
+        DataBase.hset(
+            "najva_special:{}".format(user_id), "time", najva["time"]
+        )
+        DataBase.hset(
+            "najva_special:{}".format(user_id), "id", msg.inline_message_id
+        )
+        DataBase.setex(
+            "ready_to_recv_special:{}".format(user_id), 1800, "True"
+        )
         if str(najva["users"]).isdigit():
             DataBase.sadd(f"najva_recent2:{user_id}", najva["users"])
         if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
             DataBase.sadd(
-                "najva_autodel", f"{user_id}:{najva['time']}:{msg.inline_message_id}"
+                "najva_autodel",
+                f"{user_id}:{najva['time']}:{msg.inline_message_id}",
             )
         DataBase.incr("stat_najva")
         del user_steps[user_id]["najva"]
         inlineKeys = iMarkup()
         inlineKeys.add(
             iButtun(
-                buttuns["cancel"], callback_data="special:cancel:@{}".format(user_id)
+                buttuns["cancel"],
+                callback_data="special:cancel:@{}".format(user_id),
             ),
         )
-        await sendText(user_id, 0, 1, langU["send_special_najva"], "html", inlineKeys)
+        await sendText(
+            user_id, 0, 1, langU["send_special_najva"], "html", inlineKeys
+        )
         if str(najva["users"]).isdigit():
             i = najva["users"]
             if not DataBase.get(f"userProfs:{i}"):
                 DataBase.setex(f"userProfs:{i}", 604800, 1)
                 profiles = await getUserProfilePhotos(i)
                 if profiles[0] and profiles[1].total_count > 0:
-                    DataBase.hset("userProfs", i, profiles[1].photos[0][-1].file_id)
-    if re.match(r"^najvaS:(\d+):(\d+)$", result_id) and "najva" in user_steps[user_id]:
+                    DataBase.hset(
+                        "userProfs", i, profiles[1].photos[0][-1].file_id
+                    )
+    if (
+        re.match(r"^najvaS:(\d+):(\d+)$", result_id)
+        and "najva" in user_steps[user_id]
+    ):
         ap = re_matches(r"^najvaS:(\d+):(\d+)$", result_id)
         najva = user_steps[user_id]["najva"]
         najva["users"] = ap[2]
         DataBase.hset(
-            "najva:{}:{}".format(user_id, najva["time"]), "users", najva["users"]
+            "najva:{}:{}".format(user_id, najva["time"]),
+            "users",
+            najva["users"],
         )
-        DataBase.hset("najva_special:{}".format(user_id), "time", najva["time"])
-        DataBase.hset("najva_special:{}".format(user_id), "id", msg.inline_message_id)
-        DataBase.setex("ready_to_recv_special:{}".format(user_id), 1800, "True")
+        DataBase.hset(
+            "najva_special:{}".format(user_id), "time", najva["time"]
+        )
+        DataBase.hset(
+            "najva_special:{}".format(user_id), "id", msg.inline_message_id
+        )
+        DataBase.setex(
+            "ready_to_recv_special:{}".format(user_id), 1800, "True"
+        )
         if str(najva["users"]).isdigit():
             DataBase.sadd(f"najva_recent2:{user_id}", najva["users"])
         if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
             DataBase.sadd(
-                "najva_autodel", f"{user_id}:{najva['time']}:{msg.inline_message_id}"
+                "najva_autodel",
+                f"{user_id}:{najva['time']}:{msg.inline_message_id}",
             )
         DataBase.incr("stat_najva")
         del user_steps[user_id]["najva"]
         inlineKeys = iMarkup()
         inlineKeys.add(
             iButtun(
-                buttuns["cancel"], callback_data="special:cancel:@{}".format(user_id)
+                buttuns["cancel"],
+                callback_data="special:cancel:@{}".format(user_id),
             ),
         )
-        await sendText(user_id, 0, 1, langU["send_special_najva"], "html", inlineKeys)
+        await sendText(
+            user_id, 0, 1, langU["send_special_najva"], "html", inlineKeys
+        )
         if str(najva["users"]).isdigit():
             i = najva["users"]
             if not DataBase.get(f"userProfs:{i}"):
                 DataBase.setex(f"userProfs:{i}", 604800, 1)
                 profiles = await getUserProfilePhotos(i)
                 if profiles[0] and profiles[1].total_count > 0:
-                    DataBase.hset("userProfs", i, profiles[1].photos[0][-1].file_id)
+                    DataBase.hset(
+                        "userProfs", i, profiles[1].photos[0][-1].file_id
+                    )
 
 
 async def channel_post_process(msg: types.Message):
-    if (msg.chat.username or "") != IDs_datas["chUsername"] and int(msg.chat.id) != int(
-        gv().supchat
-    ):
+    if (msg.chat.username or "") != IDs_datas["chUsername"] and int(
+        msg.chat.id
+    ) != int(gv().supchat):
         await bot.leave_chat(msg.chat.id)
 
 
@@ -6006,7 +6606,9 @@ async def bot_off(app):
 async def bot_run(app):
     content_types = types.ContentType.ANY
     dp.register_message_handler(message_process, content_types=content_types)
-    dp.register_channel_post_handler(channel_post_process, content_types=content_types)
+    dp.register_channel_post_handler(
+        channel_post_process, content_types=content_types
+    )
     dp.register_callback_query_handler(callback_query_process)
     dp.register_inline_handler(inline_query_process)
     dp.register_chosen_inline_handler(chosen_inline_process)
@@ -6046,7 +6648,12 @@ async def bot_run(app):
         name = bt.first_name
     ti_me = datetime.now()
     text = "{:04d}/{:02d}/{:02d} - {:02d}:{:02d}:{:02d}".format(
-        ti_me.year, ti_me.month, ti_me.day, ti_me.hour, ti_me.minute, ti_me.second
+        ti_me.year,
+        ti_me.month,
+        ti_me.day,
+        ti_me.hour,
+        ti_me.minute,
+        ti_me.second,
     )
     a1 = 22 - (len("Name > {}".format(name)) // 2)
     aa = ""
@@ -6060,7 +6667,9 @@ async def bot_run(app):
     cc = ""
     for i in range(-1, c1):
         cc += " "
-    d1 = 22 - (len("Developer > @{} [{}]".format(gv().sudoUser, gv().sudoID)) // 2)
+    d1 = 22 - (
+        len("Developer > @{} [{}]".format(gv().sudoUser, gv().sudoID)) // 2
+    )
     dd = ""
     for i in range(-1, d1):
         dd += " "
