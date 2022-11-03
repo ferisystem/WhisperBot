@@ -6,14 +6,6 @@ from core_file import *
 
 
 async def inline_query_process(msg: types.InlineQuery):
-    # {
-    # "id": "601066437965102448",
-    # "from": {
-    # "id": 139946685, "is_bot": false, "first_name": "Alireza 🏴🏳",
-    # "username": "ferisystem", "language_code": "de"},
-    # "chat_type": "sender/private/group/supergroup/channel",
-    # "query": "text", "offset": ""
-    # }
     msg_id = msg.id
     user_id = msg.from_user.id
     if msg.from_user.username:

@@ -171,7 +171,7 @@ class DataBase:
         return rds.keys(hash)
 
 
-class GlobalValues:  # Global Values
+class GlobalValues:
     def __init__(self):
         self.ipAdd = server_datas["ip"]
         self.ipAdD = "http://{}:{}".format(
@@ -271,5 +271,3 @@ class CheckMsg:
                 self.user = msg.forward_from
             elif "from" in msg:
                 self.user = msg.from_user
-
-#

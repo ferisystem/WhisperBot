@@ -6,14 +6,6 @@ from core_file import *
 
 
 async def chosen_inline_process(msg: types.ChosenInlineResult):
-    # {
-    # "from": {
-    # "id": 139946685, "is_bot": false,
-    # "first_name": "Alireza 🏴🏳",
-    # "username": "ferisystem", "language_code": "de"},
-    # "inline_message_id": "BAAAAKqZKQC9alcIRMLU6NZ-9PU", # if keyboard attached
-    # "query": "awd", "result_id": "601066437369956078"
-    # }
     user_id = msg.from_user.id
     user_name = msg.from_user.first_name
     result_id = msg.result_id
@@ -53,8 +45,6 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
             )
             if str(najva["users"][0]).isdigit():
                 DataBase.sadd(f"najva_recent:{user_id}", najva["users"][0])
-            # DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
-            # DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
             if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
                 DataBase.sadd(
                     "najva_autodel",
@@ -110,8 +100,6 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
         DataBase.hset(
             "najva:{}:{}".format(user_id, najva["time"]), "users", "reply"
         )
-        # DataBase.hset('najva_special:{}'.format(user_id), 'time', najva['time'])
-        # DataBase.hset('najva_special:{}'.format(user_id), 'id2', msg.inline_message_id)
         if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
             DataBase.sadd(
                 "najva_autodel",

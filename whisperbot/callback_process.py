@@ -6,25 +6,6 @@ from core_file import *
 
 
 async def callback_query_process(msg: types.CallbackQuery):
-    # {"id": "601066438631931931",
-    # "from": {"id": 139946685, "is_bot": false, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "language_code": "de"},
-    # "message": {"message_id": 33021, "from": {"id": 238204510, "is_bot": true, "first_name": "TeleSeed", "username": "TeleSeedBot"},
-    # "chat": {"id": 139946685, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "type": "private"},
-    # "date": 1664543136, "edit_date": 1664543182,
-    # "reply_to_message": {"message_id": 33019,
-    # "from": {"id": 139946685, "is_bot": false, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "language_code": "de"},
-    # "chat": {"id": 139946685, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "type": "private"},
-    # "date": 1664543135, "text": "/start", "entities": [{"type": "bot_command", "offset": 0, "length": 6}]},
-    # "text": "این متن را بعدا تغییر دهید. بخش لینک ناشناس",
-    # "reply_markup": {"inline_keyboard":
-    # [
-    # [
-    # {"text": "شخصی سازی لینک", "callback_data": "anon:cus:@139946685"},
-    # {"text": "اشتراک گذاری", "url": "https://t.me/share/url?text=asdad&url=google.com"}],
-    # [{"text": "لینک برای اینستاگرام", "callback_data": "anon:insta:@139946685"}],
-    # [{"text": "لینک برای تلگرام", "callback_data": "anon:telg:@139946685"}],
-    # [{"text": "بازگشت به بخش ناشناس", "callback_data": "anon:@139946685"}]]}},
-    # "chat_instance": "1169386402171875241", "data": "anon:@139946685"}
     saveUsername(msg, mode="callback")
     user_id = msg.from_user.id
     if msg.from_user.username:
@@ -271,7 +252,6 @@ async def callback_query_process(msg: types.CallbackQuery):
                 n = int(ap[2])
                 for i in keys:
                     n += 1
-                    # userID = i.split(':')[-1]
                     userID = i
                     text = "{}{}- {} | {}\n".format(
                         text,
@@ -1507,13 +1487,6 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id, msg_id, reply_markup=inlineKeys
             )
     else:
-        # {
-        # "id": "601066437221691493",
-        # "from": {
-        # "id": 139946685, "is_bot": false, "first_name": "Alireza 🏴🏳",
-        # "username": "ferisystem", "language_code": "de"},
-        # "inline_message_id": "BAAAACcAAABRsQ-ZJkZtztRsZ9I", "chat_instance": "8145064389776335333", "data": "showN:139946685:1666127436.399383"
-        # }
         msgID = msg.id
         msg_id = msg.inline_message_id
         if re.match(r"^shown:(\d+):([-+]?\d*\.\d+|\d+)$", input):
@@ -1545,7 +1518,6 @@ async def callback_query_process(msg: types.CallbackQuery):
                 await answerCallbackQuery(
                     msg, text_data, show_alert=True, cache_time=3600
                 )
-                # if not str(user_id) in from_user and DataBase.scard('najva_seened:{}:{}'.format(from_user, time_data)) == 0
                 if (
                     DataBase.scard(
                         "najva_seened:{}:{}".format(from_user, time_data)
@@ -1599,7 +1571,6 @@ async def callback_query_process(msg: types.CallbackQuery):
                             ),
                             int(time()),
                         )
-                # if not str(user_id) in from_user:
                 DataBase.incr(
                     "najva_seen_count:{}:{}".format(from_user, time_data)
                 )

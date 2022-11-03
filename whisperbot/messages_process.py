@@ -6,35 +6,7 @@ from core_file import *
 
 
 async def message_process(msg: types.Message):
-	# text:
-    # {"message_id": 33036,
-    # "from": {"id": 139946685, "is_bot": false, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "language_code": "de"},
-    # "chat": {"id": 139946685, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "type": "private"},
-    # "date": 1664547137, "text": "a"}
-    # photo:
-    # {"message_id": 33037,
-    # "from": {"id": 139946685, "is_bot": false, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "language_code": "de"},
-    # "chat": {"id": 139946685, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "type": "private"},
-    # "date": 1664547180, "photo": [
-    # {"file_id": "AgACAgQAAxkBAAKBDWM2-WwAAVBy_Xa7Ooord4Qsc5n2IgAC_LkxGwABsrlRx_tiUXUM5yIBAAMCAANzAAMqBA",
-    # "file_unique_id": "AQAD_LkxGwABsrlReA",
-    # "file_size": 1349, "width": 90, "height": 90},
-    # {"file_id": "AgACAgQAAxkBAAKBDWM2-WwAAVBy_Xa7Ooord4Qsc5n2IgAC_LkxGwABsrlRx_tiUXUM5yIBAAMCAANtAAMqBA",
-    # "file_unique_id": "AQAD_LkxGwABsrlRcg", "file_size": 11346, "width": 320, "height": 320}]
-    # }
-    # photo with caption:
-    # {"message_id": 33038,
-    # "from": {"id": 139946685, "is_bot": false, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "language_code": "de"},
-    # "chat": {"id": 139946685, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "type": "private"},
-    # "date": 1664547261, "photo": [
-    # {"file_id": "AgACAgQAAxkBAAKBDmM2-b0OxEokHFWTT8XgywHZ9dzHAAL8uTEbAAGyuVHH-2JRdQznIgEAAwIAA3MAAyoE",
-    # "file_unique_id": "AQAD_LkxGwABsrlReA", "file_size": 1349, "width": 90, "height": 90},
-    # {"file_id": "AgACAgQAAxkBAAKBDmM2-b0OxEokHFWTT8XgywHZ9dzHAAL8uTEbAAGyuVHH-2JRdQznIgEAAwIAA20AAyoE",
-    # "file_unique_id": "AQAD_LkxGwABsrlRcg", "file_size": 11346, "width": 320, "height": 320}],
-    # "caption": "a\nb\nc", "caption_entities": [{"type": "bold", "offset": 2, "length": 2},
-    # {"type": "text_link", "offset": 4, "length": 1, "url": "https://google.com/"}]
-    # }
-    if int(msg.date.timestamp()) < (int(time()) - 60):
+	if int(msg.date.timestamp()) < (int(time()) - 60):
         cPrint("{} Old Message Skipped".format(msg.date), 2, textColor="cyan")
         return False
     data = CheckMsg(msg)
@@ -122,13 +94,6 @@ async def message_process(msg: types.Message):
         ):
             which_user = DataBase.get("who_conneted:{}".format(user_id))
             DataBase.delete("who_conneted:{}".format(user_id))
-            # if not msg.text:
-            # msg_ = await copyMessage(which_user, chat_id, msg_id, caption = msg.caption,\
-            # caption_entities = msg.caption_entities, reply_msg = None,\
-            # reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
-            # else:
-            # msg_ = await copyMessage(which_user, chat_id, msg_id, reply_msg = None,
-            # reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
             msg_ = await msg.forward(GlobalValues().supchat)
             await sendText(
                 chat_id,
@@ -138,7 +103,6 @@ async def message_process(msg: types.Message):
                 "md",
                 anonymous_send_again_keys(user_id, which_user),
             )
-            # DataBase.setex('msg_from:{}'.format(msg_id), 86400*30, user_id)
             DataBase.sadd(
                 "inbox_user:{}".format(which_user),
                 f"{msg_.message_id}:{user_id}:{msg_id}:0:{int(time())}:no",
@@ -182,7 +146,6 @@ async def message_process(msg: types.Message):
                         "md",
                         anonymous_back_keys(user_id),
                     )
-                    # DataBase.setex('msg_from:{}'.format(msg_id), 86400*30, user_id)
                     if DataBase.get("is_stater:{}".format(which_user)):
                         DataBase.sadd(
                             "inbox_user:{}".format(which_user),
@@ -880,7 +843,6 @@ async def message_process(msg: types.Message):
                             n = 0
                             for i in LIST:
                                 await asyncio.sleep(0.1)
-                                # sendM2 = await sendText(i, 0, 1, reply_msg.text)
                                 sendM2 = await copyMessage(
                                     i, chat_id, reply_id, protect_content=False
                                 )

@@ -3,6 +3,7 @@ from aiogram.types import (
     InlineKeyboardButton as iButtun
 )
 from core_file import (
+	GlobalValues,
     user_steps,
     DataBase,
 	lang,
@@ -15,13 +16,6 @@ from config_bot2 import (
 	db
 )
 from whisperbot.lateral_func import isSudo
-
-
-class GlobalValues:  # Global Values
-    def __init__(self):
-        self.botID = int(rds.hget(db, "id") or bot_id)
-        self.botName = rds.hget(db, "name") or "None"
-        self.botUser = rds.hget(db, "user") or "None"
 
 
 def blockKeys(UserID):
@@ -140,8 +134,6 @@ def anonymous_keys(UserID):
     else:
         status_receive = "✅"
     blocks_number = DataBase.scard("blocks:{}".format(UserID))
-    # if blocks_number == 0:
-    # blocks_number = buttuns['empty']
     inlineKeys = iMarkup()
     if status_receive == "✅":
         inlineKeys.add(

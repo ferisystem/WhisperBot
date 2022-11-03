@@ -220,9 +220,7 @@ async def userInfos(userID, info="name"):
 
 
 async def userIds(username):
-    # if username:match("@"):
     username = username.replace("@", "")
-    # end
     if rds.hget("UsernamesIds", username.lower()):
         return int(rds.hget("UsernamesIds", username.lower()))
     else:
@@ -466,14 +464,6 @@ def saveUsername(msg, mode="message"):
 
 
 def generate_link():
-    # alphabets = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'n', 'm', 'l', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-    # numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-    # letters = (alphabets, numbers, alphabets, alphabets, numbers)
-    # text = ''
-    # for i in range(0, 12):
-    # which_one = random.choice(letters)
-    # which_key = random.choice(which_one)
-    # text = "{}{}".format(text, which_key)
     text = "".join(random.choices(string.ascii_letters + string.digits, k=12))
     return text
 
