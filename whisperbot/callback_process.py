@@ -320,8 +320,8 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["anon"],
-                None,
+                langU["anon"].format(GlobalValues().botName),
+                "html",
                 anonymous_keys(user_id),
             )
         if re.match(r"^anon:link:@(\d+)$", input):
@@ -595,8 +595,8 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["anon"],
-                None,
+                langU["anon"].format(GlobalValues().botName),
+                "html",
                 anonymous_keys(user_id),
             )
         if re.match(r"^anon:sendmore:(\d+):@(\d+)$", input):
