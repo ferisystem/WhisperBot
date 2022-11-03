@@ -1,27 +1,27 @@
-db = 'name_database'
+db = 'begobot'
 # - - - - - - - - - - - - - #
 telegram_datas = {
-"botToken": "Bot_Token",
-"api_hash": "api_hash",
-"api_id": api_id,
+"botToken": "537502140:AAHDzN2USmOMJ6iVm7S46D30aR7dUCojXR0",
+"api_hash": "5146e754701a0ae922a77c940f15c803", # "a91737390f3c6f51d2b9dfef87eca954",
+"api_id": 2179978, #752812,
 "device_model": "Linux",
 "system_version": "Ubuntu 20.04",
 "app_version": "1.0",
 }
 # - - - - - - - - - - - - - #
-sudo_users = (777000, telegram_datas['botToken'].split(':')[0], 000) # PUT_YOUR_ADMINS_HERE
+sudo_users = (777000, telegram_datas['botToken'].split(':')[0], 139946685, 375029817)
 # - - - - - - - - - - - - - #
 IDs_datas = {
-"sudo_id": SUDO_ID,
+"sudo_id": 139946685,#752815712,
 "bot_id": int(telegram_datas['botToken'].split(':')[0]),
-"chUsername": "YOUR_CHANNEL_USERNAME", # for force join
-"chLink": "YOUR_CHANNEL_LINK",
+"chUsername": "fereidouni",
+"chLink": "https://t.me/joinchat/AAAAAFHGwAQNVhcSJSY6Qw",
 }
 # - - - - - - - - - - - - - #
 server_datas = {
-"ip": "YOUR_SERVER_IP",
+"ip": "178.63.174.231",
 "port_server": 10128, #optional
-"port_tg": 8443, #80, 88, 443, 8443
+"port_tg": 8443, #80, 88, 443, 8443 
 }
 # - - - - - - - - - - - - - #
 sendApi = "https://api.telegram.org/bot{}/".format(telegram_datas['botToken'])
@@ -36,65 +36,3 @@ pic_all = f'{git_url}/all.jpg'
 pic_tick = f'{git_url}/tick.jpg'
 pic_cross = f'{git_url}/cross.jpg'
 pic_special = f'{git_url}/special.jpg'
-
-
-
-# - - - - - - - - - - - - - - - #
-# don't change lines after this #
-# - - - - - - - - - - - - - - - #
-
-
-
-import telethon.errors.rpcerrorlist as telethonErrors
-from aiogram.dispatcher import Dispatcher
-from telethon.sync import TelegramClient
-from aiogram import Bot, executor, types
-import aiogram.utils.exceptions as expts
-from termcolor import colored, cprint
-from teleredis import RedisSession
-from datetime import datetime
-from aiohttp import web
-from time import time
-import coloredlogs
-import asyncio
-import logging
-import string
-import random
-import redis
-import ssl
-import re
-import os
-with open("Files/language.json", encoding="utf-8") as file:
-    lang = eval(file.read())
-coloredlogs.install()
-logging.getLogger("aiohttp").setLevel(logging.WARNING)
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - [%(name)s] %(message)s",
-    datefmt="%d-%b-%y %H:%M:%S",
-    file="aio.log",
-)
-log = logging.getLogger("broadcast")
-stroge = redis.Redis(
-    host="localhost", port=6379, db=3, decode_responses=False, encoding="utf-8"
-)
-session = RedisSession(db, stroge)
-client = TelegramClient(
-    session,
-    api_id=telegram_datas["api_id"],
-    api_hash=telegram_datas["api_hash"],
-    device_model = telegram_datas['device_model'],
-    system_version = telegram_datas['system_version'],
-    app_version = telegram_datas['app_version']
-)
-client.session.save_entities = False
-rds = redis.Redis(
-    host="localhost", port=6379, db=3, decode_responses=True, encoding="utf-8"
-)
-loop = asyncio.get_event_loop()
-bot = Bot(token=telegram_datas["botToken"], loop=loop)
-dp = Dispatcher(bot)
-sudo_id = IDs_datas["sudo_id"]
-bot_id = IDs_datas["bot_id"]
-global user_steps
-user_steps = {}
