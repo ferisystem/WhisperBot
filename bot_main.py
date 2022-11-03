@@ -12,8 +12,8 @@ from core_file import *
 
 # -------------------------------------------------------------------------------- #
 
-async def memberCommands(msg, input, gp_id, is_super, is_fwd):
-    # text:
+async def message_process(msg: types.Message):
+	# text:
     # {"message_id": 33036,
     # "from": {"id": 139946685, "is_bot": false, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "language_code": "de"},
     # "chat": {"id": 139946685, "first_name": "Alireza .Feri 🏴", "username": "ferisystem", "type": "private"},
@@ -41,23 +41,48 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
     # "caption": "a\nb\nc", "caption_entities": [{"type": "bold", "offset": 2, "length": 2},
     # {"type": "text_link", "offset": 4, "length": 1, "url": "https://google.com/"}]
     # }
-    _ = CheckMsg(msg)
-    user_id = msg.from_user.id
-    user_name = msg.from_user.first_name
-    chat_id = msg.chat.id
+    if int(msg.date.timestamp()) < (int(time()) - 60):
+        cPrint("{} Old Message Skipped".format(msg.date), 2, textColor="cyan")
+        return False
+    data = CheckMsg(msg)
+    chat_id = int(msg.chat.id)
+    content = data.content
+    user_id = int(msg.from_user.id)
     msg_id = msg.message_id
-    content = _.content
+    setupUserSteps(msg, user_id)
     langU = lang[user_steps[user_id]["lang"]]
+    print(colored("Message >", "cyan"))
+    print(colored("userID", "yellow"), colored(user_id, "white"))
+    print(colored("Type", "yellow"), colored(content, "white"))
+    print(colored("msgID", "yellow"), colored(msg_id, "white"))
+    print()
     if "reply_to_message" in msg:
         reply_msg = msg.reply_to_message
         reply_id = reply_msg.message_id
     else:
         reply_msg = None
         reply_id = 0
-    etebar = int(DataBase.get("user.etebar:{}".format(user_id)) or "0")
-    if is_super:
-        pass
+    if "forward_from" in msg and msg.forward_from.id:
+        saveUsername(msg)
     else:
+        saveUsername(msg)
+    if not DataBase.get("checkBotInfo"):
+        try:
+            b = await bot.get_me()
+            DataBase.hset(db, "user", b.username)
+            DataBase.hset(db, "id", b.id)
+            DataBase.hset(db, "name", b.first_name)
+            DataBase.hset(db, "token", telegram_datas["botToken"])
+            getC = await bot.get_chat(sudo_id)
+            DataBase.hset("sudo", "user", getC.id)
+            if getC.username:
+                DataBase.hset("sudo", "user", getC.username)
+            DataBase.setex("checkBotInfo", 86400, "True")
+        except:
+            print("Sudo or Channel Not Found!!!")
+            pass
+    if isPv(msg):
+        user_name = msg.from_user.first_name
         if isBlock(user_id):
             if not DataBase.get("user.alertBlocked:{}".format(user_id)):
                 DataBase.setex(
@@ -876,52 +901,6 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                             )
                     else:
                         await sendText(chat_id, msg, 1, langU["just_reply"])
-
-
-async def message_process(msg: types.Message):
-    if int(msg.date.timestamp()) < (int(time()) - 60):
-        cPrint("{} Old Message Skipped".format(msg.date), 2, textColor="cyan")
-        return False
-    data = CheckMsg(msg)
-    chat_id = int(msg.chat.id)
-    content = data.content
-    user_id = int(msg.from_user.id)
-    msg_id = msg.message_id
-    setupUserSteps(msg, user_id)
-    langU = lang[user_steps[user_id]["lang"]]
-    print(colored("Message >", "cyan"))
-    print(colored("userID", "yellow"), colored(user_id, "white"))
-    print(colored("Type", "yellow"), colored(content, "white"))
-    print(colored("msgID", "yellow"), colored(msg_id, "white"))
-    print()
-    if "reply_to_message" in msg:
-        reply_msg = msg.reply_to_message
-        reply_id = reply_msg.message_id
-    else:
-        reply_msg = None
-        reply_id = 0
-    if "forward_from" in msg and msg.forward_from.id:
-        saveUsername(msg)
-    else:
-        saveUsername(msg)
-    if not DataBase.get("checkBotInfo"):
-        try:
-            b = await bot.get_me()
-            DataBase.hset(db, "user", b.username)
-            DataBase.hset(db, "id", b.id)
-            DataBase.hset(db, "name", b.first_name)
-            DataBase.hset(db, "token", telegram_datas["botToken"])
-            getC = await bot.get_chat(sudo_id)
-            DataBase.hset("sudo", "user", getC.id)
-            if getC.username:
-                DataBase.hset("sudo", "user", getC.username)
-            DataBase.setex("checkBotInfo", 86400, "True")
-        except:
-            print("Sudo or Channel Not Found!!!")
-            pass
-    if isPv(msg):
-        setupUserSteps(msg, user_id)
-        await memberCommands(msg, "input", chat_id, False, False)
     if isSuper(msg):
         if chat_id == GlobalValues().supchat:
             if isSudo(user_id):
@@ -934,7 +913,6 @@ async def message_process(msg: types.Message):
                     else:
                         await sendText(chat_id, msg, 1, "❌\n{}".format(sendM))
         else:
-            # await bot.leave_chat(chat_id)
             if (
                 msg.via_bot
                 and msg.via_bot.username == GlobalValues().botUser
