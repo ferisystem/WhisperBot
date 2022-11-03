@@ -1,10 +1,12 @@
 from core_file import (
     user_steps,
     DataBase,
+    client,
     bot,
     rds,
     re
 )
+from whisperbot.main_func import sendText
 import aiogram.utils.exceptions as expts
 from config_bot2 import sudo_users
 from aiogram import types
