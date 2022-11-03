@@ -48,7 +48,7 @@ With unique options in every section that is not like it in Telegram 🤩
         "just_reply": "reply on a message",
         "stats": "آمار کامل ربات\n\nتعداد کل کاربران: {}\nتعداد بلاک شدگان: {}\nتعداد استفاده از نجوا: {}\nتعداد استفاده از ناشناس: {}",
         "force_join": "for use bot you must to join us channel!\n\n🔺channel: @{0}\n@{0}",
-        "language": "میتوانید زبان ربات را تغییر دهید\nyou can change bot language",
+        "language": "میتوانید زبان ربات را تغییر دهید\nyou can change bot language\nSie können die Bot-Sprache ändern",
         "anon": """
 You may have heard of the <b>Anonymous Message</b> bot, or you may have seen examples of this type of bot 🤔
 But <b>{0}</b> is the best version of all Anonymous Message bots! Why?

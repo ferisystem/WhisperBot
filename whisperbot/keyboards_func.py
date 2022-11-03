@@ -92,7 +92,7 @@ def settings_keys(UserID, arg2=None):
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
-    inlineKeys.add(iButtun("زبان/language", callback_data="nil"))
+    inlineKeys.add(iButtun("زبان/language/Sprache", callback_data="nil"))
     if (arg2 or user_steps[UserID]["lang"]) == "fa":
         status1 = "✅"
     else:
