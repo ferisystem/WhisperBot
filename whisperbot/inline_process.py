@@ -619,13 +619,13 @@ async def inline_query_process(msg: types.InlineQuery):
                     from_user,
                     source_id,
                     1,
-                    langU["speical_najva_seen"].format(
+                    lang[lang_user(from_user)]["speical_najva_seen"].format(
                         msg.from_user.first_name
                     ),
                 )
                 await editText(
                     inline_msg_id=special_msgID,
-                    text=langU["speical_najva_seen2"].format(
+                    text=lang[lang_user(from_user)]["speical_najva_seen2"].format(
                         msg.from_user.first_name
                     ),
                     parse_mode="html",
