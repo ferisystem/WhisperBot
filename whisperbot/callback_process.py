@@ -164,7 +164,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         chat_id,
                         msg_id,
                         0,
-                        lang[ap[2]]["settings"],
+                        lang[ap[2]]["language"],
                         None,
                         settings_keys(user_id, ap[2]),
                     )
