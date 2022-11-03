@@ -7,6 +7,7 @@ from aiogram import (
     Bot
 )
 import aiogram.utils.exceptions as expts
+from docs.lang_file import lang
 from termcolor import colored, cprint
 from teleredis import RedisSession
 from aiogram.dispatcher.webhook import (
@@ -50,9 +51,6 @@ import ssl
 import re
 import os
 
-
-with open("docs/language.json", encoding="utf-8") as file:
-    lang = eval(file.read())
 coloredlogs.install()
 logging.getLogger("aiohttp").setLevel(logging.WARNING)
 logging.basicConfig(
