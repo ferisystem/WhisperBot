@@ -997,7 +997,6 @@ async def message_process(msg: types.Message):
 
 async def bot_off(app):
     await bot.delete_webhook()
-    # await client.disconnect()
     print(
         colored("==========================", "white"),
         colored("\n= ", "white")
@@ -1043,7 +1042,6 @@ async def bot_run(app):
                 "chat_join_request",
             ],
         )
-    # await client.start(bot_token = telegram_datas['botToken'])
     bt = None
     while not bt:
         bt = await bot.get_me()
@@ -1133,18 +1131,18 @@ async def bot_run(app):
             DataBase.hset("sudo", "id", bt1.id)
     except:
         print("Sudo Not Found!!!")
-    # await sendText(GlobalValues().sudoID, 0, 1, 'Bot has been Successfully Loaded')
-    # if not rds.hget(db, 'linkyCH'):
-    # status = False
-    # while status != True:
-    # iD = input("Enter LinkyCH Username: ")
-    # if re.match(r'^(@\w+)$', iD):
-    # rds.hset(db, 'linkyCH', re.match(r'^(@\w+)$', iD).group(1))
-    # status = True
-    # break
-    # else:
-    # iD = input("Enter LinkyCH Username: ")
-    # status = False
+    await sendText(GlobalValues().sudoID, 0, 1, 'Bot has been Successfully Loaded')
+    if not rds.hget(db, "linkyCH"):
+        status = False
+        while status != True:
+            iD = input("Enter Channel Username for linkyCH: ")
+            if re.match(r"^(@\w+)$", iD):
+                rds.hset(db, "linkyCH", re.match(r"^(@\w+)$", iD).group(1))
+                status = True
+                break
+            else:
+                iD = input("Enter Channel Username for linkyCH: ")
+                status = False
     if not rds.hget(db, "supchat"):
         status = False
         while status != True:
