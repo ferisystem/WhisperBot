@@ -120,6 +120,7 @@ class DataBase:
 
 
 def lang_user(UserID):
+	UserID = int(UserID)
 	if UserID in user_steps and 'lang' in user_steps[UserID]:
 		return user_steps[UserID]['lang']
 	else:
@@ -134,7 +135,7 @@ async def main():
 	for i in autodels:
 		now_time = int(time())
 		from_user, time_data, inline_msg_id = i.split(':')
-		langU = lang[lang_user(int(from_user))]
+		langU = lang[lang_user(from_user)]
 		buttuns = langU['buttuns']
 		time_to_del = int(DataBase.get('autodel_time:{}'.format(from_user)) or 0) * 60
 		time_seen = DataBase.get('najva_seen_time:{}:{}'.format(from_user, time_data))
