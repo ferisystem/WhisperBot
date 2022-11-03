@@ -51,7 +51,7 @@ import re
 import os
 
 
-with open("Files/language.json", encoding="utf-8") as file:
+with open("docs/language.json", encoding="utf-8") as file:
     lang = eval(file.read())
 coloredlogs.install()
 logging.getLogger("aiohttp").setLevel(logging.WARNING)
