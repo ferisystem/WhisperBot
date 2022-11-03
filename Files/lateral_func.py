@@ -1,4 +1,4 @@
-from config_bot import rds, sudo_users, bot, re
+from config_bot2 import rds, sudo_users, bot, re
 import aiogram.utils.exceptions as expts
 from aiogram import types
 

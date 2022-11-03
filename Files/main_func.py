@@ -5,7 +5,7 @@ from aiogram.types import (
 import aiogram.utils.exceptions as expts
 from termcolor import colored, cprint
 from bot_main import DataBase
-from config_bot import bot, IDs_datas
+from config_bot2 import bot, IDs_datas
 
 
 class CheckMsg:

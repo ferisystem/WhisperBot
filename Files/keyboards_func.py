@@ -2,7 +2,7 @@ from aiogram.types import (
     InlineKeyboardMarkup as iMarkup,
     InlineKeyboardButton as iButtun
 )
-from config_bot import (
+from config_bot2 import (
 	user_steps,
 	IDs_datas,
     lang,

@@ -20,7 +20,7 @@ from aiogram.dispatcher.webhook import (
     AnswerCallbackQuery,
     get_new_configured_app,
 )
-from config_bot import *
+from config_bot2 import *
 from Files.main_func import *
 from Files.lateral_func import *
 from Files.keyboards_func import *
