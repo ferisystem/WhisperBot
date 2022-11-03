@@ -4,85 +4,8 @@ from aiogram.types import (
 )
 import aiogram.utils.exceptions as expts
 from termcolor import colored, cprint
-from bot_main import DataBase
-from config_bot2 import bot, IDs_datas
-
-
-class CheckMsg:
-    def __init__(self, msg, echoMsg=False):
-        if "text" in msg:
-            self.content = "Text"
-        elif "audio" in msg:
-            self.content = "Audio"
-        elif "voice" in msg:
-            self.content = "Voice"
-        elif "video" in msg:
-            self.content = "Video"
-        elif "video_note" in msg:
-            self.content = "VideoNote"
-        elif "photo" in msg:
-            self.content = "Photo"
-        elif "document" in msg:
-            self.content = "File"
-        elif "animation" in msg:
-            self.content = "Gif"
-        elif "poll" in msg:
-            self.content = "Poll"
-        elif "edit_date" in msg:
-            self.content = "Edited"
-        elif "game" in msg:
-            self.content = "Game"
-        elif "sticker" in msg:
-            self.content = "Sticker"
-        elif "contact" in msg:
-            self.content = "Contact"
-        elif "venue" in msg:
-            self.content = "Venue"
-        elif "location" in msg:
-            self.content = "Location"
-        elif "new_chat_members" in msg:
-            self.content = "NewChatMembers"
-        elif "left_chat_member" in msg:
-            self.content = "LeftChatMember"
-        elif "new_chat_title" in msg:
-            self.content = "NewChatTitle"
-        elif "new_chat_photo" in msg:
-            self.content = "NewChatPhoto"
-        elif "delete_chat_photo" in msg:
-            self.content = "DeleteChatPhoto"
-        elif "group_chat_created" in msg:
-            self.content = "GroupChatCreated"
-        elif "supergroup_chat_created" in msg:
-            self.content = "SupergroupChatCreated"
-        elif "channel_chat_created" in msg:
-            self.content = "ChannelChatCreated"
-        elif "migrate_to_chat_id" in msg:
-            self.content = "MigrateToChatId"
-        elif "pinned_message" in msg:
-            self.content = "PinnedMessage"
-        elif "invoice" in msg:
-            self.content = "Invoice"
-        elif "successful_payment" in msg:
-            self.content = "SuccessfulPayment"
-        elif "connected_website" in msg:
-            self.content = "ConnectedWebsite"
-        elif "passport_data" in msg:
-            self.content = "PassportData"
-        elif "reply_markup" in msg:
-            self.content = "ReplyMarkup"
-        elif "caption" in msg:
-            self.content = "caption"
-        if "reply_to_message" in msg:
-            msg = msg.reply_to_message
-            if "forward_from" in msg:
-                self.user = msg.forward_from
-            elif "from" in msg:
-                self.user = msg.from_user
-        else:
-            if "forward_from" in msg:
-                self.user = msg.forward_from
-            elif "from" in msg:
-                self.user = msg.from_user
+from core_file import bot, DataBase
+from config_bot2 import IDs_datas
 
 
 def cPrint(text, type=1, backColor="on_white", textColor="blue", modes=None):

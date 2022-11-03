@@ -1,10 +1,12 @@
-from config_bot2 import (
-    sudo_users,
+from core_file import (
+    user_steps,
+    DataBase,
     bot,
     rds,
     re
 )
 import aiogram.utils.exceptions as expts
+from config_bot2 import sudo_users
 from aiogram import types
 
 
@@ -440,7 +442,6 @@ def saveUsername(msg, mode="message"):
         ):
             rds.hset("UsernamesIds", us.lower(), uid)
             cPrint("@{} [{}] Saved".format(us, uid), 2, None, "magenta")
-
 
 
 def generate_link():

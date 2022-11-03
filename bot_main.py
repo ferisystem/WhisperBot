@@ -20,121 +20,13 @@ from aiogram.dispatcher.webhook import (
     AnswerCallbackQuery,
     get_new_configured_app,
 )
-from config_bot2 import *
-from Files.main_func import *
-from Files.lateral_func import *
 from Files.keyboards_func import *
+from Files.lateral_func import *
+from Files.main_func import *
+from config_bot2 import *
+from core_file import *
 
 # -------------------------------------------------------------------------------- #
-
-class DataBase:
-    def get(hash):
-        hash = "{}.{}".format(db, hash)
-        return rds.get(hash)
-
-    def delete(hash, *hash2):
-        hash3 = []
-        hash3.append("{}.{}".format(db, hash))
-        for i in hash2:
-            hash3.append("{}.{}".format(db, i))
-        return rds.delete(*hash3)
-
-    def set(hash, value):
-        hash = "{}.{}".format(db, hash)
-        return rds.set(hash, value)
-
-    def mset(hash):
-        hash2 = {}
-        for i in hash:
-            k = "{}.{}".format(db, i)
-            hash2.update({k: hash[i]})
-        return rds.mset(hash2)
-
-    def setex(hash, time, value):
-        hash = "{}.{}".format(db, hash)
-        return rds.setex(hash, time, value)
-
-    def incr(hash):
-        hash = "{}.{}".format(db, hash)
-        return rds.incr(hash)
-
-    def incrby(hash, value):
-        hash = "{}.{}".format(db, hash)
-        return rds.incrby(hash, value)
-
-    def decr(hash):
-        hash = "{}.{}".format(db, hash)
-        return rds.decr(hash)
-
-    def decrby(hash, value):
-        hash = "{}.{}".format(db, hash)
-        return rds.decrby(hash, value)
-
-    def ttl(hash):
-        hash = "{}.{}".format(db, hash)
-        return rds.ttl(hash)
-
-    def hget(hash, value):
-        hash = "{}.{}".format(db, hash)
-        return rds.hget(hash, value)
-
-    def hset(hash, value, field):
-        hash = "{}.{}".format(db, hash)
-        return rds.hset(hash, value, field)
-
-    def hdel(hash, value):
-        hash = "{}.{}".format(db, hash)
-        return rds.hdel(hash, value)
-
-    def sadd(hash, member):
-        hash = "{}.{}".format(db, hash)
-        return rds.sadd(hash, member)
-
-    def srem(hash, member):
-        hash = "{}.{}".format(db, hash)
-        return rds.srem(hash, member)
-
-    def sismember(hash, member):
-        hash = "{}.{}".format(db, hash)
-        return rds.sismember(hash, member)
-
-    def smembers(hash):
-        hash = "{}.{}".format(db, hash)
-        return rds.smembers(hash)
-
-    def scard(hash):
-        hash = "{}.{}".format(db, hash)
-        return rds.scard(hash)
-
-    def keys(hash):
-        hash = "{}.{}".format(db, hash)
-        return rds.keys(hash)
-
-
-class GlobalValues:  # Global Values
-    def __init__(self):
-        self.ipAdd = server_datas["ip"]
-        self.ipAdD = "http://{}:{}".format(
-            self.ipAdd, server_datas["port_server"]
-        )
-        self.WEBHOOK_URL_PATH = "/{}".format(telegram_datas["botToken"])
-        self.port = server_datas["port_tg"]
-        self.WEBHOOK_URL = "https://{}:{}{}".format(
-            self.ipAdd, self.port, self.WEBHOOK_URL_PATH
-        )
-        self.WEBHOOK_SSL_CERT = "webhook_cert.pem"
-        self.WEBHOOK_SSL_PRIV = "webhook_pkey.pem"
-        self.botID = int(rds.hget(db, "id") or bot_id)
-        self.botName = rds.hget(db, "name") or "None"
-        self.botUser = rds.hget(db, "user") or "None"
-        self.sudoID = int(DataBase.hget("sudo", "id") or sudo_id)
-        self.supchat = int(rds.hget(db, "supchat") or self.sudoID)
-        self.spychat = int(rds.hget(db, "spychat") or self.sudoID)
-        self.linkyCH = rds.hget(db, "linkyCH") or "None"
-        self.sudoUser = DataBase.hget("sudo", "user") or "None"
-        self.sudo_users = (self.sudoID, self.botID) + sudo_users
-        self.chLink = IDs_datas["chLink"]
-
 
 def isBlock(UserID):
     if DataBase.get("isBan:{}".format(UserID)):
