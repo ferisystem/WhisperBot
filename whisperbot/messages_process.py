@@ -1,6 +1,6 @@
-from Files.keyboards_func import *
-from Files.lateral_func import *
-from Files.main_func import *
+from whisperbot.keyboards_func import *
+from whisperbot.lateral_func import *
+from whisperbot.main_func import *
 from config_bot2 import *
 from core_file import *
 
