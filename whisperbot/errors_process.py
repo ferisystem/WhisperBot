@@ -1,17 +1,10 @@
 import telethon.errors.rpcerrorlist as telethonErrors
 import aiogram.utils.exceptions as expts
-from core_file import GlobalValues, log
+from core_file import GlobalValues, log, asyncio
 from whisperbot.main_func import sendText
 
 
 async def errors_handlers(update, exception):
-    """
-    Exceptions handler. Catches all exceptions within task factory tasks.
-    :param dispatcher:
-    :param update:
-    :param exception:
-    :return: stdout logging
-    """
     if isinstance(exception, expts.CantDemoteChatCreator):
         log.debug("Can't demote chat creator!")
         return
@@ -32,7 +25,6 @@ async def errors_handlers(update, exception):
         return
     if isinstance(exception, expts.RestartingTelegram):
         await asyncio.sleep(5)
-        # log.exception(f'TelegramAPIError: {exception} !\nUpdate: {update}')
         await sendText(
             GlobalValues().sudoID, 0, 1, "The Telegram Bot API service is restarting..."
         )
