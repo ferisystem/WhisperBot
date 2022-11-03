@@ -67,7 +67,7 @@ async def message_process(msg: types.Message):
             inlineKeys2 = iMarkup()
             inlineKeys2.add(
                 iButtun(
-                    langU["buttuns"]["notice"],
+                    lang[lang_user(GlobalValues().sudoID)]["buttuns"]["notice"],
                     callback_data=f"from_who:{user_id}:{msg_id}",
                 )
             )
@@ -110,7 +110,7 @@ async def message_process(msg: types.Message):
             )
             DataBase.setex("is_stater:{}".format(user_id), 86400 * 7, "True")
             await sendText(
-                which_user, 0, 1, langU["new_message"].format(msg_.message_id)
+                which_user, 0, 1, lang[lang_user(which_user)]["new_message"].format(msg_.message_id)
             )
         if reply_msg:
             if "reply_markup" in reply_msg:
@@ -161,7 +161,7 @@ async def message_process(msg: types.Message):
                         which_user,
                         0,
                         1,
-                        langU["new_message"].format(msg_.message_id),
+                        lang[lang_user(which_user)]["new_message"].format(msg_.message_id),
                     )
                 if "from_who" in input_:
                     ap = re_matches(r"^from_who:(\d+):(\d+)$", input_)
@@ -475,12 +475,12 @@ async def message_process(msg: types.Message):
                                 "name_anon2:{}".format(user_id)
                             )
                         else:
-                            user_name = langU["anonymous"]
+                            user_name = lang[lang_user(ap[2])]["anonymous"]
                         await sendText(
                             ap[2],
                             ap[3],
                             1,
-                            langU["your_msg_seen"].format(user_name),
+                            lang[lang_user(ap[2])]["your_msg_seen"].format(user_name),
                         )
                         DataBase.srem("inbox_user:{}".format(user_id), i)
                 else:
@@ -555,13 +555,13 @@ async def message_process(msg: types.Message):
                             from_user,
                             source_id,
                             1,
-                            langU["speical_najva_seen"].format(
+                            lang[lang_user(from_user)]["speical_najva_seen"].format(
                                 msg.from_user.first_name
                             ),
                         )
                     await editText(
                         inline_msg_id=special_msgID,
-                        text=langU["speical_najva_seen2"].format(
+                        text=lang[lang_user(from_user)]["speical_najva_seen2"].format(
                             msg.from_user.first_name
                         ),
                         parse_mode="html",
@@ -900,7 +900,7 @@ async def message_process(msg: types.Message):
                                 '<a href="t.me/c/{}/{}">{}</a>'.format(
                                     str(chat_id).replace("-100", ""),
                                     msg_id,
-                                    langU["new_najva"],
+                                    lang[lang_user(Uid)]["new_najva"],
                                 ),
                                 "html",
                             )
