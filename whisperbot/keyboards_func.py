@@ -15,7 +15,7 @@ from config_bot2 import (
 	IDs_datas,
 	db
 )
-from whisperbot.lateral_func import isSudo
+from whisperbot.lateral_func import isSudo, lang_user
 
 
 def blockKeys(UserID):
@@ -29,7 +29,7 @@ def blockKeys(UserID):
 
 def start_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
@@ -77,7 +77,7 @@ def start_keys(UserID):
 
 def back_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
@@ -89,7 +89,7 @@ def back_keys(UserID):
 
 def settings_keys(UserID, arg2=None):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(iButtun("زبان/language", callback_data="nil"))
@@ -127,7 +127,7 @@ def settings_keys(UserID, arg2=None):
 
 def anonymous_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     if DataBase.get("dont_receive_anon:{}".format(UserID)):
         status_receive = "❌"
@@ -183,7 +183,7 @@ def anonymous_keys(UserID):
 
 def anonymous_my_link_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     share_text_anon = langU["share_text_anon"].format(GlobalValues().botName)
     link_anon = DataBase.get("link_anon:{}".format(UserID))
@@ -217,7 +217,7 @@ def anonymous_my_link_keys(UserID):
 
 def anonymous_cus_link_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -236,7 +236,7 @@ def anonymous_cus_link_keys(UserID):
 
 def anonymous_insta_link_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -249,7 +249,7 @@ def anonymous_insta_link_keys(UserID):
 
 def anonymous_help_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -280,7 +280,7 @@ def anonymous_help_keys(UserID):
 
 def anonymous_back_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -291,7 +291,7 @@ def anonymous_back_keys(UserID):
 
 def anonymous_send_again_keys(UserID, which_user):
     hash = ":{}:@{}".format(which_user, UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -304,7 +304,7 @@ def anonymous_send_again_keys(UserID, which_user):
 
 def anonymous_name_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -327,7 +327,7 @@ def anonymous_name_keys(UserID):
 
 def anonymous_cus_name_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -341,7 +341,7 @@ def anonymous_new_message_keys(
 ):
     hash = ":{}:{}:{}:@{}".format(TO_USER, MSG_ID, SENT_TIME, UserID)
     try:
-        langU = lang[user_steps[UserID]["lang"]]
+        langU = lang[lang_user(UserID)]
     except:
         langU = lang["fa"]
     buttuns = langU["buttuns"]
@@ -376,7 +376,7 @@ def anonymous_new_message_keys(
 
 def anonymous_delete_blocks_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -391,7 +391,7 @@ def anonymous_delete_blocks_keys(UserID):
 
 def najva_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -414,7 +414,7 @@ def rplac_tick(text):
 
 def najva_settings_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -502,7 +502,7 @@ def najva_settings_keys(UserID):
 
 def najva_help_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -561,7 +561,7 @@ def najva_help_keys(UserID):
 
 def najva_help1_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -592,7 +592,7 @@ def najva_help1_keys(UserID):
 
 def najva_help2_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -614,7 +614,7 @@ def najva_help2_keys(UserID):
 
 def najva_help3_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -636,7 +636,7 @@ def najva_help3_keys(UserID):
 
 def najva_help4_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -656,7 +656,7 @@ def najva_help4_keys(UserID):
 
 def najva_help5_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -675,7 +675,7 @@ def najva_help5_keys(UserID):
 
 def najva_help6_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(iButtun(buttuns["example"], switch_inline_query="set"))
@@ -690,7 +690,7 @@ def najva_help6_keys(UserID):
 
 def najva_help7_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -704,7 +704,7 @@ def najva_help7_keys(UserID):
 
 def najva_help8_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -739,7 +739,7 @@ def najva_help8_keys(UserID):
 
 def najva_help9_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -759,7 +759,7 @@ def najva_help9_keys(UserID):
 
 def najva_autodel_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -780,7 +780,7 @@ def najva_autodel_keys(UserID):
 
 def najva_autodel2_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup(row_width=6)
     inlineKeys.add(
@@ -817,7 +817,7 @@ def najva_autodel2_keys(UserID):
 
 def najva_seen_keys(UserID, from_user, time_data):
     hash = ":{}:{}".format(from_user, time_data)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup(row_width=3)
     inlineKeys.add(
@@ -830,7 +830,7 @@ def najva_seen_keys(UserID, from_user, time_data):
 
 def najva_seen2_keys(UserID, from_user, time_data):
     hash = ":{}:{}".format(from_user, time_data)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -861,7 +861,7 @@ def najva_seen3_keys(from_user, time_data):
 
 def register_special_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -897,7 +897,7 @@ def register_special_keys(UserID):
 
 async def show_speical_najva_keys(UserID, from_user):
     hash2 = ":{}:@{}".format(from_user, UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     name_user = await userInfos(from_user, info="name")
@@ -925,7 +925,7 @@ async def show_speical_najva_keys(UserID, from_user):
 
 def report_najva_keys(UserID, from_user, reply_id):
     hash2 = ":{}:{}:@{}".format(from_user, reply_id, UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -957,7 +957,7 @@ def ban_user_keys(UserID, user_id):
 
 def support_keys(UserID):
     hash = ":@{}".format(UserID)
-    langU = lang[user_steps[UserID]["lang"]]
+    langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
