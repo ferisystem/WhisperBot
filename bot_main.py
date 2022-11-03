@@ -1,13 +1,13 @@
 # coding: utf8
-from Files.keyboards_func import *
-from Files.lateral_func import *
-from Files.switch_func import *
-from Files.main_func import *
-from config_bot2 import *
-from core_file import *
-
+from Files.switch_func import bot_run, bot_off
+from core_file import (
+    get_new_configured_app,
+    GlobalValues,
+    ssl,
+    web,
+    dp
+)
 # -------------------------------------------------------------------------------- #
-
 # کاراکتر
 if __name__ == "__main__":
     app = get_new_configured_app(dispatcher=dp, path=GlobalValues().WEBHOOK_URL_PATH)
