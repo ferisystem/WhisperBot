@@ -1,25 +1,4 @@
 # coding: utf8
-from aiogram.types import (
-    ReplyKeyboardMarkup,
-    ReplyKeyboardRemove,
-    KeyboardButton,
-    InputMediaPhoto,
-    InputTextMessageContent,
-    InlineQueryResultArticle,
-    InlineQueryResultCachedPhoto,
-    InlineQueryResultCachedGif,
-    InlineQueryResultCachedSticker,
-    InlineQueryResultCachedVideo,
-    InlineQueryResultCachedVoice,
-    InputMediaVideo,
-    InlineKeyboardMarkup as iMarkup,
-    InlineKeyboardButton as iButtun,
-    InlineQueryResultPhoto,
-)
-from aiogram.dispatcher.webhook import (
-    AnswerCallbackQuery,
-    get_new_configured_app,
-)
 from Files.keyboards_func import *
 from Files.lateral_func import *
 from Files.main_func import *

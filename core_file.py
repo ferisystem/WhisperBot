@@ -1,13 +1,36 @@
 import telethon.errors.rpcerrorlist as telethonErrors
 from aiogram.dispatcher import Dispatcher
 from telethon.sync import TelegramClient
-from aiogram import Bot, executor, types
+from aiogram import (
+    executor,
+    types,
+    Bot
+)
 import aiogram.utils.exceptions as expts
 from termcolor import colored, cprint
 from teleredis import RedisSession
+from aiogram.dispatcher.webhook import (
+    AnswerCallbackQuery,
+    get_new_configured_app,
+)
 from datetime import datetime
-from aiohttp import web
-from time import time
+from aiogram.types import (
+    ReplyKeyboardMarkup,
+    ReplyKeyboardRemove,
+    KeyboardButton,
+    InputMediaPhoto,
+    InputTextMessageContent,
+    InlineQueryResultArticle,
+    InlineQueryResultCachedPhoto,
+    InlineQueryResultCachedGif,
+    InlineQueryResultCachedSticker,
+    InlineQueryResultCachedVideo,
+    InlineQueryResultCachedVoice,
+    InputMediaVideo,
+    InlineKeyboardMarkup as iMarkup,
+    InlineKeyboardButton as iButtun,
+    InlineQueryResultPhoto,
+)
 from config_bot2 import (
     telegram_datas,
     server_datas,
@@ -15,6 +38,8 @@ from config_bot2 import (
     IDs_datas,
     db
 )
+from aiohttp import web
+from time import time
 import coloredlogs
 import asyncio
 import logging
