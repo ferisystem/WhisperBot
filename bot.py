@@ -245,7 +245,7 @@ class CheckMsg:
                 self.user = msg.from_user
 
 
-class gv:  # Global Values
+class GlobalValues:  # Global Values
     def __init__(self):
         self.ipAdd = server_datas["ip"]
         self.ipAdD = "http://{}:{}".format(
@@ -1417,7 +1417,7 @@ async def editText(
             return True, result
     except expts.BadRequest as a:
         await bot.send_message(
-            chat_id=gv().sudoID,
+            chat_id=GlobalValues().sudoID,
             text="Chat ID: {}\nError: {}".format(chat_id, a.args),
         )
         return a.args
@@ -1458,7 +1458,7 @@ async def editMessageMedia(
             return True, result
     except expts.BadRequest as a:
         await bot.send_message(
-            chat_id=gv().sudoID,
+            chat_id=GlobalValues().sudoID,
             text="Chat ID: {}\nError: {}".format(chat_id, a.args),
         )
         return a.args
@@ -1694,7 +1694,7 @@ def re_matches(match, input, type_re=None):
 async def newUser(msg):
     DataBase.sadd("allUsers", msg.from_user.id)
     await sendText(
-        gv().sudoID,
+        GlobalValues().sudoID,
         0,
         1,
         "#NewUser\n{} > `{}`\nType: {}\nStatus: Active✅".format(
@@ -1779,14 +1779,14 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                     user_steps[user_id].update({"action": "nothing"})
                 else:
                     await copyMessage(
-                        gv().sudoID, chat_id, msg_id, reply_markup=inlineKeys2
+                        GlobalValues().sudoID, chat_id, msg_id, reply_markup=inlineKeys2
                     )
                     await sendText(
                         chat_id, msg, 1, langU["sent_wait"], None, inlineKeys
                     )
             else:
                 await copyMessage(
-                    gv().sudoID, chat_id, msg_id, reply_markup=inlineKeys2
+                    GlobalValues().sudoID, chat_id, msg_id, reply_markup=inlineKeys2
                 )
                 await sendText(
                     chat_id, msg, 1, langU["sent_wait"], None, inlineKeys
@@ -1804,7 +1804,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
             # else:
             # msg_ = await copyMessage(which_user, chat_id, msg_id, reply_msg = None,
             # reply_markup = anonymous_new_message_keys(which_user, user_id, msg_id))
-            msg_ = await msg.forward(gv().supchat)
+            msg_ = await msg.forward(GlobalValues().supchat)
             await sendText(
                 chat_id,
                 msg,
@@ -1846,9 +1846,9 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                         )
                         return False
                     if not msg.text:
-                        msg_ = await msg.forward(gv().supchat)
+                        msg_ = await msg.forward(GlobalValues().supchat)
                     elif not "/start" in msg.text:
-                        msg_ = await msg.forward(gv().supchat)
+                        msg_ = await msg.forward(GlobalValues().supchat)
                     await sendText(
                         chat_id,
                         msg,
@@ -1975,7 +1975,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                         1,
                         "{}\nt.me/{}?start={}".format(
                             langU["customize_link_anon2"],
-                            gv().botUser,
+                            GlobalValues().botUser,
                             DataBase.get("link_anon:{}".format(user_id)),
                         ),
                         "md",
@@ -2174,7 +2174,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                         await asyncio.sleep(0.5)
                         await copyMessage(
                             user_id,
-                            gv().supchat,
+                            GlobalValues().supchat,
                             int(ap[1]),
                             reply_msg=int(ap[4]),
                             protect_content=False,
@@ -2209,7 +2209,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                         chat_id,
                         msg,
                         1,
-                        langU["najva_settings"].format(gv().botName),
+                        langU["najva_settings"].format(GlobalValues().botName),
                         "html",
                         najva_settings_keys(user_id),
                     )
@@ -2260,7 +2260,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                     )
                     msg_ = await copyMessage(
                         chat_id,
-                        gv().supchat,
+                        GlobalValues().supchat,
                         msgid,
                         protect_content=False,
                         reply_markup=inlineKeys,
@@ -2369,15 +2369,15 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                         langU["ban_flood"].format(
                             name,
                             user_id,
-                            gv().botName,
-                            gv().botUser,
-                            gv().sudoUser,
+                            GlobalValues().botName,
+                            GlobalValues().botUser,
+                            GlobalValues().sudoUser,
                         ),
                         "html",
                     )
                     DataBase.setex("isBan:{}".format(user_id), 900, "True")
                 redis.setex(hash, 3, msgs + 1)
-            if int(user_id) != gv().botID and not await is_Channel_Member(
+            if int(user_id) != GlobalValues().botID and not await is_Channel_Member(
                 "@{}".format(IDs_datas["chUsername"]), user_id
             ):
                 await sendText(
@@ -2398,7 +2398,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                     iButtun(
                         langU["buttuns"]["join"],
                         url="https://t.me/{}".format(IDs_datas["chUsername"]),
-                    ),  # gv().chLink),
+                    ),  # GlobalValues().chLink),
                     iButtun(
                         langU["buttuns"]["joined"],
                         callback_data="backstart:@{}".format(user_id),
@@ -2427,7 +2427,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                     chat_id,
                     msg,
                     1,
-                    langU["anon"].format(gv().botName),
+                    langU["anon"].format(GlobalValues().botName),
                     "html",
                     anonymous_keys(user_id),
                 )
@@ -2445,7 +2445,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                     chat_id,
                     msg,
                     1,
-                    langU["najva_settings"].format(gv().botName),
+                    langU["najva_settings"].format(GlobalValues().botName),
                     "html",
                     najva_settings_keys(user_id),
                 )
@@ -2480,7 +2480,7 @@ async def memberCommands(msg, input, gp_id, is_super, is_fwd):
                     chat_id,
                     msg,
                     1,
-                    langU["start"].format(gv().botName),
+                    langU["start"].format(GlobalValues().botName),
                     "html",
                     start_keys(user_id),
                 )
@@ -2763,7 +2763,7 @@ def anonymous_my_link_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[user_steps[UserID]["lang"]]
     buttuns = langU["buttuns"]
-    share_text_anon = langU["share_text_anon"].format(gv().botName)
+    share_text_anon = langU["share_text_anon"].format(GlobalValues().botName)
     link_anon = DataBase.get("link_anon:{}".format(UserID))
     inlineKeys = iMarkup()
     inlineKeys.add(
@@ -2773,7 +2773,7 @@ def anonymous_my_link_keys(UserID):
         ),
         iButtun(
             buttuns["share_link_anon"],
-            url=f"https://t.me/share/url?text={share_text_anon}&url=t.me/{gv().botUser}?start={link_anon}",
+            url=f"https://t.me/share/url?text={share_text_anon}&url=t.me/{GlobalValues().botUser}?start={link_anon}",
         ),
     )
     inlineKeys.add(
@@ -3753,9 +3753,9 @@ async def message_process(msg: types.Message):
         setupUserSteps(msg, user_id)
         await memberCommands(msg, "input", chat_id, False, False)
     if isSuper(msg):
-        if chat_id == gv().supchat:
+        if chat_id == GlobalValues().supchat:
             if isSudo(user_id):
-                IF = reply_msg and reply_msg.from_user.id == gv().botID
+                IF = reply_msg and reply_msg.from_user.id == GlobalValues().botID
                 if IF and reply_msg.text and "text" in msg:
                     IF2 = reply_msg.text.split(" | ")
                     sendM = await sendText(IF2[1], 0, 1, msg.text, "html")
@@ -3767,7 +3767,7 @@ async def message_process(msg: types.Message):
             # await bot.leave_chat(chat_id)
             if (
                 msg.via_bot
-                and msg.via_bot.username == gv().botUser
+                and msg.via_bot.username == GlobalValues().botUser
                 and msg.reply_markup
             ):
                 time_data = msg.reply_markup.inline_keyboard[0][0]
@@ -3927,7 +3927,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["start"].format(gv().botName),
+                langU["start"].format(GlobalValues().botName),
                 "html",
                 start_keys(user_id),
             )
@@ -3943,7 +3943,7 @@ async def callback_query_process(msg: types.CallbackQuery):
         if re.match(r"^support:@(\d+)$", input):
             user_steps[user_id].update({"action": "support"})
             await sendText(
-                gv().sudoID,
+                GlobalValues().sudoID,
                 0,
                 1,
                 langU["connected_support"].format(menMD(msg)),
@@ -3982,7 +3982,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["adsfree"].format(gv().linkyCH),
+                langU["adsfree"].format(GlobalValues().linkyCH),
                 "html",
                 back_keys(user_id),
             )
@@ -4164,8 +4164,8 @@ async def callback_query_process(msg: types.CallbackQuery):
                 msg_id,
                 0,
                 langU["my_link_anon"].format(
-                    gv().botName,
-                    gv().botUser,
+                    GlobalValues().botName,
+                    GlobalValues().botUser,
                     DataBase.get("link_anon:{}".format(user_id)),
                 ),
                 "html",
@@ -4184,7 +4184,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 0,
                 "{}t.me/{}?start={}".format(
                     langU["customize_link_anon"],
-                    gv().botUser,
+                    GlobalValues().botUser,
                     DataBase.get("link_anon:{}".format(user_id)),
                 ),
                 None,
@@ -4208,7 +4208,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 0,
                 "{}t.me/{}?start={}".format(
                     langU["customize_link_anon"],
-                    gv().botUser,
+                    GlobalValues().botUser,
                     DataBase.get("link_anon:{}".format(user_id)),
                 ),
                 None,
@@ -4221,7 +4221,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 0,
                 "{}\n<code>https://t.me/{}?start={}</code>".format(
                     langU["telg_link_anon"],
-                    gv().botUser,
+                    GlobalValues().botUser,
                     DataBase.get("link_anon:{}".format(user_id)),
                 ),
                 "html",
@@ -4234,7 +4234,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 msg_id,
                 0,
                 langU["insta_link_anon"].format(
-                    gv().botUser, DataBase.get("link_anon:{}".format(user_id))
+                    GlobalValues().botUser, DataBase.get("link_anon:{}".format(user_id))
                 ),
                 parse_mode="html",
                 reply_markup=anonymous_insta_link_keys(user_id),
@@ -4264,7 +4264,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["help{}_anon".format(ap[1])].format(gv().botName),
+                langU["help{}_anon".format(ap[1])].format(GlobalValues().botName),
                 None,
                 inlineKeys,
             )
@@ -4462,7 +4462,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["najva"].format(gv().botUser, gv().botName),
+                langU["najva"].format(GlobalValues().botUser, GlobalValues().botName),
                 "html",
                 najva_keys(user_id),
             )
@@ -4471,7 +4471,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["najva_settings"].format(gv().botName),
+                langU["najva_settings"].format(GlobalValues().botName),
                 "html",
                 najva_settings_keys(user_id),
             )
@@ -4598,7 +4598,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["najva_settings"].format(gv().botName),
+                langU["najva_settings"].format(GlobalValues().botName),
                 "html",
                 najva_settings_keys(user_id),
             )
@@ -4642,7 +4642,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["najva_settings"].format(gv().botName),
+                langU["najva_settings"].format(GlobalValues().botName),
                 "html",
                 najva_settings_keys(user_id),
             )
@@ -4671,7 +4671,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["najva_settings"].format(gv().botName),
+                langU["najva_settings"].format(GlobalValues().botName),
                 "html",
                 najva_settings_keys(user_id),
             )
@@ -4724,7 +4724,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["najva_settings"].format(gv().botName),
+                langU["najva_settings"].format(GlobalValues().botName),
                 "html",
                 najva_settings_keys(user_id),
             )
@@ -4812,7 +4812,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     await sendPhoto(
                         chat_id,
                         file,
-                        langU["najva_help_send"].format(gv().botUser),
+                        langU["najva_help_send"].format(GlobalValues().botUser),
                         "html",
                         _.reply_to_message,
                         reply_markup=najva_help1_keys(user_id),
@@ -4823,7 +4823,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     await sendPhoto(
                         chat_id,
                         file,
-                        langU["najva_help_media"].format(gv().botUser),
+                        langU["najva_help_media"].format(GlobalValues().botUser),
                         "html",
                         _.reply_to_message,
                         reply_markup=najva_help2_keys(user_id),
@@ -4834,7 +4834,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     await sendPhoto(
                         chat_id,
                         file,
-                        langU["najva_help_group"].format(gv().botUser),
+                        langU["najva_help_group"].format(GlobalValues().botUser),
                         "html",
                         _.reply_to_message,
                         reply_markup=najva_help3_keys(user_id),
@@ -4845,7 +4845,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     await sendPhoto(
                         chat_id,
                         file,
-                        langU["najva_help_bd"].format(gv().botUser),
+                        langU["najva_help_bd"].format(GlobalValues().botUser),
                         "html",
                         _.reply_to_message,
                         reply_markup=najva_help4_keys(user_id),
@@ -4857,7 +4857,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         chat_id,
                         _.reply_to_message,
                         file,
-                        langU["najva_help_noid"].format(gv().botUser),
+                        langU["najva_help_noid"].format(GlobalValues().botUser),
                         "html",
                         supports_streaming=True,
                         reply_markup=najva_help5_keys(user_id),
@@ -4868,7 +4868,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     await sendPhoto(
                         chat_id,
                         file,
-                        langU["najva_help_shset"].format(gv().botUser),
+                        langU["najva_help_shset"].format(GlobalValues().botUser),
                         "html",
                         _.reply_to_message,
                         reply_markup=najva_help6_keys(user_id),
@@ -4880,7 +4880,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         chat_id,
                         _.reply_to_message,
                         file,
-                        langU["najva_help_prob"].format(gv().botUser),
+                        langU["najva_help_prob"].format(GlobalValues().botUser),
                         "html",
                         supports_streaming=True,
                         reply_markup=najva_help7_keys(user_id),
@@ -4911,7 +4911,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     chat_id,
                     _.reply_to_message,
                     file,
-                    langU[f"najva_vid-{ap[1]}"].format(gv().botUser),
+                    langU[f"najva_vid-{ap[1]}"].format(GlobalValues().botUser),
                     "html",
                     supports_streaming=True,
                     reply_markup=keyboard,
@@ -4958,7 +4958,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             )
         if re.match(r"^special:reg1:@(\d+)", input):
             try:
-                msg_ = await reply_msg.forward(gv().supchat)
+                msg_ = await reply_msg.forward(GlobalValues().supchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
                 time_data = DataBase.hget(
                     "najva_special:{}".format(user_id), "time"
@@ -5031,7 +5031,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         show_alert=True,
                         cache_time=3600,
                     )
-                msg_ = await reply_msg.forward(gv().supchat)
+                msg_ = await reply_msg.forward(GlobalValues().supchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
                 time_data = DataBase.hget(
                     "najva_special:{}".format(user_id), "time"
@@ -5098,7 +5098,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 await editText(chat_id, msg_id, 0, langU["error_reg_najva"])
         if re.match(r"^special:sendpv:@(\d+)", input):
             try:
-                msg_ = await reply_msg.forward(gv().supchat)
+                msg_ = await reply_msg.forward(GlobalValues().supchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
                 time_data = DataBase.hget(
                     "najva_special:{}".format(user_id), "time"
@@ -5228,7 +5228,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             inlineKeys = await show_speical_najva_keys(user_id, from_user)
             msg_ = await copyMessage(
                 chat_id,
-                gv().supchat,
+                GlobalValues().supchat,
                 msgid,
                 protect_content=False,
                 reply_markup=inlineKeys,
@@ -5299,19 +5299,19 @@ async def callback_query_process(msg: types.CallbackQuery):
             from_user = ap[1]
             msg_ID = ap[2]
             msg_ = await copyMessage(
-                gv().sudoID, chat_id, msg_ID, protect_content=False
+                GlobalValues().sudoID, chat_id, msg_ID, protect_content=False
             )
             name_user = await userInfos(from_user, info="name")
             text = langU["reported_this_user"].format(
                 msg.from_user.first_name, name_user
             )
             await sendText(
-                gv().sudoID,
+                GlobalValues().sudoID,
                 msg_[1].message_id,
                 1,
                 text,
                 "html",
-                ban_user_keys(from_user, gv().sudoID),
+                ban_user_keys(from_user, GlobalValues().sudoID),
             )
             await editText(chat_id, msg_id, 0, langU["reported_special_najva"])
             await _.reply_to_message.delete()
@@ -5359,7 +5359,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     return await answerCallbackQuery(
                         msg,
                         url_web="t.me/{}?start={}_{}".format(
-                            gv().botUser,
+                            GlobalValues().botUser,
                             from_user,
                             time_data.replace(".", "_"),
                         ),
@@ -5609,7 +5609,7 @@ async def inline_query_process(msg: types.InlineQuery):
         inlineKeys.add(
             iButtun(
                 buttuns["help_comp"],
-                url="t.me/{}?start=help".format(gv().botUser),
+                url="t.me/{}?start=help".format(GlobalValues().botUser),
             )
         )
         item1 = InlineQueryResultArticle(
@@ -6031,8 +6031,8 @@ async def inline_query_process(msg: types.InlineQuery):
         inlineKeys = iMarkup()
         inlineKeys.add(
             iButtun(
-                "{} - {}".format(gv().botName, gv().botUser),
-                url="t.me/{}".format(gv().botUser),
+                "{} - {}".format(GlobalValues().botName, GlobalValues().botUser),
+                url="t.me/{}".format(GlobalValues().botUser),
             )
         )
         ads = DataBase.get("have_ads")
@@ -6244,8 +6244,8 @@ async def inline_query_process(msg: types.InlineQuery):
         inlineKeys = iMarkup()
         inlineKeys.add(
             iButtun(
-                "{} - {}".format(gv().botName, gv().botUser),
-                url="t.me/{}".format(gv().botUser),
+                "{} - {}".format(GlobalValues().botName, GlobalValues().botUser),
+                url="t.me/{}".format(GlobalValues().botUser),
             )
         )
         ads = DataBase.get("have_ads")
@@ -6544,7 +6544,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
 async def channel_post_process(msg: types.Message):
     if (msg.chat.username or "") != IDs_datas["chUsername"] and int(
         msg.chat.id
-    ) != int(gv().supchat):
+    ) != int(GlobalValues().supchat):
         await bot.leave_chat(msg.chat.id)
 
 
@@ -6578,7 +6578,7 @@ async def errors_handlers(update, exception):
         await asyncio.sleep(5)
         # log.exception(f'TelegramAPIError: {exception} !\nUpdate: {update}')
         await sendText(
-            gv().sudoID, 0, 1, "The Telegram Bot API service is restarting..."
+            GlobalValues().sudoID, 0, 1, "The Telegram Bot API service is restarting..."
         )
         return
     if isinstance(exception, telethonErrors.BotMethodInvalidError):
@@ -6614,12 +6614,12 @@ async def bot_run(app):
     dp.register_chosen_inline_handler(chosen_inline_process)
     dp.register_errors_handler(errors_handlers)
     webhook = await bot.get_webhook_info()
-    if webhook.url != gv().WEBHOOK_URL:
+    if webhook.url != GlobalValues().WEBHOOK_URL:
         if not webhook.url:
             await bot.delete_webhook()
         await bot.set_webhook(
-            gv().WEBHOOK_URL,
-            open(gv().WEBHOOK_SSL_CERT, "rb"),
+            GlobalValues().WEBHOOK_URL,
+            open(GlobalValues().WEBHOOK_SSL_CERT, "rb"),
             max_connections=100,
             allowed_updates=[
                 "message",
@@ -6668,7 +6668,7 @@ async def bot_run(app):
     for i in range(-1, c1):
         cc += " "
     d1 = 22 - (
-        len("Developer > @{} [{}]".format(gv().sudoUser, gv().sudoID)) // 2
+        len("Developer > @{} [{}]".format(GlobalValues().sudoUser, GlobalValues().sudoID)) // 2
     )
     dd = ""
     for i in range(-1, d1):
@@ -6711,7 +6711,7 @@ async def bot_run(app):
         + dd
         + colored("Developer", "red")
         + colored(" > ", "white")
-        + colored("@{}[{}]".format(gv().sudoUser, gv().sudoID), "cyan")
+        + colored("@{}[{}]".format(GlobalValues().sudoUser, GlobalValues().sudoID), "cyan")
         + dd
         + pW2,
         pW + ee + colored(text, "yellow") + ee + " " + pW2,
@@ -6728,7 +6728,7 @@ async def bot_run(app):
             DataBase.hset("sudo", "id", bt1.id)
     except:
         print("Sudo Not Found!!!")
-    # await sendText(gv().sudoID, 0, 1, 'Bot has been Successfully Loaded')
+    # await sendText(GlobalValues().sudoID, 0, 1, 'Bot has been Successfully Loaded')
     # if not redis.hget(db, 'linkyCH'):
     # status = False
     # while status != True:
@@ -6757,9 +6757,9 @@ async def bot_run(app):
 if __name__ == "__main__":
     global user_steps
     user_steps = {}
-    app = get_new_configured_app(dispatcher=dp, path=gv().WEBHOOK_URL_PATH)
+    app = get_new_configured_app(dispatcher=dp, path=GlobalValues().WEBHOOK_URL_PATH)
     app.on_startup.append(bot_run)
     app.on_shutdown.append(bot_off)
     context = ssl.SSLContext(ssl.PROTOCOL_TLS)
-    context.load_cert_chain(gv().WEBHOOK_SSL_CERT, gv().WEBHOOK_SSL_PRIV)
-    web.run_app(app, host="0.0.0.0", port=gv().port, ssl_context=context)
+    context.load_cert_chain(GlobalValues().WEBHOOK_SSL_CERT, GlobalValues().WEBHOOK_SSL_PRIV)
+    web.run_app(app, host="0.0.0.0", port=GlobalValues().port, ssl_context=context)
