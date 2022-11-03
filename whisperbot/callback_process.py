@@ -14,7 +14,8 @@ async def callback_query_process(msg: types.CallbackQuery):
         username = ""
     input = msg.data.lower()
     setupUserSteps(msg, user_id)
-    langU = lang[user_steps[user_id]["lang"]]
+    langU = lang[lang_user(user_id)]
+    buttuns = langU["buttuns"]
     if "message" in msg:
         msg_id = msg.message.message_id
     else:
@@ -112,7 +113,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             inlineKeys = iMarkup()
             inlineKeys.add(
                 iButtun(
-                    langU["buttuns"]["disconnect"],
+                    buttuns["disconnect"],
                     callback_data="backstart:@{}".format(user_id),
                 )
             )
@@ -268,7 +269,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 )
                 inlineKeys.add(
                     iButtun(
-                        langU["buttuns"]["back"],
+                        buttuns["back"],
                         callback_data="backstart:@{}".format(user_id),
                     ),
                 )
@@ -409,8 +410,6 @@ async def callback_query_process(msg: types.CallbackQuery):
         if re.match(r"^anon:help(\d+):@(\d+)$", input):
             ap = re_matches(r"^anon:help(\d+):@(\d+)$", input)
             hash = ":@{}".format(user_id)
-            langU = lang[user_steps[user_id]["lang"]]
-            buttuns = langU["buttuns"]
             inlineKeys = iMarkup()
             inlineKeys.add(
                 iButtun(
@@ -595,8 +594,6 @@ async def callback_query_process(msg: types.CallbackQuery):
         if re.match(r"^anon:sendmore:(\d+):@(\d+)$", input):
             ap = re_matches(r"^anon:sendmore:(\d+):@(\d+)$", input)
             hash = ":@{}".format(user_id)
-            langU = lang[user_steps[user_id]["lang"]]
-            buttuns = langU["buttuns"]
             inlineKeys = iMarkup()
             inlineKeys.add(
                 iButtun(
@@ -676,11 +673,11 @@ async def callback_query_process(msg: types.CallbackQuery):
                                 break
                     inlineKeys.add(
                         iButtun(
-                            langU["buttuns"]["back_nset"],
+                            buttuns["back_nset"],
                             callback_data=f"najva:settings:@{user_id}",
                         ),
                         iButtun(
-                            langU["buttuns"]["delall"],
+                            buttuns["delall"],
                             callback_data=f"recent:all:@{user_id}",
                         ),
                     )
@@ -714,11 +711,11 @@ async def callback_query_process(msg: types.CallbackQuery):
                                 break
                     inlineKeys.add(
                         iButtun(
-                            langU["buttuns"]["back_nset"],
+                            buttuns["back_nset"],
                             callback_data=f"najva:settings:@{user_id}",
                         ),
                         iButtun(
-                            langU["buttuns"]["delall"],
+                            buttuns["delall"],
                             callback_data=f"blocks2:all:@{user_id}",
                         ),
                     )
@@ -738,11 +735,11 @@ async def callback_query_process(msg: types.CallbackQuery):
             inlineKeys = iMarkup()
             inlineKeys.add(
                 iButtun(
-                    langU["buttuns"]["no"],
+                    buttuns["no"],
                     callback_data=f"najva:settings:blocks:@{user_id}",
                 ),
                 iButtun(
-                    langU["buttuns"]["yes"],
+                    buttuns["yes"],
                     callback_data=f"blocks2:all:y:@{user_id}",
                 ),
             )
@@ -774,11 +771,11 @@ async def callback_query_process(msg: types.CallbackQuery):
             )
             inlineKeys.add(
                 iButtun(
-                    langU["buttuns"]["no"],
+                    buttuns["no"],
                     callback_data=f"najva:settings:blocks:@{user_id}",
                 ),
                 iButtun(
-                    langU["buttuns"]["yes"],
+                    buttuns["yes"],
                     callback_data=f"blocks2:{ap[1]}:y:@{user_id}",
                 ),
             )
@@ -808,11 +805,11 @@ async def callback_query_process(msg: types.CallbackQuery):
             inlineKeys = iMarkup()
             inlineKeys.add(
                 iButtun(
-                    langU["buttuns"]["no"],
+                    buttuns["no"],
                     callback_data=f"najva:settings:recents:@{user_id}",
                 ),
                 iButtun(
-                    langU["buttuns"]["yes"],
+                    buttuns["yes"],
                     callback_data=f"recent:all:y:@{user_id}",
                 ),
             )
@@ -847,19 +844,19 @@ async def callback_query_process(msg: types.CallbackQuery):
             )
             inlineKeys.add(
                 iButtun(
-                    langU["buttuns"]["block"],
+                    buttuns["block"],
                     callback_data=f"recent:{ap[1]}:b:@{user_id}",
                 ),
             )
             inlineKeys.add(
                 iButtun(
-                    langU["buttuns"]["delete"],
+                    buttuns["delete"],
                     callback_data=f"recent:{ap[1]}:y:@{user_id}",
                 ),
             )
             inlineKeys.add(
                 iButtun(
-                    langU["buttuns"]["back_nrec"],
+                    buttuns["back_nrec"],
                     callback_data=f"najva:settings:recents:@{user_id}",
                 ),
             )
@@ -1153,7 +1150,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 inlineKeys = iMarkup()
                 inlineKeys.add(
                     iButtun(
-                        langU["buttuns"]["show_najva"],
+                        buttuns["show_najva"],
                         callback_data="shown:{}:{}".format(user_id, time_data),
                     )
                 )
@@ -1226,7 +1223,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 inlineKeys = iMarkup()
                 inlineKeys.add(
                     iButtun(
-                        langU["buttuns"]["show_najva"],
+                        buttuns["show_najva"],
                         switch_inline_query_current_chat="sp{}.{}".format(
                             user_id, time_data
                         ),
@@ -1292,7 +1289,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 inlineKeys = iMarkup()
                 inlineKeys.add(
                     iButtun(
-                        langU["buttuns"]["show_najva"],
+                        buttuns["show_najva"],
                         callback_data="showpv:{}:{}".format(
                             user_id, time_data
                         ),

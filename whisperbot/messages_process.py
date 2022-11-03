@@ -6,7 +6,7 @@ from core_file import *
 
 
 async def message_process(msg: types.Message):
-    if int(msg.date.timestamp()) < (int(time()) - 60):
+	if int(msg.date.timestamp()) < (int(time()) - 60):
         cPrint("{} Old Message Skipped".format(msg.date), 2, textColor="cyan")
         return False
     data = CheckMsg(msg)
@@ -15,7 +15,8 @@ async def message_process(msg: types.Message):
     user_id = int(msg.from_user.id)
     msg_id = msg.message_id
     setupUserSteps(msg, user_id)
-    langU = lang[user_steps[user_id]["lang"]]
+    langU = lang[lang_user(user_id)]
+    buttuns = langU["buttuns"]
     print(colored("Message >", "cyan"))
     print(colored("userID", "yellow"), colored(user_id, "white"))
     print(colored("Type", "yellow"), colored(content, "white"))
@@ -327,8 +328,6 @@ async def message_process(msg: types.Message):
                             )
                         else:
                             hash = ":@{}".format(user_id)
-                            langU = lang[user_steps[user_id]["lang"]]
-                            buttuns = langU["buttuns"]
                             inlineKeys = iMarkup()
                             inlineKeys.add(
                                 iButtun(
@@ -400,8 +399,6 @@ async def message_process(msg: types.Message):
                             )
                         else:
                             hash = ":@{}".format(user_id)
-                            langU = lang[user_steps[user_id]["lang"]]
-                            buttuns = langU["buttuns"]
                             inlineKeys = iMarkup()
                             inlineKeys.add(
                                 iButtun(
@@ -613,8 +610,6 @@ async def message_process(msg: types.Message):
                             )
                         else:
                             hash = ":@{}".format(user_id)
-                            langU = lang[user_steps[user_id]["lang"]]
-                            buttuns = langU["buttuns"]
                             inlineKeys = iMarkup()
                             inlineKeys.add(
                                 iButtun(

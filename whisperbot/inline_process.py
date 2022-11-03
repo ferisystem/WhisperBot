@@ -17,8 +17,9 @@ async def inline_query_process(msg: types.InlineQuery):
     input = msg.query
     saveUsername(msg, mode="inline")
     setupUserSteps(msg, user_id)
-    langU = lang[user_steps[user_id]["lang"]]
+    langU = lang[lang_user(user_id)]
     buttuns = langU["buttuns"]
+    ln_in = langU["inline"]
     print(colored("Inline >", "cyan"))
     print(colored("userID", "yellow"), colored(user_id, "white"))
     print(colored("Query", "yellow"), colored(input, "white"))
@@ -26,7 +27,7 @@ async def inline_query_process(msg: types.InlineQuery):
     print()
     if input == "":
         input_content = InputTextMessageContent(
-            message_text=langU["inline"]["text"]["help_send"]
+            message_text=ln_in["text"]["help_send"]
         )
         inlineKeys = iMarkup()
         inlineKeys.add(
@@ -37,8 +38,8 @@ async def inline_query_process(msg: types.InlineQuery):
         )
         item1 = InlineQueryResultArticle(
             id=f"help:{user_id}",
-            title=langU["inline"]["title"]["help_send"],
-            description=langU["inline"]["desc"]["help_send"],
+            title=ln_in["title"]["help_send"],
+            description=ln_in["desc"]["help_send"],
             thumb_url=pic_question,
             thumb_width=512,
             thumb_height=512,
@@ -46,7 +47,7 @@ async def inline_query_process(msg: types.InlineQuery):
             reply_markup=inlineKeys,
         )
         input_content = InputTextMessageContent(
-            message_text=langU["inline"]["text"]["my_id"].format(user_id)
+            message_text=ln_in["text"]["my_id"].format(user_id)
         )
         inlineKeys = iMarkup()
         inlineKeys.add(
@@ -59,8 +60,8 @@ async def inline_query_process(msg: types.InlineQuery):
         )
         item2 = InlineQueryResultArticle(
             id=f"myid:{user_id}",
-            title=langU["inline"]["title"]["my_id"],
-            description=langU["inline"]["desc"]["my_id"].format(user_id),
+            title=ln_in["title"]["my_id"],
+            description=ln_in["desc"]["my_id"].format(user_id),
             thumb_url=pic_atsign,
             thumb_width=512,
             thumb_height=512,
@@ -101,14 +102,14 @@ async def inline_query_process(msg: types.InlineQuery):
             )
         if text == "":
             input_content = InputTextMessageContent(
-                message_text=langU["inline"]["text"]["najva_havn_text"],
+                message_text=ln_in["text"]["najva_havn_text"],
                 parse_mode="HTML",
                 disable_web_page_preview=True,
             )
             item1 = InlineQueryResultArticle(
                 id="null",
-                title=langU["inline"]["title"]["najva_havn_text"],
-                description=langU["inline"]["desc"]["najva_havn_text"],
+                title=ln_in["title"]["najva_havn_text"],
+                description=ln_in["desc"]["najva_havn_text"],
                 thumb_url=pic_cross,
                 thumb_width=512,
                 thumb_height=512,
@@ -139,7 +140,7 @@ async def inline_query_process(msg: types.InlineQuery):
                 else:
                     name_users = "{}\n{}".format(name_user, name_users)
             input_content = InputTextMessageContent(
-                message_text=langU["inline"]["text"]["najva_group"].format(
+                message_text=ln_in["text"]["najva_group"].format(
                     len(users), name_users
                 ),
                 parse_mode="HTML",
@@ -147,10 +148,10 @@ async def inline_query_process(msg: types.InlineQuery):
             )
             item1 = InlineQueryResultArticle(
                 id=f"najvaP:{user_id}",
-                title=langU["inline"]["title"]["najva_group"].format(
+                title=ln_in["title"]["najva_group"].format(
                     len(users)
                 ),
-                description=langU["inline"]["desc"]["najva_group"].format(
+                description=ln_in["desc"]["najva_group"].format(
                     len(text)
                 ),
                 thumb_url=pic_group,
@@ -169,7 +170,7 @@ async def inline_query_process(msg: types.InlineQuery):
                 name_user2 = langU["no_name"]
             name_user = await userInfos(users[0], info="name")
             input_content = InputTextMessageContent(
-                message_text=langU["inline"]["text"]["najva_person"].format(
+                message_text=ln_in["text"]["najva_person"].format(
                     name_user2 or name_user
                 ),
                 parse_mode="HTML",
@@ -177,10 +178,10 @@ async def inline_query_process(msg: types.InlineQuery):
             )
             item1 = InlineQueryResultArticle(
                 id=f"najvaP:{user_id}",
-                title=langU["inline"]["title"]["najva_person"].format(
+                title=ln_in["title"]["najva_person"].format(
                     name_user
                 ),
-                description=langU["inline"]["desc"]["najva_person"].format(
+                description=ln_in["desc"]["najva_person"].format(
                     len(text)
                 ),
                 thumb_url=pic_message,
@@ -231,14 +232,14 @@ async def inline_query_process(msg: types.InlineQuery):
                 )
             )
         input_content = InputTextMessageContent(
-            message_text=langU["inline"]["text"]["najva_all"],
+            message_text=ln_in["text"]["najva_all"],
             parse_mode="HTML",
             disable_web_page_preview=False,
         )
         item1 = InlineQueryResultArticle(
             id=f"najvaA:{user_id}",
-            title=langU["inline"]["title"]["najva_all"],
-            description=langU["inline"]["desc"]["najva_all"].format(len(text)),
+            title=ln_in["title"]["najva_all"],
+            description=ln_in["desc"]["najva_all"].format(len(text)),
             thumb_url=pic_all,
             thumb_width=512,
             thumb_height=512,
@@ -246,14 +247,14 @@ async def inline_query_process(msg: types.InlineQuery):
             reply_markup=inlineKeys,
         )
         input_content = InputTextMessageContent(
-            message_text=langU["inline"]["text"]["najva_all2"],
+            message_text=ln_in["text"]["najva_all2"],
             parse_mode="HTML",
             disable_web_page_preview=False,
         )
         item2 = InlineQueryResultArticle(
             id=f"najvaA2:{user_id}",
-            title=langU["inline"]["title"]["najva_all"],
-            description=langU["inline"]["desc"]["najva_all2"].format(
+            title=ln_in["title"]["najva_all"],
+            description=ln_in["desc"]["najva_all2"].format(
                 len(text)
             ),
             thumb_url=pic_all,
@@ -273,50 +274,50 @@ async def inline_query_process(msg: types.InlineQuery):
         )
         await answerInlineQuery(msg_id, results=[item1, item2], cache_time=1)
     if re.search(r"set$", input.lower()):
-        set_desc = langU["inline"]["desc"]
+        set_desc = ln_in["desc"]
         if DataBase.hget(f"setting_najva:{user_id}", "seen"):
             seen = langU["is_power_on"]
-            title1 = langU["inline"]["title"]["power_off"]
+            title1 = ln_in["title"]["power_off"]
             photo1 = pic_tick
         else:
             seen = langU["is_power_off"]
-            title1 = langU["inline"]["title"]["power_on"]
+            title1 = ln_in["title"]["power_on"]
             photo1 = pic_cross
         seen = set_desc["najva_seen"].format(seen)
         if DataBase.hget(f"setting_najva:{user_id}", "recv"):
             recv = langU["is_power_on"]
-            title2 = langU["inline"]["title"]["power_off"]
+            title2 = ln_in["title"]["power_off"]
             photo2 = pic_tick
         else:
             recv = langU["is_power_off"]
-            title2 = langU["inline"]["title"]["power_on"]
+            title2 = ln_in["title"]["power_on"]
             photo2 = pic_cross
         recv = set_desc["najva_recv"].format(recv)
         if DataBase.hget(f"setting_najva:{user_id}", "encrypt"):
             encrypt = langU["is_power_on"]
-            title3 = langU["inline"]["title"]["power_off"]
+            title3 = ln_in["title"]["power_off"]
             photo3 = pic_tick
         else:
             encrypt = langU["is_power_off"]
-            title3 = langU["inline"]["title"]["power_on"]
+            title3 = ln_in["title"]["power_on"]
             photo3 = pic_cross
         encrypt = set_desc["najva_encrypt"].format(encrypt)
         if DataBase.hget(f"setting_najva:{user_id}", "noname"):
             noname = langU["is_power_on"]
-            title4 = langU["inline"]["title"]["power_off"]
+            title4 = ln_in["title"]["power_off"]
             photo4 = pic_tick
         else:
             noname = langU["is_power_off"]
-            title4 = langU["inline"]["title"]["power_on"]
+            title4 = ln_in["title"]["power_on"]
             photo4 = pic_cross
         noname = set_desc["najva_noname"].format(noname)
         if DataBase.hget(f"setting_najva:{user_id}", "dispo"):
             dispo = langU["is_power_on"]
-            title5 = langU["inline"]["title"]["power_off"]
+            title5 = ln_in["title"]["power_off"]
             photo5 = pic_tick
         else:
             dispo = langU["is_power_off"]
-            title5 = langU["inline"]["title"]["power_on"]
+            title5 = ln_in["title"]["power_on"]
             photo5 = pic_cross
         dispo = set_desc["najva_dispo"].format(dispo)
         inlineKeys = iMarkup()
@@ -326,7 +327,7 @@ async def inline_query_process(msg: types.InlineQuery):
             )
         )
         input_content = InputTextMessageContent(
-            message_text=langU["inline"]["text"]["setting_changed"],
+            message_text=ln_in["text"]["setting_changed"],
             parse_mode="HTML",
             disable_web_page_preview=False,
         )
@@ -384,7 +385,7 @@ async def inline_query_process(msg: types.InlineQuery):
             msg_id,
             [item1, item2, item3, item4, item5],
             1,
-            langU["inline"]["title"]["all_set"],
+            ln_in["title"]["all_set"],
             "set",
         )
     if (
@@ -412,14 +413,14 @@ async def inline_query_process(msg: types.InlineQuery):
                 )
             )
         input_content = InputTextMessageContent(
-            message_text=langU["inline"]["text"]["najva_reply"],
+            message_text=ln_in["text"]["najva_reply"],
             parse_mode="HTML",
             disable_web_page_preview=True,
         )
         item1 = InlineQueryResultArticle(
             id=f"najvaR:{user_id}",
-            title=langU["inline"]["title"]["najva_reply"],
-            description=langU["inline"]["desc"]["najva_reply"],
+            title=ln_in["title"]["najva_reply"],
+            description=ln_in["desc"]["najva_reply"],
             thumb_url=pic_message,
             thumb_width=512,
             thumb_height=512,
@@ -467,14 +468,14 @@ async def inline_query_process(msg: types.InlineQuery):
                 )
             )
         input_content = InputTextMessageContent(
-            message_text=langU["inline"]["text"]["najva_havn_text"],
+            message_text=ln_in["text"]["najva_havn_text"],
             parse_mode="HTML",
             disable_web_page_preview=True,
         )
         item2 = InlineQueryResultArticle(
             id="null",
-            title=langU["inline"]["title"]["najva_havn_text"],
-            description=langU["inline"]["desc"]["najva_havn_text"],
+            title=ln_in["title"]["najva_havn_text"],
+            description=ln_in["desc"]["najva_havn_text"],
             thumb_url=pic_cross,
             thumb_width=512,
             thumb_height=512,
@@ -490,7 +491,7 @@ async def inline_query_process(msg: types.InlineQuery):
             name_user2 = langU["no_name"]
         name_user = await userInfos(name_user, info="name")
         input_content = InputTextMessageContent(
-            message_text=langU["inline"]["text"]["najva_special"].format(
+            message_text=ln_in["text"]["najva_special"].format(
                 name_user2 or name_user
             ),
             parse_mode="HTML",
@@ -498,8 +499,8 @@ async def inline_query_process(msg: types.InlineQuery):
         )
         item1 = InlineQueryResultArticle(
             id=f"najvaS:{user_id}",
-            title=langU["inline"]["title"]["najva_special"].format(name_user),
-            description=langU["inline"]["desc"]["najva_special"],
+            title=ln_in["title"]["najva_special"].format(name_user),
+            description=ln_in["desc"]["najva_special"],
             thumb_url=pic_special,
             thumb_width=512,
             thumb_height=512,
@@ -535,14 +536,14 @@ async def inline_query_process(msg: types.InlineQuery):
                 return False
         if not special_msgID:
             input_content = InputTextMessageContent(
-                message_text=langU["inline"]["text"]["special_404"],
+                message_text=ln_in["text"]["special_404"],
                 parse_mode="HTML",
                 disable_web_page_preview=True,
             )
             item1 = InlineQueryResultArticle(
                 id="null",
-                title=langU["inline"]["title"]["special_404"],
-                description=langU["inline"]["desc"]["special_404"],
+                title=ln_in["title"]["special_404"],
+                description=ln_in["desc"]["special_404"],
                 thumb_url=pic_cross,
                 thumb_width=512,
                 thumb_height=512,
@@ -681,14 +682,14 @@ async def inline_query_process(msg: types.InlineQuery):
             )
         items = []
         input_content = InputTextMessageContent(
-            message_text=langU["inline"]["text"]["najva_havn_text"],
+            message_text=ln_in["text"]["najva_havn_text"],
             parse_mode="HTML",
             disable_web_page_preview=True,
         )
         item2 = InlineQueryResultArticle(
             id="null",
-            title=langU["inline"]["title"]["najva_havn_text"],
-            description=langU["inline"]["desc"]["najva_havn_text"],
+            title=ln_in["title"]["najva_havn_text"],
+            description=ln_in["desc"]["najva_havn_text"],
             thumb_url=pic_cross,
             thumb_width=512,
             thumb_height=512,
@@ -706,7 +707,7 @@ async def inline_query_process(msg: types.InlineQuery):
                 name_user2 = langU["no_name"]
             name_user = await userInfos(name_user, info="name")
             input_content = InputTextMessageContent(
-                message_text=langU["inline"]["text"]["najva_special"].format(
+                message_text=ln_in["text"]["najva_special"].format(
                     name_user2 or name_user
                 ),
                 parse_mode="HTML",
@@ -722,10 +723,10 @@ async def inline_query_process(msg: types.InlineQuery):
             file_path = pic_user
             item1 = InlineQueryResultArticle(
                 id=f"najvaS:{user_id}:{user}",
-                title=langU["inline"]["title"]["najva_special"].format(
+                title=ln_in["title"]["najva_special"].format(
                     name_user
                 ),
-                description=langU["inline"]["desc"]["najva_special"],
+                description=ln_in["desc"]["najva_special"],
                 thumb_url=file_path,
                 thumb_width=512,
                 thumb_height=512,

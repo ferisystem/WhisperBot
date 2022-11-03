@@ -12,7 +12,7 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
     input = msg.query
     saveUsername(msg, mode="inline")
     setupUserSteps(msg, user_id)
-    langU = lang[user_steps[user_id]["lang"]]
+    langU = lang[lang_user(user_id)]
     buttuns = langU["buttuns"]
     print(colored("Chosen_Inline >", "cyan"))
     print(colored("userID", "yellow"), colored(user_id, "white"))
