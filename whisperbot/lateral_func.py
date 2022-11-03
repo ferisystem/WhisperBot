@@ -10,6 +10,16 @@ from config_bot2 import sudo_users
 from aiogram import types
 
 
+def lang_user(UserID):
+	if UserID in user_steps and 'lang' in user_steps[UserID]:
+		return user_steps[UserID]['lang']
+	else:
+		user_steps.update({UserID: {
+		"lang": (DataBase.get('user.lang:{}'.format(UserID)) or 'en'),
+		}})
+		return user_steps[UserID]['lang']
+
+
 def isBlock(UserID):
     if DataBase.get("isBan:{}".format(UserID)):
         return True
