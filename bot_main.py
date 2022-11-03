@@ -1,5 +1,5 @@
 # coding: utf8
-from Files.switch_func import bot_run, bot_off
+from whisperbot.switch_func import bot_run, bot_off
 from core_file import (
     get_new_configured_app,
     GlobalValues,
