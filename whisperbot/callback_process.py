@@ -150,6 +150,10 @@ async def callback_query_process(msg: types.CallbackQuery):
         if re.match(r"^set_(.*)_(.*):@(\d+)$", input):
             ap = re_matches("^set_(.*)_(.*):@(\d+)$", input)
             if ap[1] == "lang":
+                if ap[2] == "de":
+                    return AnswerCallbackQuery(
+                        msg.id, lang["set_{}".format(ap[2])], True, None, 0
+                    )
                 DataBase.set("user.lang:{}".format(user_id), ap[2])
                 if user_id in user_steps:
                     user_steps[user_id].update(

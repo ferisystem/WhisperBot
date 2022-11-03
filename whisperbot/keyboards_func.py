@@ -101,6 +101,10 @@ def settings_keys(UserID, arg2=None):
         status2 = "✅"
     else:
         status2 = ""
+    if (arg2 or user_steps[UserID]["lang"]) == "de":
+        status3 = "✅"
+    else:
+        status3 = ""
     inlineKeys.add(
         iButtun(
             "{}English🇺🇸".format(status2),
@@ -109,6 +113,12 @@ def settings_keys(UserID, arg2=None):
         iButtun(
             "{}پارسی🇮🇷".format(status1),
             callback_data="set_lang_fa{}".format(hash),
+        ),
+    )
+    inlineKeys.add(
+        iButtun(
+            "{}Deutsch🇩🇪".format(status3),
+            callback_data="set_lang_de{}".format(hash),
         ),
     )
     if arg2:
