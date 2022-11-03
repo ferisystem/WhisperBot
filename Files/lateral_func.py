@@ -1,6 +1,120 @@
-from config_bot2 import rds, sudo_users, bot, re
+from config_bot2 import (
+    sudo_users,
+    bot,
+    rds,
+    re
+)
 import aiogram.utils.exceptions as expts
 from aiogram import types
+
+
+def find_media_id(msg):
+    can_hide = False
+    if msg.photo:
+        file_id = msg.photo[-1].file_id
+        file_type = "photo"
+        can_hide = True
+    elif msg.video:
+        file_id = msg.video.file_id
+        file_type = "video"
+        can_hide = True
+    elif msg.sticker:
+        file_id = msg.sticker.file_id
+        file_type = "sticker"
+        can_hide = True
+    elif msg.animation:
+        file_id = msg.animation.file_id
+        file_type = "animation"
+        can_hide = True
+    elif msg.voice:
+        file_id = msg.voice.file_id
+        file_type = "voice"
+        can_hide = True
+    elif msg.audio:
+        file_id = msg.audio.file_id
+        file_type = "audio"
+    elif msg.document:
+        file_id = msg.document.file_id
+        file_type = "document"
+    elif msg.video_note:
+        file_id = msg.video_note.file_id
+        file_type = "video_note"
+    elif msg.text:
+        file_id = msg.message_id
+        file_type = "text"
+    elif msg.contact:
+        file_id = msg.message_id
+        file_type = "contact"
+    elif msg.venue:
+        file_id = msg.message_id
+        file_type = "venue"
+    return file_id, file_type, can_hide
+
+
+def isUserSteps(user_id):
+    if user_id in user_steps and "action" in user_steps[user_id]:
+        return True
+    else:
+        return False
+
+
+def setupUserSteps(msg, user_id):
+    if user_id in user_steps and "action" in user_steps[user_id]:
+        action = user_steps[user_id]["action"]
+    else:
+        action = "nothing"
+    try:
+        if not DataBase.get("link_anon:{}".format(user_id)):
+            DataBase.hset(f"setting_najva:{user_id}", "seen", 1)
+            DataBase.hset(f"setting_najva:{user_id}", "recv", 1)
+            text = generate_link()
+            while True:
+                if not DataBase.sismember("links_anon", text):
+                    DataBase.set("link_anon:{}".format(user_id), text)
+                    DataBase.set("link_anon:{}".format(text), user_id)
+                    DataBase.sadd("links_anon", text)
+                    break
+                text = generate_link()
+        name_anon2 = DataBase.get("name_anon2:{}".format(user_id))
+        user_name = msg.from_user.first_name
+        if not name_anon2:
+            DataBase.set("name_anon2:{}".format(user_id), user_name)
+        elif name_anon2 != user_name:
+            DataBase.set("name_anon2:{}".format(user_id), user_name)
+        user_steps[user_id].update(
+            {
+                "action": action,
+                "lang": (
+                    DataBase.get("user.lang:{}".format(user_id))
+                    or echoLangCode(msg.from_user)
+                ),
+            }
+        )
+    except:
+        user_steps.update(
+            {
+                user_id: {
+                    "action": action,
+                    "lang": (
+                        DataBase.get("user.lang:{}".format(user_id))
+                        or echoLangCode(msg.from_user)
+                    ),
+                }
+            }
+        )
+
+
+def echoLangCode(from_user):
+    if "language_code" in from_user:
+        from_user = from_user.language_code
+        if re.search("^fa", from_user):
+            return "fa"
+        elif re.search("^en", from_user):
+            return "en"
+        else:
+            return "en"
+    else:
+        return "en"
 
 
 async def userInfos(userID, info="name"):
@@ -326,4 +440,30 @@ def saveUsername(msg, mode="message"):
         ):
             rds.hset("UsernamesIds", us.lower(), uid)
             cPrint("@{} [{}] Saved".format(us, uid), 2, None, "magenta")
+
+
+
+def generate_link():
+    # alphabets = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'n', 'm', 'l', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    # numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+    # letters = (alphabets, numbers, alphabets, alphabets, numbers)
+    # text = ''
+    # for i in range(0, 12):
+    # which_one = random.choice(letters)
+    # which_key = random.choice(which_one)
+    # text = "{}{}".format(text, which_key)
+    text = "".join(random.choices(string.ascii_letters + string.digits, k=12))
+    return text
+
+
+def generate_uniqid():
+    text = "".join(random.choices(string.ascii_letters + string.digits, k=29))
+    while True:
+        if not DataBase.sismember("file_ids", text):
+            DataBase.sadd("file_ids", text)
+            break
+        text = "".join(
+            random.choices(string.ascii_letters + string.digits, k=29)
+        )
+    return text
 
