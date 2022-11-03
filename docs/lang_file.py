@@ -593,7 +593,7 @@ Go to Bot and send your media or message 👇
         "buttuns": {
             "najva_section": "💬Whisper",
             "anon_section": "Anonymous message💌",
-            "language": "زبان | Language🌎",
+            "language": "🌎زبان | Language",
             "adsfree": "📣 Free AD group & channel 📣",
             "link_my_anon": "My Link🔗",
             "help_my_anon": "💡Guide",
@@ -686,7 +686,7 @@ Go to Bot and send your media or message 👇
             "preview_page": "preview page◀️",
             "back": "back",
             "channel": "Channel📢",
-            "support": "Support💭",
+            "support": "⛑ Support",
             "creator": "Bot Creator",
             "notice": "Notice",
             "start_again": "Start bot again",
