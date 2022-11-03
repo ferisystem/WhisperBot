@@ -107,7 +107,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 GlobalValues().sudoID,
                 0,
                 1,
-                langU["connected_support"].format(menMD(msg)),
+                lang[lang_user(GlobalValues().sudoID)]["connected_support"].format(menMD(msg)),
                 "md",
             )
             inlineKeys = iMarkup()
@@ -1325,7 +1325,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     id_user,
                     0,
                     1,
-                    langU["receive_new_najva_pv"].format(
+                    lang[lang_user(id_user)]["receive_new_najva_pv"].format(
                         msg.from_user.first_name
                     ),
                     "html",
@@ -1393,13 +1393,13 @@ async def callback_query_process(msg: types.CallbackQuery):
                     from_user,
                     source_id,
                     1,
-                    langU["speical_najva_seen"].format(
+                    lang[lang_user(from_user)]["speical_najva_seen"].format(
                         msg.from_user.first_name
                     ),
                 )
             await editText(
                 inline_msg_id=special_msgID,
-                text=langU["speical_najva_seen2"].format(
+                text=lang[lang_user(from_user)]["speical_najva_seen2"].format(
                     msg.from_user.first_name
                 ),
                 parse_mode="html",
@@ -1457,7 +1457,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 GlobalValues().sudoID, chat_id, msg_ID, protect_content=False
             )
             name_user = await userInfos(from_user, info="name")
-            text = langU["reported_this_user"].format(
+            text = lang[lang_user(GlobalValues().sudoID)]["reported_this_user"].format(
                 msg.from_user.first_name, name_user
             )
             await sendText(
@@ -1530,7 +1530,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                             from_user,
                             0,
                             1,
-                            langU["najva_seened"].format(
+                            lang[lang_user(from_user)]["najva_seened"].format(
                                 msg.from_user.first_name
                             ),
                         )
@@ -1545,7 +1545,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         else:
                             await editText(
                                 inline_msg_id=msg_id,
-                                text=langU["najva_seened"].format(
+                                text=lang[lang_user(from_user)]["najva_seened"].format(
                                     '<a href="tg://user?id={}">{}</a>'.format(
                                         user_id, msg.from_user.first_name
                                     )
