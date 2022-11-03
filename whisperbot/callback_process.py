@@ -260,11 +260,11 @@ async def callback_query_process(msg: types.CallbackQuery):
                         userID,
                     )
                 with open(
-                    "Files/list_block.txt", mode="a", encoding="utf-8"
+                    "docs/list_block.txt", mode="a", encoding="utf-8"
                 ) as file:
                     file.write(text)
                 await sendDocument(
-                    chat_id, open("Files/list_block.txt", encoding="utf-8")
+                    chat_id, open("docs/list_block.txt", encoding="utf-8")
                 )
                 inlineKeys.add(
                     iButtun(
@@ -280,7 +280,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     None,
                     inlineKeys,
                 )
-                os.system("rm Files/list_block.txt")
+                os.system("rm docs/list_block.txt")
             elif ap[1] == "stats":
                 stat_users = DataBase.scard("allUsers")
                 stat_block = DataBase.scard("isBanned")
@@ -965,7 +965,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             except:
                 pass
             if ap[1] == "send":
-                file = "Files/helps/help_media.jpg"
+                file = "docs/helps/help_media.jpg"
                 with open(file, "rb") as file:
                     await sendPhoto(
                         chat_id,
@@ -976,7 +976,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         reply_markup=najva_help1_keys(user_id),
                     )
             elif ap[1] == "media":
-                file = "Files/helps/help_media.jpg"
+                file = "docs/helps/help_media.jpg"
                 with open(file, "rb") as file:
                     await sendPhoto(
                         chat_id,
@@ -987,7 +987,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         reply_markup=najva_help2_keys(user_id),
                     )
             elif ap[1] == "group":
-                file = "Files/helps/help_group.jpg"
+                file = "docs/helps/help_group.jpg"
                 with open(file, "rb") as file:
                     await sendPhoto(
                         chat_id,
@@ -998,7 +998,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         reply_markup=najva_help3_keys(user_id),
                     )
             elif ap[1] == "bd":
-                file = "Files/helps/help_bd.jpg"
+                file = "docs/helps/help_bd.jpg"
                 with open(file, "rb") as file:
                     await sendPhoto(
                         chat_id,
@@ -1009,7 +1009,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         reply_markup=najva_help4_keys(user_id),
                     )
             elif ap[1] == "noid":
-                file = "Files/helps/help_noid.mp4"
+                file = "docs/helps/help_noid.mp4"
                 with open(file, "rb") as file:
                     await sendVideo(
                         chat_id,
@@ -1021,7 +1021,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         reply_markup=najva_help5_keys(user_id),
                     )
             elif ap[1] == "shset":
-                file = "Files/helps/help_shset.jpg"
+                file = "docs/helps/help_shset.jpg"
                 with open(file, "rb") as file:
                     await sendPhoto(
                         chat_id,
@@ -1032,7 +1032,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         reply_markup=najva_help6_keys(user_id),
                     )
             elif ap[1] == "prob":
-                file = "Files/helps/help_prob.mp4"
+                file = "docs/helps/help_prob.mp4"
                 with open(file, "rb") as file:
                     await sendVideo(
                         chat_id,
@@ -1063,7 +1063,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 keyboard = najva_help9_keys(user_id)
             elif ap[1] == "6":
                 keyboard = najva_help5_keys(user_id)
-            file = f"Files/helps/vid-{ap[1]}.mp4"
+            file = f"docs/helps/vid-{ap[1]}.mp4"
             with open(file, "rb") as file:
                 await sendVideo(
                     chat_id,
