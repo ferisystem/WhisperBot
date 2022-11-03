@@ -12,7 +12,7 @@ import os
 client = TelegramClient(db, telegram_datas['api_id'], telegram_datas['api_hash'])#.start(bot_token=telegram_datas['botToken'])
 redis = redis.Redis(host = 'localhost', port = 6379, db = 3, decode_responses = True, encoding = 'utf-8')
 loop = asyncio.get_event_loop()
-with open("Files/language.json", encoding = 'utf-8') as file:
+with open("docs/language.json", encoding = 'utf-8') as file:
 	lang = eval(file.read())
 
 
