@@ -146,9 +146,9 @@ def echoLangCode(from_user):
         elif re.search("^en", from_user):
             return "en"
         else:
-            return "en"
+            return "fa"
     else:
-        return "en"
+        return "fa"
 
 
 async def userInfos(userID, info="name"):
