@@ -1127,10 +1127,10 @@ async def callback_query_process(msg: types.CallbackQuery):
             try:
                 msg_ = await reply_msg.forward(GlobalValues().supchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
-                hash_db = "najva:{}:{}".format(user_id, time_data)
                 time_data = DataBase.hget(
                     "najva_special:{}".format(user_id), "time"
                 )
+                hash_db = "najva:{}:{}".format(user_id, time_data)
                 special_msgID = DataBase.hget(
                     "najva_special:{}".format(user_id), "id"
                 )
@@ -1192,7 +1192,6 @@ async def callback_query_process(msg: types.CallbackQuery):
         if re.match(r"^special:reg2:@(\d+)", input):
             try:
                 find_ID, find_type, can_hide = find_media_id(reply_msg)
-                hash_db = "najva:{}:{}".format(user_id, time_data)
                 if not can_hide:
                     return await answerCallbackQuery(
                         msg,
@@ -1205,6 +1204,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 time_data = DataBase.hget(
                     "najva_special:{}".format(user_id), "time"
                 )
+                hash_db = "najva:{}:{}".format(user_id, time_data)
                 special_msgID = DataBase.hget(
                     "najva_special:{}".format(user_id), "id"
                 )
@@ -1269,10 +1269,10 @@ async def callback_query_process(msg: types.CallbackQuery):
             try:
                 msg_ = await reply_msg.forward(GlobalValues().supchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
-                hash_db = "najva:{}:{}".format(user_id, time_data)
                 time_data = DataBase.hget(
                     "najva_special:{}".format(user_id), "time"
                 )
+                hash_db = "najva:{}:{}".format(user_id, time_data)
                 special_msgID = DataBase.hget(
                     "najva_special:{}".format(user_id), "id"
                 )
