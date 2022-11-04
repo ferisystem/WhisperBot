@@ -1028,3 +1028,11 @@ async def getUserProfilePhotos(UserID, offset=0, limit=1):
         return True, result
     except Exception as e:
         return False
+
+
+async def delete_messages(chat_id, message_id):
+    try:
+        await bot.delete_message(chat_id, message_id)
+        return True
+    except:
+        return False
