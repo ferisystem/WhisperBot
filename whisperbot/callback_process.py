@@ -104,7 +104,7 @@ async def callback_query_process(msg: types.CallbackQuery):
         if re.match(r"^support:@(\d+)$", input):
             user_steps[user_id].update({"action": "support"})
             await sendText(
-                GlobalValues().sudoID,
+                GlobalValues().supchat,
                 0,
                 1,
                 lang[lang_user(GlobalValues().sudoID)]["connected_support"].format(menMD(msg)),
