@@ -95,7 +95,7 @@ async def message_process(msg: types.Message):
         ):
             which_user = DataBase.get("who_conneted:{}".format(user_id))
             DataBase.delete("who_conneted:{}".format(user_id))
-            msg_ = await msg.forward(GlobalValues().supchat)
+            msg_ = await msg.forward(GlobalValues().logchat)
             await sendText(
                 chat_id,
                 msg,
@@ -138,9 +138,9 @@ async def message_process(msg: types.Message):
                         return False
                     msg_ = None
                     if not msg.text:
-                        msg_ = await msg.forward(GlobalValues().supchat)
+                        msg_ = await msg.forward(GlobalValues().logchat)
                     elif not "/start" in msg.text:
-                        msg_ = await msg.forward(GlobalValues().supchat)
+                        msg_ = await msg.forward(GlobalValues().logchat)
                     if not msg_ is None:
                         await sendText(
                             chat_id,
@@ -459,7 +459,7 @@ async def message_process(msg: types.Message):
                         await asyncio.sleep(0.5)
                         await copyMessage(
                             user_id,
-                            GlobalValues().supchat,
+                            GlobalValues().logchat,
                             int(ap[1]),
                             reply_msg=int(ap[4]),
                             protect_content=False,
@@ -554,7 +554,7 @@ async def message_process(msg: types.Message):
                         )
                         return await copyMessage(
                                 chat_id,
-                                GlobalValues().supchat,
+                                GlobalValues().logchat,
                                 msgid,
                                 protect_content=False,
                                 reply_markup=inlineKeys,
@@ -582,7 +582,7 @@ async def message_process(msg: types.Message):
                     )
                     msg_ = await copyMessage(
                         chat_id,
-                        GlobalValues().supchat,
+                        GlobalValues().logchat,
                         msgid,
                         protect_content=False,
                         reply_markup=inlineKeys,

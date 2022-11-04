@@ -1125,7 +1125,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             )
         if re.match(r"^special:reg1:@(\d+)", input):
             try:
-                msg_ = await reply_msg.forward(GlobalValues().supchat)
+                msg_ = await reply_msg.forward(GlobalValues().logchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
                 time_data = DataBase.hget(
                     "najva_special:{}".format(user_id), "time"
@@ -1199,7 +1199,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         show_alert=True,
                         cache_time=3600,
                     )
-                msg_ = await reply_msg.forward(GlobalValues().supchat)
+                msg_ = await reply_msg.forward(GlobalValues().logchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
                 time_data = DataBase.hget(
                     "najva_special:{}".format(user_id), "time"
@@ -1267,7 +1267,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 await editText(chat_id, msg_id, 0, langU["error_reg_najva"])
         if re.match(r"^special:sendpv:@(\d+)", input):
             try:
-                msg_ = await reply_msg.forward(GlobalValues().supchat)
+                msg_ = await reply_msg.forward(GlobalValues().logchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
                 time_data = DataBase.hget(
                     "najva_special:{}".format(user_id), "time"
@@ -1399,7 +1399,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             inlineKeys = await show_speical_najva_keys(user_id, from_user)
             msg_ = await copyMessage(
                 chat_id,
-                GlobalValues().supchat,
+                GlobalValues().logchat,
                 msgid,
                 protect_content=False,
                 reply_markup=inlineKeys,
