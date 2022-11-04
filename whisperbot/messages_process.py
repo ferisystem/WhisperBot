@@ -108,14 +108,16 @@ async def message_process(msg: types.Message):
                 "inbox_user:{}".format(which_user),
                 f"{msg_.message_id}:{user_id}:{msg_id}:0:{int(time())}:no",
             )
-            DataBase.setex("is_stater:{}".format(user_id), 86400 * 7, "True")
+            DataBase.setex(f"is_stater:{user_id}>{which_user}", 86400 * 7, "True")
+            DataBase.delete(f"is_stater:{which_user}>{user_id}")
             await sendText(
                 which_user, 0, 1, lang[lang_user(which_user)]["new_message"].format(msg_.message_id)
             )
         if reply_msg:
             if "reply_markup" in reply_msg:
-                input_ = reply_msg.reply_markup
-                input_ = input_.inline_keyboard[0][0].callback_data
+                inpu_ = reply_msg.reply_markup
+                input_ = inpu_.inline_keyboard[0][0].callback_data
+                input2_ = inpu_.inline_keyboard[1][0].callback_data
                 if "anon:blo" in input_:
                     ap = re_matches(
                         r"^anon:blo:(\d+):(\d+):(\d+):@(\d+)$", input_
@@ -146,15 +148,15 @@ async def message_process(msg: types.Message):
                         "md",
                         anonymous_back_keys(user_id),
                     )
-                    if DataBase.get("is_stater:{}".format(which_user)):
+                    if input2_ == "none:yes":
                         DataBase.sadd(
                             "inbox_user:{}".format(which_user),
-                            f"{msg_.message_id}:{user_id}:{msg_id}:{ap[2]}:{int(time())}:yes",
+                            f"{msg_.message_id}:{user_id}:{msg_id}:{ap[2]}:{int(time())}:no",
                         )
                     else:
                         DataBase.sadd(
                             "inbox_user:{}".format(which_user),
-                            f"{msg_.message_id}:{user_id}:{msg_id}:{ap[2]}:{int(time())}:no",
+                            f"{msg_.message_id}:{user_id}:{msg_id}:{ap[2]}:{int(time())}:yes",
                         )
                     await sendText(
                         which_user,
@@ -466,10 +468,11 @@ async def message_process(msg: types.Message):
                                 user_id, ap[2], ap[3], show_sender, ap[5]
                             ),
                         )
-                        if DataBase.get("is_stater:{}".format(ap[2])):
+                        if DataBase.get(f"is_stater:{ap[2]}>{user_id}"):
                             DataBase.setex(
-                                "is_stater:{}".format(ap[2]), 86400 * 7, "True"
+                                f"is_stater:{ap[2]}>{user_id}", 86400 * 7, "True"
                             )
+                            DataBase.delete(f"is_stater:{user_id}>{ap[2]}")
                             user_name = DataBase.get(
                                 "name_anon2:{}".format(user_id)
                             )
