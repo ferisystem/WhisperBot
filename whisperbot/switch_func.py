@@ -166,16 +166,27 @@ async def bot_run(app):
                 status = True
                 break
             else:
-                iD = input("Enter Channel Username for linkyCH: ")
-                status = False
+                print("Enter Channel Username that start with @")
+                break
     if not rds.hget(db, "supchat"):
         status = False
         while status != True:
-            iD = input("Enter Supergroup ID for support: ")
+            iD = input("Enter Supergroup ID for Support Messages: ")
             if re.match(r"^(-\d+)$", iD):
                 rds.hset(db, "supchat", re.match(r"^(-\d+)$", iD).group(1))
                 status = True
                 break
             else:
-                iD = input("Enter Channel ID for support: ")
-                status = False
+                print("Enter Supergroup ID that start with -100")
+                break
+    if not rds.hget(db, "logchat"):
+        status = False
+        while status != True:
+            iD = input("Enter Channel ID for Anonymous Messages & special Whispers: ")
+            if re.match(r"^(-\d+)$", iD):
+                rds.hset(db, "supchat", re.match(r"^(-\d+)$", iD).group(1))
+                status = True
+                break
+            else:
+                print("Enter Channel ID that start with -100")
+                break
