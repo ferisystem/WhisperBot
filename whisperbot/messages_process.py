@@ -114,9 +114,8 @@ async def message_process(msg: types.Message):
             )
         if reply_msg:
             if "reply_markup" in reply_msg:
-                input_ = reply_msg.reply_markup.inline_keyboard[0][
-                    0
-                ].callback_data
+                input_ = reply_msg.reply_markup
+                input_ = input_.inline_keyboard[0][0].callback_data
                 if "anon:blo" in input_:
                     ap = re_matches(
                         r"^anon:blo:(\d+):(\d+):(\d+):@(\d+)$", input_
