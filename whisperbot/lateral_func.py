@@ -492,3 +492,15 @@ def generate_uniqid():
         )
     return text
 
+
+async def delete_previous_message(UserID):
+    try:
+        hash_db = "pre_msgbot:{}".format(UserID)
+        if DataBase.get(hash_db):
+            await bot.delete_message(
+                    chat_id,
+                    DataBase.get(hash_db)
+            )
+            DataBase.delete(hash_db)
+    except:
+        pass
