@@ -9,4 +9,7 @@ async def channel_post_process(msg: types.Message):
     if (msg.chat.username or "") != IDs_datas["chUsername"] and int(
         msg.chat.id
     ) != int(GlobalValues().supchat):
-        await bot.leave_chat(msg.chat.id)
+        try:
+            await bot.leave_chat(msg.chat.id)
+        except:
+            pass

@@ -955,4 +955,7 @@ async def message_process(msg: types.Message):
                                 "HTML",
                             )
     if isGroup(msg):
-        await bot.leave_chat(chat_id)
+        try:
+            await bot.leave_chat(chat_id)
+        except:
+            pass
