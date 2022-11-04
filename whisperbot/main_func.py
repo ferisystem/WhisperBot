@@ -1036,3 +1036,32 @@ async def delete_messages(chat_id, message_id):
         return True
     except:
         return False
+
+
+async def editMessageReplyMarkup(
+    chat_id=None,
+    message_id=None,
+    inline_message_id=None,
+    reply_markup=None,
+):
+    if type(reply_markup) is tuple:
+        if len(reply_markup) > 0:
+            markup = ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+            for row in reply_markup:
+                markup.row(*row)
+        else:
+            markup = ReplyKeyboardRemove()
+    else:
+        markup = reply_markup
+    try:
+        result = await bot.edit_message_reply_markup(
+            chat_id=chat_id,
+            message_id=message_id,
+            inline_message_id=inline_message_id,
+            reply_markup=markup,
+        )
+        return True, result
+    except expts.BadRequest as a:
+        return a.args
+    except Exception as e:
+        print(e)
