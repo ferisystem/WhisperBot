@@ -567,11 +567,11 @@ If you have a suggestion or an idea, you can use say 🌹
 4️⃣ Space
 5️⃣ Enter the destination user's username or numericID
 
-🤩 To learn how to send whisper without any ID or numericID, <a href='t.me/{0}?start=reply>click here</a> and start the bot
+🤩 To learn how to send whisper without any ID or numericID, <a href='t.me/{0}?start=reply'>click here</a> and start the bot
 
-🎁 To learn how to whisper a file or media, <a href='t.me/{0}?start=special>click here</a> and start the bot
+🎁 To learn how to whisper a file or media, <a href='t.me/{0}?start=special'>click here</a> and start the bot
 
-👥 To send a whisper to multiple people at once, <a href='t.me/{0}?start=multi>click here</a> and start the bot
+👥 To send a whisper to multiple people at once, <a href='t.me/{0}?start=multi'>click here</a> and start the bot
 """,
                 "my_id": "🆔 My numericID: {}",
                 "najva_person": "📬 An whisper for ({}) sent",

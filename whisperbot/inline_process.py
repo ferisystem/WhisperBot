@@ -27,7 +27,9 @@ async def inline_query_process(msg: types.InlineQuery):
     print()
     if input == "":
         input_content = InputTextMessageContent(
-            message_text=ln_in["text"]["help_send"]
+            message_text=ln_in["text"]["help_send"].format(GlobalValues().botUser),
+            parse_mode="HTML",
+            disable_web_page_preview=True
         )
         inlineKeys = iMarkup()
         inlineKeys.add(
@@ -47,7 +49,9 @@ async def inline_query_process(msg: types.InlineQuery):
             reply_markup=inlineKeys,
         )
         input_content = InputTextMessageContent(
-            message_text=ln_in["text"]["my_id"].format(user_id)
+            message_text=ln_in["text"]["my_id"].format(user_id),
+            parse_mode="HTML",
+            disable_web_page_preview=True
         )
         inlineKeys = iMarkup()
         inlineKeys.add(
