@@ -956,6 +956,14 @@ async def message_process(msg: types.Message):
                             )
     if isGroup(msg):
         try:
+            if not DataBase.get("group.alerttext"):
+                DataBase.setex("group.alerttext", 1800, "True")
+                sendM = await sendText(
+                    chat_id,
+                    0,
+                    1,
+                    langU["cant_add_to_group"],
+                )
             await bot.leave_chat(chat_id)
         except:
             pass
