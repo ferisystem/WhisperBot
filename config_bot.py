@@ -1,25 +1,25 @@
-db = 'begobot'
+db = 'name_database'
 # - - - - - - - - - - - - - #
 telegram_datas = {
-"botToken": "537502140:AAHDzN2USmOMJ6iVm7S46D30aR7dUCojXR0",
-"api_hash": "5146e754701a0ae922a77c940f15c803", # "a91737390f3c6f51d2b9dfef87eca954",
-"api_id": 2179978, #752812,
+"botToken": "Bot_Token",
+"api_hash": "api_hash",
+"api_id": api_id,
 "device_model": "Linux",
 "system_version": "Ubuntu 20.04",
 "app_version": "1.0",
 }
 # - - - - - - - - - - - - - #
-sudo_users = (777000, telegram_datas['botToken'].split(':')[0], 139946685, 375029817)
+sudo_users = (777000, telegram_datas['botToken'].split(':')[0], ) # PUT_YOUR_ADMINS_HERE
 # - - - - - - - - - - - - - #
 IDs_datas = {
-"sudo_id": 139946685,#752815712,
+"sudo_id": SUDO_ID,
 "bot_id": int(telegram_datas['botToken'].split(':')[0]),
-"chUsername": "fereidouni",
-"chLink": "https://t.me/joinchat/AAAAAFHGwAQNVhcSJSY6Qw",
+"chUsername": "YOUR_CHANNEL_USERNAME", # for force join
+"chLink": "YOUR_CHANNEL_LINK",
 }
 # - - - - - - - - - - - - - #
 server_datas = {
-"ip": "178.63.174.231",
+"ip": "YOUR_SERVER_IP",
 "port_server": 10128, #optional
 "port_tg": 8443, #80, 88, 443, 8443 
 }
