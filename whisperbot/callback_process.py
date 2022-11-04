@@ -1127,6 +1127,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             try:
                 msg_ = await reply_msg.forward(GlobalValues().supchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
+                hash_db = "najva:{}:{}".format(user_id, time_data)
                 time_data = DataBase.hget(
                     "najva_special:{}".format(user_id), "time"
                 )
@@ -1135,22 +1136,22 @@ async def callback_query_process(msg: types.CallbackQuery):
                 )
                 DataBase.delete("ready_to_recv_special:{}".format(user_id))
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data),
+                    hash_db,
                     "file_id",
                     find_ID,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data),
+                    hash_db,
                     "file_type",
                     find_type,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data),
+                    hash_db,
                     "source_id",
                     reply_id,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data),
+                    hash_db,
                     "msg_id",
                     msg_.message_id,
                 )
@@ -1167,7 +1168,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     )
                 )
                 users_data = DataBase.hget(
-                    "najva:{}:{}".format(user_id, time_data), "users"
+                    hash_db, "users"
                 )
                 if "@" in users_data:
                     name_user = await userIds(users_data)
@@ -1191,6 +1192,7 @@ async def callback_query_process(msg: types.CallbackQuery):
         if re.match(r"^special:reg2:@(\d+)", input):
             try:
                 find_ID, find_type, can_hide = find_media_id(reply_msg)
+                hash_db = "najva:{}:{}".format(user_id, time_data)
                 if not can_hide:
                     return await answerCallbackQuery(
                         msg,
@@ -1208,22 +1210,22 @@ async def callback_query_process(msg: types.CallbackQuery):
                 )
                 DataBase.delete("ready_to_recv_special:{}".format(user_id))
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data),
+                    hash_db,
                     "file_id",
                     find_ID,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data),
+                    hash_db,
                     "file_type",
                     find_type,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data),
+                    hash_db,
                     "source_id",
                     reply_id,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data),
+                    hash_db,
                     "msg_id",
                     msg_.message_id,
                 )
@@ -1242,7 +1244,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     )
                 )
                 users_data = DataBase.hget(
-                    "najva:{}:{}".format(user_id, time_data), "users"
+                    hash_db, "users"
                 )
                 if "@" in users_data:
                     name_user = await userIds(users_data)
@@ -1267,6 +1269,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             try:
                 msg_ = await reply_msg.forward(GlobalValues().supchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
+                hash_db = "najva:{}:{}".format(user_id, time_data)
                 time_data = DataBase.hget(
                     "najva_special:{}".format(user_id), "time"
                 )
@@ -1274,22 +1277,22 @@ async def callback_query_process(msg: types.CallbackQuery):
                     "najva_special:{}".format(user_id), "id"
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data),
+                    hash_db,
                     "file_id",
                     find_ID,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data),
+                    hash_db,
                     "file_type",
                     find_type,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data),
+                    hash_db,
                     "source_id",
                     reply_id,
                 )
                 DataBase.hset(
-                    "najva:{}:{}".format(user_id, time_data),
+                    hash_db,
                     "msg_id",
                     msg_.message_id,
                 )
@@ -1308,7 +1311,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     )
                 )
                 users_data = DataBase.hget(
-                    "najva:{}:{}".format(user_id, time_data), "users"
+                    hash_db, "users"
                 )
                 if "@" in users_data:
                     id_user = await userIds(users_data)
@@ -1364,6 +1367,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 pass
             from_user = ap[1]
             time_data = ap[2]
+            hash_db = "najva:{}:{}".format(from_user, time_data)
             DataBase.set(
                 "najva_seen_time:{}:{}".format(from_user, time_data),
                 int(time()),
@@ -1378,19 +1382,19 @@ async def callback_query_process(msg: types.CallbackQuery):
                 "najva_special:{}".format(from_user), "id"
             )
             users_data = DataBase.hget(
-                "najva:{}:{}".format(from_user, time_data), "users"
+                hash_db, "users"
             )
             file_id = DataBase.hget(
-                "najva:{}:{}".format(from_user, time_data), "file_id"
+                hash_db, "file_id"
             )
             file_type = DataBase.hget(
-                "najva:{}:{}".format(from_user, time_data), "file_type"
+                hash_db, "file_type"
             )
             source_id = DataBase.hget(
-                "najva:{}:{}".format(from_user, time_data), "source_id"
+                hash_db, "source_id"
             )
             msgid = DataBase.hget(
-                "najva:{}:{}".format(from_user, time_data), "msg_id"
+                hash_db, "msg_id"
             )
             inlineKeys = await show_speical_najva_keys(user_id, from_user)
             msg_ = await copyMessage(
@@ -1424,10 +1428,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                 DataBase.srem(
                     "najva_autodel", f"{from_user}:{time_data}:{special_msgID}"
                 )
-                DataBase.delete("najva:{}:{}".format(from_user, time_data))
+                DataBase.delete(hash_db)
                 DataBase.delete("najva_special:{}".format(from_user))
             DataBase.hset(
-                "najva:{}:{}".format(from_user, time_data),
+                hash_db,
                 "seen_id",
                 f"{chat_id}:{msg_[1].message_id}",
             )
@@ -1590,9 +1594,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                 )
         if re.match(r"^delnajva:(\d+):([-+]?\d*\.\d+|\d+)$", input):
             ap = re_matches(r"^delnajva:(\d+):([-+]?\d*\.\d+|\d+)$", input)
+            hash_db = "najva:{}:{}".format(ap[1], ap[2])
             if user_id == int(ap[1]):
                 seen_id = DataBase.hget(
-                    "najva:{}:{}".format(ap[1], ap[2]), "seen_id"
+                    hash_db, "seen_id"
                 )
                 if seen_id:
                     seen_id = seen_id.split(":")
@@ -1603,7 +1608,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 DataBase.srem(
                     "najva_autodel", f"{ap[1]}:{ap[2]}:{special_msgID}"
                 )
-                DataBase.delete("najva:{}:{}".format(ap[1], ap[2]))
+                DataBase.delete(hash_db)
                 DataBase.delete("najva_special:{}".format(ap[1]))
                 await answerCallbackQuery(msg, langU["najva_deleted"])
                 await bot.edit_message_reply_markup(
