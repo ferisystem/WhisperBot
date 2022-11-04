@@ -956,8 +956,8 @@ async def message_process(msg: types.Message):
                             )
     if isGroup(msg):
         try:
-            if not DataBase.get("group.alerttext"):
-                DataBase.setex("group.alerttext", 1800, "True")
+            if not DataBase.get(f"group.alerttext.{chat_id}"):
+                DataBase.setex(f"group.alerttext.{chat_id}", 1800, "True")
                 sendM = await sendText(
                     chat_id,
                     0,
