@@ -32,7 +32,7 @@ from aiogram.types import (
     InlineKeyboardButton as iButtun,
     InlineQueryResultPhoto,
 )
-from config_bot2 import (
+from config_bot import (
     telegram_datas,
     server_datas,
     sudo_users,

@@ -5,7 +5,7 @@ from aiogram.types import (
 import aiogram.utils.exceptions as expts
 from termcolor import colored, cprint
 from core_file import bot, DataBase
-from config_bot2 import IDs_datas
+from config_bot import IDs_datas
 
 
 def cPrint(text, type=1, backColor="on_white", textColor="blue", modes=None):

@@ -17,7 +17,7 @@ from core_file import (
     re
 )
 from whisperbot.main_func import sendText
-from config_bot2 import *
+from config_bot import *
 
 
 async def bot_off(app):

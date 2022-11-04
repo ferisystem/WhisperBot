@@ -11,7 +11,7 @@ from core_file import (
     rds,
     re
 )
-from config_bot2 import (
+from config_bot import (
 	IDs_datas,
 	db
 )

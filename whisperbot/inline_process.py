@@ -1,7 +1,7 @@
 from whisperbot.keyboards_func import *
 from whisperbot.lateral_func import *
 from whisperbot.main_func import *
-from config_bot2 import *
+from config_bot import *
 from core_file import *
 
 
