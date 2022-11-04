@@ -802,6 +802,7 @@ async def message_process(msg: types.Message):
                 DataBase.delete("ready_to_enter_id:{}".format(user_id))
                 DataBase.delete("ready_to_recv_special:{}".format(user_id))
                 DataBase.delete("who_conneted:{}".format(user_id))
+                await newUser(msg)
                 await sendText(
                     chat_id,
                     msg,
