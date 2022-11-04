@@ -1617,7 +1617,8 @@ async def callback_query_process(msg: types.CallbackQuery):
                 )
             else:
                 await answerCallbackQuery(
-                    msg, langU["must_be_owner_najva"], cache_time=3600
+                    msg, langU["must_be_owner_najva"],
+                    show_alert=True, cache_time=3600
                 )
         if re.match(r"^shows:(\d+):([-+]?\d*\.\d+|\d+)$", input):
             ap = re_matches(r"^shows:(\d+):([-+]?\d*\.\d+|\d+)$", input)
