@@ -1502,19 +1502,14 @@ async def callback_query_process(msg: types.CallbackQuery):
             ap = re_matches(r"^shown:(\d+):([-+]?\d*\.\d+|\d+)$", input)
             from_user = ap[1]
             time_data = ap[2]
-            text_data = DataBase.hget(
-                "najva:{}:{}".format(from_user, time_data), "text"
-            )
-            users_data = DataBase.hget(
-                "najva:{}:{}".format(from_user, time_data), "users"
-            )
+            hash_db = "najva:{}:{}".format(from_user, time_data)
+            text_data = DataBase.hget(hash_db, "text")
+            users_data = DataBase.hget(hash_db, "users")
             is_allow = (username != "" and username in users_data) or str(
                 user_id
             ) in users_data
             if is_allow or str(user_id) in from_user or users_data == "all":
-                file_id = DataBase.hget(
-                    "najva:{}:{}".format(from_user, time_data), "file_id"
-                )
+                file_id = DataBase.hget(hash_db, "file_id")
                 if file_id:
                     return await answerCallbackQuery(
                         msg,
