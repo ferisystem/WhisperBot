@@ -16,8 +16,8 @@ from config_bot2 import (
 	db
 )
 from whisperbot.lateral_func import (
-    lang_user,
     userInfos,
+    lang_user,
     isSudo
 )
 
@@ -930,6 +930,28 @@ async def show_speical_najva_keys(UserID, from_user):
             buttuns["report"], callback_data="special:report{}".format(hash2)
         ),
         iButtun(which_one, callback_data="special:block{}".format(hash2)),
+    )
+    return inlineKeys
+
+
+async def show_speical_najva2_keys(UserID, from_user):
+    hash2 = ":{}:@{}".format(from_user, UserID)
+    langU = lang[lang_user(UserID)]
+    buttuns = langU["buttuns"]
+    inlineKeys = iMarkup()
+    name_user = await userInfos(from_user, info="name")
+    uname_user = await userInfos(from_user, info="username")
+    if uname_user:
+        call_url = "https://t.me/{}".format(uname_user)
+    else:
+        call_url = "https://t.me?openmessage?user_id={}".format(from_user)
+    if DataBase.sismember("blocks2:{}".format(UserID), from_user):
+        which_one = buttuns["unblock"]
+    else:
+        which_one = buttuns["block"]
+    inlineKeys.add(
+        iButtun(buttuns["special_najva"], callback_data="none"),
+        iButtun(name_user, url=call_url),
     )
     return inlineKeys
 
