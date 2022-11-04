@@ -1,4 +1,9 @@
+from aiogram.types import (
+    InlineKeyboardMarkup as iMarkup,
+    InlineKeyboardButton as iButtun
+)
 from core_file import (
+    GlobalValues,
     user_steps,
     DataBase,
     client,
@@ -30,6 +35,15 @@ def isBlock(UserID):
         return True
     else:
         return False
+
+
+def blockKeys(UserID):
+    inlineKeys = iMarkup()
+    inlineKeys.add(
+        iButtun("Deactive🚫", callback_data="blockUser:{}".format(UserID)),
+        iButtun("Active✅", callback_data="unblockUser:{}".format(UserID)),
+    )
+    return inlineKeys
 
 
 async def newUser(msg):

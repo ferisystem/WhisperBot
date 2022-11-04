@@ -22,15 +22,6 @@ from whisperbot.lateral_func import (
 )
 
 
-def blockKeys(UserID):
-    inlineKeys = iMarkup()
-    inlineKeys.add(
-        iButtun("Deactive🚫", callback_data="blockUser:{}".format(UserID)),
-        iButtun("Active✅", callback_data="unblockUser:{}".format(UserID)),
-    )
-    return inlineKeys
-
-
 def start_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
