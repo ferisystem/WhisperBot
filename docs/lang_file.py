@@ -526,6 +526,12 @@ If your problem is not resolved, click on 'direct communication' and say your pr
 If you have a suggestion or an idea, you can use say 🌹
 """,
         "message_from": "Message sent from ({})",
+        "cant_add_to_group": """
+⚠️ Convert the group to supergroup and add the Bot to the group again according to the above tutorial
+
+💡 Tutorial to convert a regular group to a supergroup:
+Just enable Chat history for new members and your group will automatically become a supergroup
+        """,
         "inline": {
             "title": {
                 "help_send": "How to send",
@@ -1160,6 +1166,12 @@ unlock inline
 در صورتی که پیشنهاد کاری یا ایده‌ای هم دارید میتونید از این طریق به ما بگید 🌹
 """,
         "message_from": "❓پیام از طرف کاربر ({}) ارسال شده",
+        "cant_add_to_group": """
+⚠️ گروه رو به سوپرگروه تبدیل کنید و دوباره ربات رو طبق آموزش بالا به گروه اضافه کنید
+
+💡 آموزش تبدیل گروه معمولی به سوپرگروه:
+فقط کافیه تاریخچه گفتگو برای اعضای جدید(Chat history for new members) رو فعال کنید و گروه شما بصورت خودکار به سوپرگروه تبدیل میشه
+        """,
         "inline": {
             "title": {
                 "help_send": "آموزش ارسال نجوا",
