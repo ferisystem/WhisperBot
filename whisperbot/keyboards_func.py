@@ -15,7 +15,11 @@ from config_bot2 import (
 	IDs_datas,
 	db
 )
-from whisperbot.lateral_func import isSudo, lang_user
+from whisperbot.lateral_func import (
+    lang_user,
+    userInfos,
+    isSudo
+)
 
 
 def blockKeys(UserID):
