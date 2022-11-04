@@ -220,7 +220,16 @@ async def message_process(msg: types.Message):
                 else:
                     name_user = users_data
                 name_user = await userInfos(name_user, info="name")
-                await sendText(
+                if DataBase.get("pre_msgbot:{}".format(user_id)):
+                    try:
+                        await bot.delete_message(
+                                chat_id,
+                                DataBase.get("pre_msgbot:{}".format(user_id))
+                        )
+                        DataBase.delete("pre_msgbot:{}".format(user_id))
+                    except:
+                        pass
+                msg_ = await sendText(
                     chat_id,
                     data_msg,
                     1,
@@ -228,6 +237,11 @@ async def message_process(msg: types.Message):
                     "html",
                     register_special_keys(user_id),
                 )
+                if not msg_[0] is False:
+                    DataBase.set(
+                        "pre_msgbot:{}".format(user_id),
+                        msg_[1].message_id
+                    )
             else:
                 await sendText(chat_id, 0, 1, langU["now_allow_type"])
         if "text" in msg:
