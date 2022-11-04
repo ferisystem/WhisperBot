@@ -178,12 +178,7 @@ async def message_process(msg: types.Message):
                     else:
                         await sendText(chat_id, msg, 1, "❌‌\n{}".format(sendM))
         if DataBase.get("ready_to_recv_special:{}".format(user_id)):
-            try:
-                await bot.delete_message(
-                    chat_id, DataBase.get("pre_msgbot:{}".format(user_id))
-                )
-            except:
-                pass
+            await delete_previous_message(user_id)
             if (
                 msg.text
                 and (
@@ -220,15 +215,7 @@ async def message_process(msg: types.Message):
                 else:
                     name_user = users_data
                 name_user = await userInfos(name_user, info="name")
-                if DataBase.get("pre_msgbot:{}".format(user_id)):
-                    try:
-                        await bot.delete_message(
-                                chat_id,
-                                DataBase.get("pre_msgbot:{}".format(user_id))
-                        )
-                        DataBase.delete("pre_msgbot:{}".format(user_id))
-                    except:
-                        pass
+                await delete_previous_message(user_id)                    
                 msg_ = await sendText(
                     chat_id,
                     data_msg,
@@ -278,9 +265,7 @@ async def message_process(msg: types.Message):
                     DataBase.set("link_anon:{}".format(msg.text), user_id)
                     DataBase.sadd("links_anon", msg.text)
                     DataBase.delete("ready_to_change_link:{}".format(user_id))
-                    await bot.delete_message(
-                        chat_id, DataBase.get("pre_msgbot:{}".format(user_id))
-                    )
+                    await delete_previous_message(user_id)
                     await sendText(
                         chat_id,
                         msg,
@@ -304,9 +289,7 @@ async def message_process(msg: types.Message):
                 else:
                     DataBase.set("name_anon:{}".format(user_id), msg.text)
                     DataBase.delete("ready_to_change_name:{}".format(user_id))
-                    await bot.delete_message(
-                        chat_id, DataBase.get("pre_msgbot:{}".format(user_id))
-                    )
+                    await delete_previous_message(user_id)
                     await sendText(
                         chat_id,
                         msg,
@@ -322,9 +305,7 @@ async def message_process(msg: types.Message):
                 if re.match(r"^(\d+)$", input):
                     ap = re_matches(r"^(\d+)$", input)
                     DataBase.delete("ready_to_enter_id:{}".format(user_id))
-                    await bot.delete_message(
-                        chat_id, DataBase.get("pre_msgbot:{}".format(user_id))
-                    )
+                    await delete_previous_message(user_id)
                     if DataBase.sismember("allUsers", ap[1]):
                         if int(ap[1]) == int(user_id):
                             await sendText(
@@ -383,9 +364,7 @@ async def message_process(msg: types.Message):
                 elif re.match(r"^(@\w+)$", input):
                     ap = re_matches(r"^(@\w+)$", input)
                     DataBase.delete("ready_to_enter_id:{}".format(user_id))
-                    await bot.delete_message(
-                        chat_id, DataBase.get("pre_msgbot:{}".format(user_id))
-                    )
+                    await delete_previous_message(user_id)
                     userID = await userIds(ap[1])
                     if not str(userID).isdigit():
                         return await sendText(
@@ -455,9 +434,7 @@ async def message_process(msg: types.Message):
                         )
                 else:
                     DataBase.delete("ready_to_enter_id:{}".format(user_id))
-                    await bot.delete_message(
-                        chat_id, DataBase.get("pre_msgbot:{}".format(user_id))
-                    )
+                    await delete_previous_message(user_id)
                     await sendText(
                         chat_id,
                         msg,
