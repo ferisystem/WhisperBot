@@ -143,12 +143,12 @@ This is a help for installation.
        ```
 8. Now you have to run this command for first time to take Bot_Token
    ```sh
-   python3.6 ./WhisperBot/whisperbot/cron_jobs.py
+   python3.6 ./WhisperBot/cron_jobs.py
    ```
    then enter bot_token here
 9. And then you have to add this command in `crontab -e` on ubuntu terminal
    ```sh
-   * * * * * python3.6 ./WhisperBot/whisperbot/cron_jobs.py
+   * * * * * python3.6 ./WhisperBot/cron_jobs.py
    ```
 10. you should install modules in `docs/modules_python37.py` with this command on **WhisperBot folder**:
    ```sh
