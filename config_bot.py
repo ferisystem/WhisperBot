@@ -15,7 +15,7 @@ IDs_datas = {
 "sudo_id": SUDO_ID,
 "bot_id": int(telegram_datas['botToken'].split(':')[0]),
 "chUsername": "YOUR_CHANNEL_USERNAME", # for force join
-"chLink": "YOUR_CHANNEL_LINK",
+"chLink": "YOUR_CHANNEL_LINK", # for force join
 }
 # - - - - - - - - - - - - - #
 server_datas = {
