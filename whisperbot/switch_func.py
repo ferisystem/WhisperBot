@@ -184,7 +184,7 @@ async def bot_run(app):
         while status != True:
             iD = input("Enter Channel ID for Anonymous Messages & special Whispers: ")
             if re.match(r"^(-\d+)$", iD):
-                rds.hset(db, "supchat", re.match(r"^(-\d+)$", iD).group(1))
+                rds.hset(db, "logchat", re.match(r"^(-\d+)$", iD).group(1))
                 status = True
                 break
             else:
