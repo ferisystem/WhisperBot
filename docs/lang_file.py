@@ -688,6 +688,7 @@ Go to Bot and send your media or message 👇
             "back": "back",
             "channel": "Channel📢",
             "support": "⛑ Support",
+            "support2": "Direct communication",
             "creator": "Bot Creator",
             "notice": "Notice",
             "start_again": "Start bot again",
