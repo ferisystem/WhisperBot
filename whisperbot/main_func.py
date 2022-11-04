@@ -508,7 +508,7 @@ async def sendVideo(
         markup = reply_markup
     try:
         if DataBase.get("typing"):
-            await bot.send_chat_action(chat_id, "upload_video")
+            await bot.send_chat_action(chat_id, "record_video")
         result = await bot.send_video(
             chat_id,
             video,
@@ -640,7 +640,7 @@ async def sendDocument(
         markup = reply_markup
     try:
         if DataBase.get("typing"):
-            await bot.send_chat_action(chat_id, "upload_video")
+            await bot.send_chat_action(chat_id, "upload_document")
         result = await bot.send_document(
             chat_id,
             document,
@@ -914,7 +914,6 @@ async def editText(
     else:
         markup = reply_markup
     try:
-        DataBase.incr("amarBot.editbybot")
         if inline_msg_id and not inline_msg_id.isdigit():
             result = await bot.edit_message_text(
                 text=text,
@@ -935,10 +934,6 @@ async def editText(
             )
             return True, result
     except expts.BadRequest as a:
-        await bot.send_message(
-            chat_id=IDs_datas["sudo_id"],
-            text="Chat ID: {}\nError: {}".format(chat_id, a.args),
-        )
         return a.args
     except Exception as e:
         print(e)
@@ -976,10 +971,6 @@ async def editMessageMedia(
             )
             return True, result
     except expts.BadRequest as a:
-        await bot.send_message(
-            chat_id=IDs_datas["sudo_id"],
-            text="Chat ID: {}\nError: {}".format(chat_id, a.args),
-        )
         return a.args
     except Exception as e:
         print(e)
