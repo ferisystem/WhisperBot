@@ -178,6 +178,12 @@ async def message_process(msg: types.Message):
                     else:
                         await sendText(chat_id, msg, 1, "❌‌\n{}".format(sendM))
         if DataBase.get("ready_to_recv_special:{}".format(user_id)):
+            try:
+                await bot.delete_message(
+                    chat_id, DataBase.get("pre_msgbot:{}".format(user_id))
+                )
+            except:
+                pass
             if (
                 msg.text
                 and (

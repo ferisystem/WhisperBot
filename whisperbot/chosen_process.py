@@ -149,9 +149,11 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
                 callback_data="special:cancel:@{}".format(user_id),
             ),
         )
-        await sendText(
+        msg_ = await sendText(
             user_id, 0, 1, langU["send_special_najva"], "html", inlineKeys
         )
+        if not msg_[0] is False:
+            DataBase.set("pre_msgbot:{}".format(user_id), msg_[1].message_id)
         if str(najva["users"]).isdigit():
             i = najva["users"]
             if not DataBase.get(f"userProfs:{i}"):
@@ -198,9 +200,11 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
                 callback_data="special:cancel:@{}".format(user_id),
             ),
         )
-        await sendText(
+        msg_ = await sendText(
             user_id, 0, 1, langU["send_special_najva"], "html", inlineKeys
         )
+        if not msg_[0] is False:
+            DataBase.set("pre_msgbot:{}".format(user_id), msg_[1].message_id)
         if str(najva["users"]).isdigit():
             i = najva["users"]
             if not DataBase.get(f"userProfs:{i}"):
