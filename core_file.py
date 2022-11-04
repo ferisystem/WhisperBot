@@ -187,7 +187,7 @@ class GlobalValues:
         self.botUser = rds.hget(db, "user") or "None"
         self.sudoID = int(DataBase.hget("sudo", "id") or sudo_id)
         self.supchat = int(rds.hget(db, "supchat") or self.sudoID)
-        self.spychat = int(rds.hget(db, "spychat") or self.sudoID)
+        self.logchat = int(rds.hget(db, "logchat") or self.sudoID)
         self.linkyCH = rds.hget(db, "linkyCH") or "None"
         self.sudoUser = DataBase.hget("sudo", "user") or "None"
         self.sudo_users = (self.sudoID, self.botID) + sudo_users
