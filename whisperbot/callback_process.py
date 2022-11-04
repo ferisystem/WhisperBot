@@ -520,7 +520,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             if input_ == "none:yes":
                 SHOW_SENDER = ap[1]
             await answerCallbackQuery(msg, text, show_alert=True, cache_time=2)
-            await bot.edit_message_reply_markup(
+            await editMessageReplyMarkup(
                 chat_id,
                 msg_id,
                 reply_markup=anonymous_new_message_keys(
@@ -570,7 +570,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 DataBase.set("dont_receive_anon:{}".format(user_id), "True")
                 text = langU["receive_anon_deactive"]
             await answerCallbackQuery(msg, text, show_alert=True, cache_time=2)
-            await bot.edit_message_reply_markup(
+            await editMessageReplyMarkup(
                 chat_id, msg_id, reply_markup=anonymous_keys(user_id)
             )
         if re.match(r"^anon:myblock:@(\d+)$", input):
@@ -946,7 +946,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 await answerCallbackQuery(
                     msg, text, show_alert=True, cache_time=2
                 )
-                await bot.edit_message_reply_markup(
+                await editMessageReplyMarkup(
                     chat_id, msg_id, reply_markup=najva_settings_keys(user_id)
                 )
         if re.match(r"^najva:autodel:@(\d+)$", input):
@@ -955,7 +955,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 DataBase.hdel("setting_najva:{}".format(user_id), "autodel")
                 text = langU["najva_setoff_autodel"]
                 await answerCallbackQuery(msg, text, cache_time=2)
-                await bot.edit_message_reply_markup(
+                await editMessageReplyMarkup(
                     chat_id, msg_id, reply_markup=najva_autodel_keys(user_id)
                 )
             else:
@@ -964,7 +964,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 text = langU["najva_seton_autodel"]
                 DataBase.hset("setting_najva:{}".format(user_id), "autodel", 1)
                 await answerCallbackQuery(msg, text, cache_time=2)
-                await bot.edit_message_reply_markup(
+                await editMessageReplyMarkup(
                     chat_id, msg_id, reply_markup=najva_autodel2_keys(user_id)
                 )
         if re.match(r"^najva:help:(.*):@(\d+)$", input):
@@ -1091,7 +1091,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     "autodel_time:{}".format(user_id),
                     int(old_autodel_time) + int(ap[1]),
                 )
-                await bot.edit_message_reply_markup(
+                await editMessageReplyMarkup(
                     chat_id, msg_id, reply_markup=najva_autodel2_keys(user_id)
                 )
             else:
@@ -1445,7 +1445,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 text = langU["user_blocked"]
             await answerCallbackQuery(msg, text, show_alert=True, cache_time=2)
             inlineKeys = await show_speical_najva_keys(user_id, ap[1])
-            await bot.edit_message_reply_markup(
+            await editMessageReplyMarkup(
                 chat_id, msg_id, reply_markup=inlineKeys
             )
         if re.match(r"^special:report:(\d+):@(\d+)$", input):
@@ -1496,7 +1496,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 text = langU["user_banned"]
             await answerCallbackQuery(msg, text, show_alert=True, cache_time=2)
             inlineKeys = ban_user_keys(ap[1], chat_id)
-            await bot.edit_message_reply_markup(
+            await editMessageReplyMarkup(
                 chat_id, msg_id, reply_markup=inlineKeys
             )
     else:
@@ -1547,7 +1547,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         )
                     if users_data != "all":
                         if len(users_data) == 1:
-                            await bot.edit_message_reply_markup(
+                            await editMessageReplyMarkup(
                                 inline_message_id=msg_id,
                                 reply_markup=najva_seen_keys(
                                     user_id, from_user, time_data
@@ -1611,7 +1611,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 DataBase.delete(hash_db)
                 DataBase.delete("najva_special:{}".format(ap[1]))
                 await answerCallbackQuery(msg, langU["najva_deleted"])
-                await bot.edit_message_reply_markup(
+                await editMessageReplyMarkup(
                     inline_message_id=msg_id,
                     reply_markup=najva_seen2_keys(user_id, ap[1], ap[2]),
                 )
