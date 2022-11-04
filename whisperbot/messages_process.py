@@ -507,6 +507,40 @@ async def message_process(msg: types.Message):
                         None,
                         najva_help_keys(user_id),
                     )
+                elif ap[1] == "multi":
+                    file = "docs/helps/help_group.jpg"
+                    with open(file, "rb") as file:
+                        await sendPhoto(
+                            chat_id,
+                            file,
+                            langU["najva_help_group"].format(GlobalValues().botUser),
+                            "html",
+                            msg,
+                            reply_markup=najva_help3_keys(user_id),
+                        )
+                elif ap[1] == "special":
+                    file = "docs/helps/help_media.jpg"
+                    with open(file, "rb") as file:
+                        await sendPhoto(
+                            chat_id,
+                            file,
+                            langU["najva_help_media"].format(GlobalValues().botUser),
+                            "html",
+                            msg,
+                            reply_markup=najva_help2_keys(user_id),
+                        )
+                elif ap[1] == "reply":
+                    file = "docs/helps/help_noid.mp4"
+                    with open(file, "rb") as file:
+                        await sendVideo(
+                            chat_id,
+                            msg,
+                            file,
+                            langU["najva_help_noid"].format(GlobalValues().botUser),
+                            "html",
+                            supports_streaming=True,
+                            reply_markup=najva_help5_keys(user_id),
+                        )
                 elif re.match(r"^(\d+)_(\d+)_(\d+)$", ap[1]):
                     ap = re_matches(r"^(\d+)_(\d+)_(\d+)$", ap[1])
                     from_user = ap[1]
