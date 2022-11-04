@@ -555,6 +555,19 @@ async def message_process(msg: types.Message):
                     ap = re_matches(r"^(\d+)_(\d+)_(\d+)$", ap[1])
                     from_user = ap[1]
                     time_data = float(f"{ap[2]}.{ap[3]}")
+                    hash_db = "najva:{}:{}".format(from_user, time_data)
+                    msgid = DataBase.hget(hash_db, "msg_id")
+                    if user_id == int(from_user):
+                        inlineKeys = await show_speical_najva2_keys(
+                            user_id, from_user
+                        )
+                        return await copyMessage(
+                                chat_id,
+                                GlobalValues().supchat,
+                                msgid,
+                                protect_content=False,
+                                reply_markup=inlineKeys,
+                        )
                     DataBase.set(
                         "najva_seen_time:{}:{}".format(from_user, time_data),
                         int(time()),
@@ -569,21 +582,10 @@ async def message_process(msg: types.Message):
                     special_msgID = DataBase.hget(
                         "najva_special:{}".format(from_user), "id"
                     )
-                    users_data = DataBase.hget(
-                        "najva:{}:{}".format(from_user, time_data), "users"
-                    )
-                    file_id = DataBase.hget(
-                        "najva:{}:{}".format(from_user, time_data), "file_id"
-                    )
-                    file_type = DataBase.hget(
-                        "najva:{}:{}".format(from_user, time_data), "file_type"
-                    )
-                    source_id = DataBase.hget(
-                        "najva:{}:{}".format(from_user, time_data), "source_id"
-                    )
-                    msgid = DataBase.hget(
-                        "najva:{}:{}".format(from_user, time_data), "msg_id"
-                    )
+                    users_data = DataBase.hget(hash_db, "users")
+                    file_id = DataBase.hget(hash_db, "file_id")
+                    file_type = DataBase.hget(hash_db, "file_type")
+                    source_id = DataBase.hget(hash_db, "source_id")
                     inlineKeys = await show_speical_najva_keys(
                         user_id, from_user
                     )
@@ -612,16 +614,14 @@ async def message_process(msg: types.Message):
                         reply_markup=najva_seen3_keys(from_user, time_data),
                     )
                     if DataBase.hget(f"setting_najva:{from_user}", "dispo"):
-                        DataBase.delete(
-                            "najva:{}:{}".format(from_user, time_data)
-                        )
+                        DataBase.delete(hash_db)
                         DataBase.delete("najva_special:{}".format(from_user))
                         DataBase.srem(
                             "najva_autodel",
                             f"{from_user}:{time_data}:{special_msgID}",
                         )
                     DataBase.hset(
-                        "najva:{}:{}".format(from_user, time_data),
+                        hash_db,
                         "seen_id",
                         f"{chat_id}:{msg_[1].message_id}",
                     )
