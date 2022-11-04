@@ -136,34 +136,36 @@ async def message_process(msg: types.Message):
                             anonymous_back_keys(user_id),
                         )
                         return False
+                    msg_ = None
                     if not msg.text:
                         msg_ = await msg.forward(GlobalValues().supchat)
                     elif not "/start" in msg.text:
                         msg_ = await msg.forward(GlobalValues().supchat)
-                    await sendText(
-                        chat_id,
-                        msg,
-                        1,
-                        langU["your_msg_sent"],
-                        "md",
-                        anonymous_back_keys(user_id),
-                    )
-                    if input2_ == "none:yes":
-                        DataBase.sadd(
-                            "inbox_user:{}".format(which_user),
-                            f"{msg_.message_id}:{user_id}:{msg_id}:{ap[2]}:{int(time())}:no",
+                    if not msg_ is None:
+                        await sendText(
+                            chat_id,
+                            msg,
+                            1,
+                            langU["your_msg_sent"],
+                            "md",
+                            anonymous_back_keys(user_id),
                         )
-                    else:
-                        DataBase.sadd(
-                            "inbox_user:{}".format(which_user),
-                            f"{msg_.message_id}:{user_id}:{msg_id}:{ap[2]}:{int(time())}:yes",
+                        if input2_ == "none:yes":
+                            DataBase.sadd(
+                                "inbox_user:{}".format(which_user),
+                                f"{msg_.message_id}:{user_id}:{msg_id}:{ap[2]}:{int(time())}:no",
+                            )
+                        else:
+                            DataBase.sadd(
+                                "inbox_user:{}".format(which_user),
+                                f"{msg_.message_id}:{user_id}:{msg_id}:{ap[2]}:{int(time())}:yes",
+                            )
+                        await sendText(
+                            which_user,
+                            0,
+                            1,
+                            lang[lang_user(which_user)]["new_message"].format(msg_.message_id),
                         )
-                    await sendText(
-                        which_user,
-                        0,
-                        1,
-                        lang[lang_user(which_user)]["new_message"].format(msg_.message_id),
-                    )
                 if "from_who" in input_:
                     ap = re_matches(r"^from_who:(\d+):(\d+)$", input_)
                     which_user = int(ap[1])
