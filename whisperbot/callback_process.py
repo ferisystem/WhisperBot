@@ -1513,7 +1513,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             ) in users_data
             if is_allow or str(user_id) in from_user or users_data == "all":
                 file_id = DataBase.hget(
-                    "najva:{}:{}".format(user_id, time_data), "file_id"
+                    "najva:{}:{}".format(from_user, time_data), "file_id"
                 )
                 if file_id:
                     return await answerCallbackQuery(
