@@ -77,14 +77,14 @@ async def message_process(msg: types.Message):
                     user_steps[user_id].update({"action": "nothing"})
                 else:
                     await copyMessage(
-                        GlobalValues().sudoID, chat_id, msg_id, reply_markup=inlineKeys2
+                        GlobalValues().supchat, chat_id, msg_id, reply_markup=inlineKeys2
                     )
                     await sendText(
                         chat_id, msg, 1, langU["sent_wait"], None, inlineKeys
                     )
             else:
                 await copyMessage(
-                    GlobalValues().sudoID, chat_id, msg_id, reply_markup=inlineKeys2
+                    GlobalValues().supchat, chat_id, msg_id, reply_markup=inlineKeys2
                 )
                 await sendText(
                     chat_id, msg, 1, langU["sent_wait"], None, inlineKeys
@@ -889,14 +889,21 @@ async def message_process(msg: types.Message):
     if isSuper(msg):
         if chat_id == GlobalValues().supchat:
             if isSudo(user_id):
-                IF = reply_msg and reply_msg.from_user.id == GlobalValues().botID
-                if IF and reply_msg.text and "text" in msg:
-                    IF2 = reply_msg.text.split(" | ")
-                    sendM = await sendText(IF2[1], 0, 1, msg.text, "html")
-                    if sendM[0] is True:
-                        await sendText(chat_id, msg, 1, "✅")
-                    else:
-                        await sendText(chat_id, msg, 1, "❌\n{}".format(sendM))
+                if reply_msg:
+                    if "reply_markup" in reply_msg:
+                        inpu_ = reply_msg.reply_markup
+                        input_ = inpu_.inline_keyboard[0][0].callback_data
+                        if "from_who" in input_:
+                            ap = re_matches(r"^from_who:(\d+):(\d+)$", input_)
+                            which_user = int(ap[1])
+                            msgID = int(ap[2])
+                            sendM = await copyMessage(
+                                which_user, chat_id, msg_id, reply_msg=msgID
+                            )
+                            if sendM[0] is True:
+                                await sendText(chat_id, msg, 1, "✅‌")
+                            else:
+                                await sendText(chat_id, msg, 1, "❌‌\n{}".format(sendM))
         else:
             if (
                 msg.via_bot
