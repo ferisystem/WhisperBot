@@ -191,12 +191,12 @@ Enabled Anti-Save Anonymous messages✅
 ⚠️From now on, when you send Anonymous message to users, they can't save or forward or take screenshot your messages
         """,
         "lock_anon_deactive": "Disabled Anti-Save Anonymous messages❌",
-        "lock_najva_active": """
+        "najva_seton_antisave": """
 Enabled Anti-Save Whisper messages✅
 
 ⚠️From now on, when you send special whisper message to users, they can't save or forward or take screenshot your messages
         """,
-        "lock_najva_deactive": "Disabled Anti-Save special whisper messages❌",
+        "najva_setoff_antisave": "Disabled Anti-Save special whisper messages❌",
         "besure_del_all_blocks": "❗️ Do you want all blocked users to be Unblocked?",
         "blocks_clear_anon": "All blocked users Unblocked ✅",
         "blocks_empty_anon": "There is no user in the block list⚠️",
@@ -656,6 +656,7 @@ Go to Bot and send your media or message 👇
             "najva_settings_no_name": "🧩Nameless whisper ({})",
             "najva_settings_disposable": "✨Disposable whisper ({})",
             "najva_settings_auto_del": "⏳Whisper auto delete ({})",
+            "najva_settings_antisave": "🧨Whisper anti-save ({})",
             "minute": "{} minute",
             "najva_settings_block": "⛔️Direct special whisper blacklist ({} user)",
             "najva_settings_del_all": "💢Delete all sent whisper💢",
@@ -883,13 +884,13 @@ t.me/{}?start={}
 ⚠️از الان به بعد وقتی پیام ناشناس به کاربری ارسال میکنی، دیگه نمیتونه از پیامت اسکرین شات بگیره یا پیامت رو کپی یا فوروارد کنه
 """,
         "lock_anon_deactive": "ضد ذخیره پیام ناشناس غیرفعال شد❌",
-        "lock_najva_active": """
+        "najva_seton_antisave": """
 ضد ذخیره پیام نجوا فعال شد✅
         
         
 ⚠️از الان به بعد وقتی پیام نجوای ویژه به کاربری ارسال میکنی، دیگه نمیتونه از پیامت اسکرین شات بگیره یا پیامت رو کپی یا فوروارد کنه
 """,
-        "lock_najva_deactive": "ضد ذخیره پیام نجوا غیرفعال شد❌",
+        "najva_setoff_antisave": "ضد ذخیره پیام نجوا غیرفعال شد❌",
         "besure_del_all_blocks": "آیا از پاک کردن تمام لیست بلاک مطمئنید؟",
         "blocks_clear_anon": "لیست بلاک پاکسازی شد♨️",
         "blocks_empty_anon": "⚠️لیست بلاک خالی است",
@@ -1310,6 +1311,7 @@ unlock inline
             "najva_settings_no_name": "🧩نجوای بی نام ({})",
             "najva_settings_disposable": "✨نجوای یکبار مصرف ({})",
             "najva_settings_auto_del": "⏳حذف خودکار نجوا ({})",
+            "najva_settings_auto_del": "🧨ضد ذخیره نجوا ({})",
             "minute": "{} دقیقه",
             "najva_settings_block": "⛔️بلاک های نجوا ویژه مستقیم ({} نفر)",
             "najva_settings_del_all": "💢حذف کل نجواهای ارسال شده💢",
