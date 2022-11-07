@@ -324,6 +324,15 @@ async def inline_query_process(msg: types.InlineQuery):
             title5 = ln_in["title"]["power_on"]
             photo5 = pic_cross
         dispo = set_desc["najva_dispo"].format(dispo)
+        if DataBase.hget(f"setting_najva:{user_id}", "antisave"):
+            antisave = langU["is_power_on"]
+            title6 = ln_in["title"]["power_off"]
+            photo6 = pic_tick
+        else:
+            antisave = langU["is_power_off"]
+            title6 = ln_in["title"]["power_on"]
+            photo6 = pic_cross
+        antisave = set_desc["najva_antisave"].format(antisave)
         inlineKeys = iMarkup()
         inlineKeys.add(
             iButtun(
@@ -385,9 +394,19 @@ async def inline_query_process(msg: types.InlineQuery):
             input_message_content=input_content,
             reply_markup=inlineKeys,
         )
+        item6 = InlineQueryResultArticle(
+            id=f"set:antisave:{user_id}",
+            title=title6,
+            description=antisave,
+            thumb_url=photo6,
+            thumb_width=512,
+            thumb_height=512,
+            input_message_content=input_content,
+            reply_markup=inlineKeys,
+        )
         await answerInlineQuery(
             msg_id,
-            [item1, item2, item3, item4, item5],
+            [item1, item2, item3, item4, item5, item6],
             1,
             ln_in["title"]["all_set"],
             "set",
