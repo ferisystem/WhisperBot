@@ -138,6 +138,10 @@ def anonymous_keys(UserID):
         status_receive = "❌"
     else:
         status_receive = "✅"
+    if DataBase.get("anti_save.anon:{}".format(UserID)):
+        status_lock = "✅"
+    else:
+        status_lock = "❌"
     blocks_number = DataBase.scard("blocks:{}".format(UserID))
     inlineKeys = iMarkup()
     if status_receive == "✅":
@@ -165,6 +169,12 @@ def anonymous_keys(UserID):
             iButtun(
                 buttuns["send_persion_anon"],
                 callback_data="anon:send{}".format(hash),
+            ),
+        )
+        inlineKeys.add(
+            iButtun(
+                buttuns["anti_save"].format(status_lock),
+                callback_data="anon:lock{}".format(hash),
             ),
         )
     inlineKeys.add(
