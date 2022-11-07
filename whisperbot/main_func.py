@@ -63,6 +63,7 @@ async def sendText(
             disable_notification=False,
             reply_to_message_id=reply_msgs,
             reply_markup=markup,
+            allow_sending_without_reply=True,
         )
         DataBase.incr("amarBot.sendMsg")
         return True, result
@@ -268,6 +269,7 @@ async def sendAudio(
             dis_notif,
             reply_msgs,
             reply_markup,
+            allow_sending_without_reply=True,
         )
         return True, result
     except expts.ChatNotFound as a:
@@ -397,6 +399,7 @@ async def sendVoice(
             dis_notif,
             reply_msgs,
             reply_markup,
+            allow_sending_without_reply=True,
         )
         return True, result
     except expts.ChatNotFound as a:
@@ -650,6 +653,7 @@ async def sendDocument(
             dis_notif,
             reply_msgs,
             reply_markup,
+            allow_sending_without_reply=True,
         )
         return True, result
     except expts.ChatNotFound as a:
