@@ -1132,7 +1132,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 pass
             await answerCallbackQuery(msg, langU["canceled"], cache_time=3600)
         if re.match(r"^special:antisave:@(\d+)", input):
-            ap = re_matches(r"^anon:lock:@(\d+)$", input)
+            ap = re_matches(r"^special:antisave:@(\d+)", input)
             if DataBase.hget("setting_najva:{}".format(user_id), "antisave"):
                 DataBase.hdel("setting_najva:{}".format(user_id), 'antisave')
                 text = langU["lock_najva_deactive"]
