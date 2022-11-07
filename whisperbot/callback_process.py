@@ -573,6 +573,18 @@ async def callback_query_process(msg: types.CallbackQuery):
             await editMessageReplyMarkup(
                 chat_id, msg_id, reply_markup=anonymous_keys(user_id)
             )
+        if re.match(r"^anon:lock:@(\d+)$", input):
+            ap = re_matches(r"^anon:lock:@(\d+)$", input)
+            if DataBase.get("anti_save.anon:{}".format(user_id)):
+                DataBase.delete("anti_save.anon:{}".format(user_id))
+                text = langU["lock_anon_deactive"]
+            else:
+                DataBase.set("anti_save.anon:{}".format(user_id), "True")
+                text = langU["lock_anon_active"]
+            await answerCallbackQuery(msg, text, show_alert=True, cache_time=2)
+            await editMessageReplyMarkup(
+                chat_id, msg_id, reply_markup=anonymous_keys(user_id)
+            )
         if re.match(r"^anon:myblock:@(\d+)$", input):
             if DataBase.scard("blocks:{}".format(user_id)) > 0:
                 await editText(
@@ -1120,8 +1132,16 @@ async def callback_query_process(msg: types.CallbackQuery):
                 pass
             await answerCallbackQuery(msg, langU["canceled"], cache_time=3600)
         if re.match(r"^special:antisave:@(\d+)", input):
-            await answerCallbackQuery(
-                msg, langU["anti_save"], show_alert=True, cache_time=3600
+            ap = re_matches(r"^anon:lock:@(\d+)$", input)
+            if DataBase.hget("setting_najva:{}".format(user_id), "antisave"):
+                DataBase.hdel("setting_najva:{}".format(user_id), 'antisave')
+                text = langU["lock_najva_deactive"]
+            else:
+                DataBase.hset("setting_najva:{}".format(user_id), "antisave", "True")
+                text = langU["lock_najva_active"]
+            await answerCallbackQuery(msg, text, show_alert=True, cache_time=2)
+            await editMessageReplyMarkup(
+                chat_id, msg_id, reply_markup=register_special_keys(user_id)
             )
         if re.match(r"^special:reg1:@(\d+)", input):
             try:
@@ -1368,6 +1388,9 @@ async def callback_query_process(msg: types.CallbackQuery):
             from_user = ap[1]
             time_data = ap[2]
             hash_db = "najva:{}:{}".format(from_user, time_data)
+            anti_save = False
+            if DataBase.hget(f"setting_najva:{from_user}", "anti-save"):
+                anti_save = True
             DataBase.set(
                 "najva_seen_time:{}:{}".format(from_user, time_data),
                 int(time()),
@@ -1401,7 +1424,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 GlobalValues().logchat,
                 msgid,
-                protect_content=False,
+                protect_content=anti_save,
                 reply_markup=inlineKeys,
             )
             if DataBase.hget(f"setting_najva:{from_user}", "seen"):
