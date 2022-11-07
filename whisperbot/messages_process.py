@@ -971,7 +971,10 @@ async def message_process(msg: types.Message):
                                 '<a href="t.me/c/{}/{}">{}</a>'.format(
                                     str(chat_id).replace("-100", ""),
                                     msg_id,
-                                    lang[lang_user(Uid)]["new_najva"],
+                                    lang[lang_user(Uid)]["new_najva"].format(
+                                    msg.from_user.first_name,
+                                    msg.chat.title
+                                    ),
                                 ),
                                 "html",
                             )
