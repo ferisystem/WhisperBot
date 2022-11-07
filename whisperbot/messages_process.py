@@ -939,6 +939,15 @@ async def message_process(msg: types.Message):
                             "users",
                             Uid,
                         )
+                        inlineKeys = iMarkup()
+                        inlineKeys.add(
+                            iButtun(
+                                buttuns["show_najva"],
+                                callback_data="showN:{}:{}".format(
+                                    user_id, time_data
+                                ),
+                            )
+                        )
                         await editText(
                             chat_id,
                             msg_id,
@@ -947,7 +956,7 @@ async def message_process(msg: types.Message):
                                 Uname
                             ),
                             "HTML",
-                            msg.reply_markup,
+                            inlineKeys,
                         )
                         if DataBase.hget(f"setting_najva:{Uid}", "recv"):
                             await sendText(
