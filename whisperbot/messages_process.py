@@ -935,12 +935,13 @@ async def message_process(msg: types.Message):
                     time_data.callback_data
                     and "showN2" in time_data.callback_data
                 ):
+                    user_data = time_data.callback_data.split(":")[1]
                     time_data = time_data.callback_data.split(":")[2]
                     if reply_msg:
                         Uid = reply_msg.from_user.id
                         Uname = reply_msg.from_user.first_name
                         DataBase.hset(
-                            "najva:{}:{}".format(user_id, time_data),
+                            "najva:{}:{}".format(user_data, time_data),
                             "users",
                             Uid,
                         )
@@ -949,7 +950,7 @@ async def message_process(msg: types.Message):
                             iButtun(
                                 buttuns["show_najva"],
                                 callback_data="showN:{}:{}".format(
-                                    user_id, time_data
+                                    user_data, time_data
                                 ),
                             )
                         )
@@ -981,7 +982,7 @@ async def message_process(msg: types.Message):
                     else:
                         if (
                             DataBase.hget(
-                                "najva:{}:{}".format(user_id, time_data),
+                                "najva:{}:{}".format(user_data, time_data),
                                 "users",
                             )
                             == "reply"
