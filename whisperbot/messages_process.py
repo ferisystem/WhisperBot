@@ -117,7 +117,6 @@ async def message_process(msg: types.Message):
             if "reply_markup" in reply_msg:
                 inpu_ = reply_msg.reply_markup
                 input_ = inpu_.inline_keyboard[0][0].callback_data
-                input2_ = inpu_.inline_keyboard[1][0].callback_data
                 if "anon:blo" in input_:
                     ap = re_matches(
                         r"^anon:blo:(\d+):(\d+):(\d+):@(\d+)$", input_
@@ -150,6 +149,7 @@ async def message_process(msg: types.Message):
                             "md",
                             anonymous_back_keys(user_id),
                         )
+                        input2_ = inpu_.inline_keyboard[1][0].callback_data
                         if input2_ == "none:yes":
                             DataBase.sadd(
                                 "inbox_user:{}".format(which_user),
