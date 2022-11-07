@@ -185,6 +185,18 @@ Disabled receiving Anonymous messages❌
 ⚠️From now on, you will not receive any Anonymous messages or replies
 """,
         "receive_anon_active": "Enabled receiving Anonymous messages✅",
+        "lock_anon_active": """
+Enabled Anti-Save Anonymous messages✅
+
+⚠️From now on, when you send Anonymous message to users, they can't save or forward or take screenshot your messages
+        """,
+        "lock_anon_deactive": "Disabled Anti-Save Anonymous messages❌",
+        "lock_najva_active": """
+Enabled Anti-Save Whisper messages✅
+
+⚠️From now on, when you send special whisper message to users, they can't save or forward or take screenshot your messages
+        """,
+        "lock_najva_deactive": "Disabled Anti-Save special whisper messages❌",
         "besure_del_all_blocks": "❗️ Do you want all blocked users to be Unblocked?",
         "blocks_clear_anon": "All blocked users Unblocked ✅",
         "blocks_empty_anon": "There is no user in the block list⚠️",
@@ -864,6 +876,20 @@ t.me/{}?start={}
 
 ⚠️از الان به بعد هیچ پیام و پاسخ ناشناسی دریافت نمیکنی""",
         "receive_anon_active": "دریافت پیام ناشناس فعال شد✅",
+        "lock_anon_active": """
+ضد ذخیره پیام ناشناس فعال شد✅
+        
+        
+⚠️از الان به بعد وقتی پیام ناشناس به کاربری ارسال میکنی، دیگه نمیتونه از پیامت اسکرین شات بگیره یا پیامت رو کپی یا فوروارد کنه
+""",
+        "lock_anon_deactive": "ضد ذخیره پیام ناشناس غیرفعال شد❌",
+        "lock_najva_active": """
+ضد ذخیره پیام نجوا فعال شد✅
+        
+        
+⚠️از الان به بعد وقتی پیام نجوای ویژه به کاربری ارسال میکنی، دیگه نمیتونه از پیامت اسکرین شات بگیره یا پیامت رو کپی یا فوروارد کنه
+""",
+        "lock_najva_deactive": "ضد ذخیره پیام نجوا غیرفعال شد❌",
         "besure_del_all_blocks": "آیا از پاک کردن تمام لیست بلاک مطمئنید؟",
         "blocks_clear_anon": "لیست بلاک پاکسازی شد♨️",
         "blocks_empty_anon": "⚠️لیست بلاک خالی است",
