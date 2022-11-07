@@ -1135,10 +1135,10 @@ async def callback_query_process(msg: types.CallbackQuery):
             ap = re_matches(r"^special:antisave:@(\d+)", input)
             if DataBase.hget("setting_najva:{}".format(user_id), "antisave"):
                 DataBase.hdel("setting_najva:{}".format(user_id), 'antisave')
-                text = langU["lock_najva_deactive"]
+                text = langU["najva_setoff_antisave"]
             else:
                 DataBase.hset("setting_najva:{}".format(user_id), "antisave", "True")
-                text = langU["lock_najva_active"]
+                text = langU["najva_seton_antisave"]
             await answerCallbackQuery(msg, text, show_alert=True, cache_time=2)
             await editMessageReplyMarkup(
                 chat_id, msg_id, reply_markup=register_special_keys(user_id)
