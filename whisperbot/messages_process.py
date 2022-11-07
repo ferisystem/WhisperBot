@@ -457,12 +457,16 @@ async def message_process(msg: types.Message):
                         else:
                             show_sender = None
                         await asyncio.sleep(0.5)
+                        anti_save = False
+                        hash_db = f"anti_save.anon:{ap[2]}"
+                        if DataBase.get(hash_db):
+                            anti_save = True
                         await copyMessage(
                             user_id,
                             GlobalValues().logchat,
                             int(ap[1]),
                             reply_msg=int(ap[4]),
-                            protect_content=False,
+                            protect_content=anti_save,
                             reply_markup=anonymous_new_message_keys(
                                 user_id, ap[2], ap[3], show_sender, ap[5]
                             ),
@@ -548,6 +552,10 @@ async def message_process(msg: types.Message):
                     time_data = float(f"{ap[2]}.{ap[3]}")
                     hash_db = "najva:{}:{}".format(from_user, time_data)
                     msgid = DataBase.hget(hash_db, "msg_id")
+                    anti_save = False
+                    hash_db2 = f"setting_najva:{from_user}"
+                    if DataBase.hget(hash_db2, "anti-save"):
+                        anti_save = True
                     if user_id == int(from_user):
                         inlineKeys = await show_speical_najva2_keys(
                             user_id, from_user
@@ -584,7 +592,7 @@ async def message_process(msg: types.Message):
                         chat_id,
                         GlobalValues().logchat,
                         msgid,
-                        protect_content=False,
+                        protect_content=anti_save,
                         reply_markup=inlineKeys,
                     )
                     if DataBase.hget(f"setting_najva:{from_user}", "seen"):
