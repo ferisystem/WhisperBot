@@ -177,7 +177,7 @@ This is a help for installation.
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Anti-save for special Whispers
+- [x] Anti-save for special Whispers
 - [ ] Delete all Whisper sent before
 - [ ] Block user from recent list user
 - [ ] Multi-language Support
