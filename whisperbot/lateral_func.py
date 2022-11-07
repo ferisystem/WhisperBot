@@ -514,7 +514,7 @@ async def delete_previous_message(UserID):
         hash_db = "pre_msgbot:{}".format(UserID)
         if DataBase.get(hash_db):
             await bot.delete_message(
-                    chat_id,
+                    UserID,
                     DataBase.get(hash_db)
             )
             DataBase.delete(hash_db)
