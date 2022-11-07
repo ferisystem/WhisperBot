@@ -215,7 +215,7 @@ async def message_process(msg: types.Message):
                 else:
                     name_user = users_data
                 name_user = await userInfos(name_user, info="name")
-                await delete_previous_message(user_id)                    
+                await delete_previous_message(user_id)
                 msg_ = await sendText(
                     chat_id,
                     data_msg,
