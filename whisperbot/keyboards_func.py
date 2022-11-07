@@ -478,6 +478,14 @@ def najva_settings_keys(UserID):
             callback_data="najva:settings1:dispo{}".format(hash),
         ),
     )
+    inlineKeys.add(
+        iButtun(
+            buttuns["najva_settings_antisave"].format(
+                rplac_tick(DataBase.hget(f"setting_najva:{UserID}", "antisave"))
+            ),
+            callback_data="najva:settings1:antisave{}".format(hash),
+        ),
+    )
     if DataBase.hget(f"setting_najva:{UserID}", "autodel"):
         time_del = buttuns["minute"].format(
             DataBase.get(f"autodel_time:{UserID}") or 10
