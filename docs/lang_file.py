@@ -1311,7 +1311,7 @@ unlock inline
             "najva_settings_no_name": "🧩نجوای بی نام ({})",
             "najva_settings_disposable": "✨نجوای یکبار مصرف ({})",
             "najva_settings_auto_del": "⏳حذف خودکار نجوا ({})",
-            "najva_settings_auto_del": "🧨ضد ذخیره نجوا ({})",
+            "najva_settings_antisave": "🧨ضد ذخیره نجوا ({})",
             "minute": "{} دقیقه",
             "najva_settings_block": "⛔️بلاک های نجوا ویژه مستقیم ({} نفر)",
             "najva_settings_del_all": "💢حذف کل نجواهای ارسال شده💢",
