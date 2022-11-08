@@ -1151,7 +1151,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             except:
                 pass
             if ap[1] == "send":
-                file = "docs/helps/help_media.jpg"
+                file = "docs/helps/help_send.jpg"
                 with open(file, "rb") as file:
                     await sendPhoto(
                         chat_id,
