@@ -76,6 +76,36 @@ async def callback_query_process(msg: types.CallbackQuery):
                 "این پنل قدیمی است دوباره پنل مربوطه را دریافت کنید!\nاگر پنل پرداختی است نگران نباشید :D",
                 True,
             )
+        if re.match(r"^joined$", input):
+            chId = GlobalValues().chId
+            channel_member = await is_Channel_Member(chId, user_id)
+            if chId != 0 and not channel_member:
+                DataBase.setex(f"join_alarm:{user_id}", 120, "True")
+                inlineKeys = iMarkup()
+                inlineKeys.add(
+                    iButtun(
+                        langU["buttuns"]["join"],
+                        url=IDs_datas["chLink"],
+                    ),
+                    iButtun(
+                        langU["buttuns"]["joined"],
+                        callback_data="joined",
+                    ),
+                )
+                return await answerCallbackQuery(
+                    msg,
+                    langU["uNotJoined"].format(IDs_datas['chUsername']),
+                    show_alert=True,
+                    cache_time=5,
+                )
+            await editText(
+                chat_id,
+                msg_id,
+                0,
+                langU["start"].format(GlobalValues().botName),
+                "html",
+                start_keys(user_id),
+            )
         if re.match(r"^backstart:@(\d+)$", input):
             DataBase.delete("sup:{}".format(user_id))
             DataBase.delete("ready_to_change_link:{}".format(user_id))
