@@ -554,6 +554,8 @@ Just enable Chat history for new members and your group will automatically becom
         "you_are_on_limit": "you can do this for every 1 hour. next time you can do: {}",
         "najva_404": "⚠️Whisper not found. Either the whisper has been seen once or it has been deleted by the sender of the whisper",
         "is_for_show": "this is for show",
+        "force_join_active": "activated✅!\nfrom now, users must be join in channel to use bot",
+        "force_join_deactive": "deactivated❌",
         "inline": {
             "title": {
                 "help_send": "How to send",
@@ -709,6 +711,7 @@ Go to Bot and send your media or message 👇
             "delall": "Delete all♨️",
             "back_nrec": "Recent list⬇️",
             "send_more": "I want to send more🎯",
+            "force_join": "Force join: {}",
             "join": "join🔰",
             "joined": "joined✅",
             "bot_ch": "bot channel",
@@ -1225,6 +1228,8 @@ unlock inline
         "you_are_on_limit": "شما این کار را هر 1 ساعت یکبار میتوانید انجام دهید. زمان مجاز بعدی برای انجام: {}",
         "najva_404": "⚠️نجوا پیدا نشد. یا نجوا یکبار دیده شده است یا توسط فرستنده نجوا حذف شده است",
         "is_for_show": "این دکمه نمایشی است",
+        "force_join_active": "روشن شد✅. از این پس کاربران برای استفاده از ربات مجبور به عضویت در کانال میشوند",
+        "force_join_deactive": "خاموش شد❌",
         "inline": {
             "title": {
                 "help_send": "آموزش ارسال نجوا",
@@ -1380,6 +1385,7 @@ unlock inline
             "delall": "حذف همه♨️",
             "back_nrec": "صفحه کاربران اخیر⬇️",
             "send_more": "میخوام بازم بفرستم🎯",
+            "force_join": "عضویت اجباری در کانال: {}",
             "join": "عضویت🔰",
             "joined": "عضو شدم✅",
             "bot_ch": "کانال ربات",
