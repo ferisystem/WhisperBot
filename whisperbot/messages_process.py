@@ -708,42 +708,6 @@ async def message_process(msg: types.Message):
                     )
                     DataBase.setex("isBan:{}".format(user_id), 900, "True")
                 rds.setex(hash, 3, msgs + 1)
-            if int(user_id) != GlobalValues().botID and not await is_Channel_Member(
-                "@{}".format(IDs_datas["chUsername"]), user_id
-            ):
-                await sendText(
-                    chat_id,
-                    msg,
-                    1,
-                    langU["join_channel"].format(IDs_datas["chUsername"]),
-                    "md",
-                )
-                return False
-            if not re.search(
-                r"^[!/#]start", input
-            ) and not await is_Channel_Member(
-                "@{}".format(IDs_datas["chUsername"]), user_id
-            ):
-                inlineKeys = iMarkup()
-                inlineKeys.add(
-                    iButtun(
-                        langU["buttuns"]["join"],
-                        url="https://t.me/{}".format(IDs_datas["chUsername"]),
-                    ),  # GlobalValues().chLink),
-                    iButtun(
-                        langU["buttuns"]["joined"],
-                        callback_data="backstart:@{}".format(user_id),
-                    ),
-                )
-                await sendText(
-                    chat_id,
-                    msg,
-                    1,
-                    langU["force_join"].format(IDs_datas["chUsername"]),
-                    "md",
-                    inlineKeys,
-                )
-                return False
             if re.match(r"^/najva$", input):
                 await sendText(
                     chat_id,
@@ -817,6 +781,31 @@ async def message_process(msg: types.Message):
                 DataBase.delete("who_conneted:{}".format(user_id))
                 if not DataBase.sismember("allUsers", user_id):
                     await newUser(msg)
+                chId = GlobalValues().chId
+                channel_member = await is_Channel_Member(chId, user_id)
+                if chId != 0 and not channel_member:
+                    if DataBase.get(f"join_alarm:{user_id}"):
+                        return False
+                    DataBase.setex(f"join_alarm:{user_id}", 120, "True")
+                    inlineKeys = iMarkup()
+                    inlineKeys.add(
+                        iButtun(
+                            langU["buttuns"]["join"],
+                            url=IDs_datas["chLink"],
+                        ),
+                        iButtun(
+                            langU["buttuns"]["joined"],
+                            callback_data="joined",
+                        ),
+                    )
+                    return await sendText(
+                        chat_id,
+                        msg,
+                        1,
+                        langU["force_join"].format(IDs_datas["chLink"]),
+                        "md",
+                        inlineKeys,
+                    )
                 await sendText(
                     chat_id,
                     msg,
