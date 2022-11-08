@@ -514,7 +514,7 @@ async def message_process(msg: types.Message):
                         msg,
                         1,
                         langU["najva_help"],
-                        None,
+                        "html",
                         najva_help_keys(user_id),
                     )
                 elif ap[1] == "multi":
@@ -713,9 +713,12 @@ async def message_process(msg: types.Message):
                     chat_id,
                     msg,
                     1,
-                    langU["najva_help"],
-                    None,
-                    najva_help_keys(user_id),
+                    langU["najva"].format(
+                        GlobalValues().botUser,
+                        GlobalValues().botName
+                    ),
+                    "html",
+                    najva_keys(user_id),
                 )
             if re.match(r"^/nashenas$", input):
                 await sendText(
