@@ -856,40 +856,20 @@ async def callback_query_process(msg: types.CallbackQuery):
             )
         if re.match(r"^recent:(\d+):@(\d+)$", input):
             ap = re_matches(r"^recent:(\d+):@(\d+)$", input)
-            inlineKeys = iMarkup()
             uname_user = await userInfos(int(ap[1]), info="username")
             name_user = await userInfos(int(ap[1]), info="name")
-            if uname_user:
-                call_url = "https://t.me/{}".format(uname_user)
-            else:
-                call_url = "https://t.me?openmessage?user_id={}".format(ap[1])
-            inlineKeys.add(
-                iButtun(name_user, call_url),
-            )
-            inlineKeys.add(
-                iButtun(
-                    buttuns["block"],
-                    callback_data=f"recent:{ap[1]}:b:@{user_id}",
-                ),
-            )
-            inlineKeys.add(
-                iButtun(
-                    buttuns["delete"],
-                    callback_data=f"recent:{ap[1]}:y:@{user_id}",
-                ),
-            )
-            inlineKeys.add(
-                iButtun(
-                    buttuns["back_nrec"],
-                    callback_data=f"najva:settings:recents:@{user_id}",
-                ),
+            inlineKeys = najva_recent_user_keys(
+                uname_user,
+                name_user,
+                int(ap[1]),
+                user_id
             )
             await editText(
                 chat_id,
                 msg_id,
                 0,
                 langU["recent_info"].format(ap[1]),
-                "md",
+                "html",
                 inlineKeys,
             )
         if re.match(r"^recent:(\d+):y:@(\d+)$", input):
@@ -909,8 +889,32 @@ async def callback_query_process(msg: types.CallbackQuery):
             )
         if re.match(r"^recent:(\d+):b:@(\d+)$", input):
             ap = re_matches(r"^recent:(\d+):b:@(\d+)$", input)
+            hash_db = f"blocks2:{user_id}"
+            who_user = int(ap[1])
+            uname_user = await userInfos(who_user, info="username")
+            name_user = await userInfos(who_user, info="name")
+            if DataBase.sismember(hash_db, who_user):
+                DataBase.srem(f"blocks2:{user_id}", who_user)
+                text = langU["user_unblocked_najva"]
+            else:
+                DataBase.sadd(f"blocks2:{user_id}", who_user)
+                text = langU["user_blocked_najva"]
             await answerCallbackQuery(
-                msg, langU["block_recent"], show_alert=True, cache_time=3600
+                msg, text, show_alert=True, cache_time=5
+            )
+            inlineKeys = najva_recent_user_keys(
+                uname_user,
+                name_user,
+                who_user,
+                user_id
+            )
+            await editText(
+                chat_id,
+                msg_id,
+                0,
+                langU["recent_info"].format(ap[1]),
+                "html",
+                inlineKeys,
             )
         if re.match(r"^najva:help:@(\d+)$", input):
             try:
