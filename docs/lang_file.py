@@ -175,6 +175,8 @@ Message ID: #id_{}
 """,
         "user_blocked": "user blocked🚫",
         "user_unblocked": "user Unblocked⭕️",
+        "user_blocked_najva": "user blocked🚫\nfrom now, the user can't sent whisper to you",
+        "user_unblocked_najva": "user Unblocked⭕️",
         "help_reply_anon": """
 Answer can be media or file in addition to text 😁
 To reply, you can also reply to the user by replying to the desired message 💡
@@ -872,6 +874,8 @@ t.me/{}?start={}
         "your_msg_sent": "پیام شما ارسال شد✅",
         "new_message": "📮پیام جدید! /inbox\nشناسه پیام: #id_{}",
         "user_blocked": "کاربر بلاک شد🚫",
+        "user_unblocked": "کاربر آنبلاک شد⭕️",
+        "user_blocked": "کاربر بلاک شد🚫\nاز حالا به بعد این کاربر دیگه نمیتونه به شما نجوا ارسال کنه",
         "user_unblocked": "کاربر آنبلاک شد⭕️",
         "help_reply_anon": "برای پاسخ روی این پیام ریپلای کنید و پیام خود را بنویسید و ارسال کنید",
         "receive_anon_deactive": """
