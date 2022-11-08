@@ -1547,7 +1547,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         ),
                     )
                 await answerCallbackQuery(
-                    msg, text_data, show_alert=True,# cache_time=3600
+                    msg, text_data, show_alert=True, cache_time=3600
                 )
                 if (
                     DataBase.scard(
@@ -1622,7 +1622,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     msg,
                     langU["najva_not_for_you"],
                     show_alert=True,
-                    # cache_time=3600,
+                    cache_time=3600,
                 )
         if re.match(r"^delnajva:(\d+):([-+]?\d*\.\d+|\d+)$", input):
             ap = re_matches(r"^delnajva:(\d+):([-+]?\d*\.\d+|\d+)$", input)
