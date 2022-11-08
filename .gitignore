@@ -3,5 +3,5 @@ config_bot2.py
 :memory:.session
 .cache
 __pycache__
-docs/helps/*
+docs/profiles/*
 *.session
