@@ -935,7 +935,7 @@ async def message_process(msg: types.Message):
                     time_data.callback_data
                     and "showN2" in time_data.callback_data
                 ):
-                    user_data = time_data.callback_data.split(":")[1]
+                    user_data = int(time_data.callback_data.split(":")[1])
                     time_data = time_data.callback_data.split(":")[2]
                     if reply_msg:
                         Uid = reply_msg.from_user.id
@@ -946,7 +946,6 @@ async def message_process(msg: types.Message):
                             Uid,
                         )
                         if msg.sender_chat:
-                            user_data = int(user_data)
                             if user_data in user_steps and "najva" in user_steps[user_data]:
                                 najva = user_steps[user_data]["najva"]
                                 DataBase.hset(
@@ -965,7 +964,10 @@ async def message_process(msg: types.Message):
                                     "HTML",
                                 )
                         else:
-                            del user_steps[user_data]["najva"]
+                            try:
+                                del user_steps[user_data]["najva"]
+                            except:
+                                pass
                         inlineKeys = iMarkup()
                         inlineKeys.add(
                             iButtun(
