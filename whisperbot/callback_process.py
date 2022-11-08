@@ -1648,6 +1648,11 @@ async def callback_query_process(msg: types.CallbackQuery):
             from_user = ap[1]
             time_data = ap[2]
             hash_db = "najva:{}:{}".format(from_user, time_data)
+            if DataBase.hash_type(hash_db) != 'hash':
+                return await editText(
+                    inline_msg_id=msg_id,
+                    text=langU["najva_404"]
+                )
             text_data = DataBase.hget(hash_db, "text")
             users_data = DataBase.hget(hash_db, "users")
             is_allow = (username != "" and username in users_data) or str(
