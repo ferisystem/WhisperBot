@@ -61,6 +61,14 @@ def start_keys(UserID):
                 callback_data="list:stats:0{}".format(hash),
             ),
         )
+        inlineKeys.add(
+            iButtun(
+                langU["buttuns"]["force_join"].format(
+                    rplac_tick(DataBase.get("force_join"))
+                ),
+                callback_data="forcejoin",
+            ),
+        )
     inlineKeys.add(
         iButtun(
             langU["buttuns"]["channel"],
