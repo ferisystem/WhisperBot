@@ -1218,15 +1218,14 @@ async def callback_query_process(msg: types.CallbackQuery):
                         reply_markup=najva_help6_keys(user_id),
                     )
             elif ap[1] == "prob":
-                file = "docs/helps/help_prob.mp4"
+                file = "docs/helps/help_prob.jpg"
                 with open(file, "rb") as file:
-                    await sendVideo(
+                    await sendPhoto(
                         chat_id,
-                        _.reply_to_message,
                         file,
                         langU["najva_help_prob"].format(GlobalValues().botUser),
                         "html",
-                        supports_streaming=True,
+                        _.reply_to_message,
                         reply_markup=najva_help7_keys(user_id),
                     )
             elif ap[1] == "examp":
