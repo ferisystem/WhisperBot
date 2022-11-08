@@ -249,13 +249,13 @@ async def callback_query_process(msg: types.CallbackQuery):
                 alerttext = langU["usblock"]
                 keyboard = blockKeys(ap[1])
                 try:
-                    getC = await bot.get_chat(ap[1])
+                    getC = await userInfos(ap[1], info="name")
                     await editText(
                         chat_id,
                         msg_id,
                         0,
-                        "#NewUser\nName: [{0}](tg://user?id={1})\nID: `{1}`\nStatus: Deactive🚫".format(
-                            getC.first_name, ap[1]
+                        "#NewUser\n[{0}](tg://user?id={1}) > `{1}`\nStatus: Deactive🚫".format(
+                            getC, ap[1]
                         ),
                         "md",
                         keyboard,
@@ -265,7 +265,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         chat_id,
                         msg_id,
                         0,
-                        "#NewUser\nName: [{0}](tg://user?id={0})\nID: `{0}`\nStatus: Deactive🚫".format(
+                        "#NewUser\n[{0}](tg://user?id={0}) > `{0}`\nStatus: Deactive🚫".format(
                             ap[1]
                         ),
                         "md",
@@ -279,13 +279,13 @@ async def callback_query_process(msg: types.CallbackQuery):
                 alerttext = langU["usunblocked"]
                 keyboard = blockKeys(ap[1])
                 try:
-                    getC = getChat(ap[1])
+                    getC = await userInfos(ap[1], info="name")
                     await editText(
                         chat_id,
                         msg_id,
                         0,
-                        "#NewUser\nName: [{0}](tg://user?id={1})\nID: `{1}`\nStatus: Active✅".format(
-                            getC.first_name, ap[1]
+                        "#NewUser\n[{0}](tg://user?id={1}) > `{1}`\nStatus: Active✅".format(
+                            getC, ap[1]
                         ),
                         "md",
                         keyboard,
@@ -295,7 +295,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         chat_id,
                         msg_id,
                         0,
-                        "#NewUser\nName: [{0}](tg://user?id={0})\nID: `{0}`\nStatus: Active✅".format(
+                        "#NewUser\n[{0}](tg://user?id={0}) > `{0}`\nStatus: Active✅".format(
                             ap[1]
                         ),
                         "md",
