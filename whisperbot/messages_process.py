@@ -940,6 +940,19 @@ async def message_process(msg: types.Message):
                     if reply_msg:
                         Uid = reply_msg.from_user.id
                         Uname = reply_msg.from_user.first_name
+                        if DataBase.sismember(f"blocks2:{Uid}", user_id):
+                            uSer = f"<a href=\"tg://user?id={Uid}\">{Uname}</a>"
+                            try:
+                                del user_steps[user_id]["najva"]
+                            except:
+                                pass
+                            return await editText(
+                                chat_id,
+                                msg_id,
+                                0,
+                                langU["najva_user_blocked_you"].format(uSer),
+                                "html",
+                            )
                         DataBase.hset(
                             "najva:{}:{}".format(user_data, time_data),
                             "users",
