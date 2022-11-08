@@ -808,7 +808,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 msg_id,
                 0,
                 langU["blocks2_info"].format(ap[1]),
-                "md",
+                "html",
                 inlineKeys,
             )
         if re.match(r"^blocks2:(\d+):y:@(\d+)$", input):
