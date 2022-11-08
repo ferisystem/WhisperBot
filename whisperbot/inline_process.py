@@ -632,11 +632,9 @@ async def inline_query_process(msg: types.InlineQuery):
             )
             # have_prof = DataBase.hget('userProfs', user)
             # if have_prof:
-            # get_file = await bot.get_file(have_prof)
-            # file_path = get_file['file_path']
-            # file_path = f'https://api.telegram.org/file/bot{telegram_datas["botToken"]}/{file_path}'
+                # file_path = f"docs/profiles/{user}.jpg"
             # else:
-            # file_path = pic_user
+                # file_path = pic_user
             file_path = pic_user
             item1 = InlineQueryResultArticle(
                 id=f"najvaS:{user_id}:{user}",

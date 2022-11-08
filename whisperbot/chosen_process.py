@@ -78,15 +78,17 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
             msg.inline_message_id,
         )
         DataBase.incr("stat_najva")
-        for i in najva["users"]:
-            if str(i).isdigit() and not DataBase.get(f"userProfs:{i}"):
-                DataBase.setex(f"userProfs:{i}", 604800, 1)
-                profiles = await getUserProfilePhotos(i)
-                if profiles[0] and profiles[1].total_count > 0:
-                    DataBase.hset(
-                        "userProfs", i, profiles[1].photos[0][-1].file_id
-                    )
-                await asyncio.sleep(0.5)
+        # for i in najva["users"]:
+            # if str(i).isdigit() and not DataBase.get(f"userProfs:{i}"):
+                # DataBase.setex(f"userProfs:{i}", 604800, 1)
+                # profiles = await getUserProfilePhotos(i)
+                # if profiles[0] and profiles[1].total_count > 0:
+                    # DataBase.hset(
+                        # "userProfs", i, profiles[1].photos[0][-1].file_id
+                    # )
+                    # have_prof = profiles[1].photos[0][1].file_id
+                    # await downloadFileByID(have_prof, f"docs/profiles/{i}.jpg")
+                # await asyncio.sleep(0.5)
         del user_steps[user_id]["najva"]
     if (
         re.match(r"^najvaA:(\d+)$", result_id)
@@ -190,15 +192,17 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
         )
         if not msg_[0] is False:
             DataBase.set("pre_msgbot:{}".format(user_id), msg_[1].message_id)
-        if str(najva["users"]).isdigit():
-            i = najva["users"]
-            if not DataBase.get(f"userProfs:{i}"):
-                DataBase.setex(f"userProfs:{i}", 604800, 1)
-                profiles = await getUserProfilePhotos(i)
-                if profiles[0] and profiles[1].total_count > 0:
-                    DataBase.hset(
-                        "userProfs", i, profiles[1].photos[0][-1].file_id
-                    )
+        # if str(najva["users"]).isdigit():
+            # i = najva["users"]
+            # if not DataBase.get(f"userProfs:{i}"):
+                # DataBase.setex(f"userProfs:{i}", 604800, 1)
+                # profiles = await getUserProfilePhotos(i)
+                # if profiles[0] and profiles[1].total_count > 0:
+                    # DataBase.hset(
+                        # "userProfs", i, profiles[1].photos[0][-1].file_id
+                    # )
+                    # have_prof = profiles[1].photos[0][1].file_id
+                    # await downloadFileByID(have_prof, f"docs/profiles/{i}.jpg")
     if (
         re.match(r"^najvaS:(\d+):(\d+)$", result_id)
         and "najva" in user_steps[user_id]
@@ -254,12 +258,14 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
         )
         if not msg_[0] is False:
             DataBase.set("pre_msgbot:{}".format(user_id), msg_[1].message_id)
-        if str(najva["users"]).isdigit():
-            i = najva["users"]
-            if not DataBase.get(f"userProfs:{i}"):
-                DataBase.setex(f"userProfs:{i}", 604800, 1)
-                profiles = await getUserProfilePhotos(i)
-                if profiles[0] and profiles[1].total_count > 0:
-                    DataBase.hset(
-                        "userProfs", i, profiles[1].photos[0][-1].file_id
-                    )
+        # if str(najva["users"]).isdigit():
+            # i = najva["users"]
+            # if not DataBase.get(f"userProfs:{i}"):
+                # DataBase.setex(f"userProfs:{i}", 604800, 1)
+                # profiles = await getUserProfilePhotos(i)
+                # if profiles[0] and profiles[1].total_count > 0:
+                    # DataBase.hset(
+                        # "userProfs", i, profiles[1].photos[0][-1].file_id
+                    # )
+                    # have_prof = profiles[1].photos[0][1].file_id
+                    # await downloadFileByID(have_prof, f"docs/profiles/{i}.jpg")
