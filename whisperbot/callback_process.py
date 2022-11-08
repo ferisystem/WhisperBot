@@ -664,13 +664,15 @@ async def callback_query_process(msg: types.CallbackQuery):
                         len(recent) + len(recent2)
                     )
                     inlineKeys = iMarkup()
+                    members = set()
                     count = 0
                     for i in recent:
                         name_user = await userInfos(i, "name")
                         if "Deleted" in name_user:
                             DataBase.srem(f"najva_recent:{user_id}", i)
                             DataBase.srem(f"najva_recent2:{user_id}", i)
-                        else:
+                        elif not i in members:
+                            members.add(i)
                             count += 1
                             inlineKeys.add(
                                 iButtun(
@@ -678,14 +680,15 @@ async def callback_query_process(msg: types.CallbackQuery):
                                     callback_data=f"recent:{i}:@{user_id}",
                                 ),
                             )
-                            if count > 22:
-                                break
+                            if len(members) > 22:
+                                break                            
                     for i in recent2:
                         name_user = await userInfos(i, "name")
                         if "Deleted" in name_user:
                             DataBase.srem(f"najva_recent:{user_id}", i)
                             DataBase.srem(f"najva_recent2:{user_id}", i)
-                        else:
+                        elif not i in members:
+                            members.add(i)
                             count += 1
                             inlineKeys.add(
                                 iButtun(
@@ -693,8 +696,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                                     callback_data=f"recent:{i}:@{user_id}",
                                 ),
                             )
-                            if count > 22:
+                            if len(members) > 22:
                                 break
+                        elif i in members:
+                            DataBase.srem(f"najva_recent2:{user_id}", i)
                     inlineKeys.add(
                         iButtun(
                             buttuns["back_nset"],
