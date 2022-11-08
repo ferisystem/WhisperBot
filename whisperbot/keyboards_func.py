@@ -520,6 +520,42 @@ def najva_settings_keys(UserID):
     return inlineKeys
 
 
+def najva_recent_user_keys(uname_user, name_user, user_ID, UserID):
+    langU = lang[lang_user(UserID)]
+    buttuns = langU["buttuns"]
+    inlineKeys = iMarkup()
+    if uname_user:
+        call_url = "https://t.me/{}".format(uname_user)
+    else:
+        call_url = "https://t.me?openmessage?user_id={}".format(user_ID)
+    if DataBase.sismember(f"blocks2:{UserID}", user_ID):
+        buttun1 = buttuns["unblock"]
+    else:
+        buttun1 = buttuns["block"]
+    inlineKeys.add(
+        iButtun(name_user, call_url),
+    )
+    inlineKeys.add(
+        iButtun(
+            buttun1,
+            callback_data=f"recent:{user_ID}:b:@{UserID}",
+        ),
+    )
+    inlineKeys.add(
+        iButtun(
+            buttuns["delete"],
+            callback_data=f"recent:{user_ID}:y:@{UserID}",
+        ),
+    )
+    inlineKeys.add(
+        iButtun(
+            buttuns["back_nrec"],
+            callback_data=f"najva:settings:recents:@{UserID}",
+        ),
+    )
+    return inlineKeys
+
+
 def najva_help_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
