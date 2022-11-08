@@ -143,7 +143,10 @@ async def main():
 			time_seen = int(time_seen)
 			if now_time > (time_seen + time_to_del):
 				chat_id, msg_id = seen_id.split(':')
-				await client.delete_messages(int(chat_id), int(msg_id))
+				try:
+                    await client.delete_messages(int(chat_id), int(msg_id))
+                except:
+                    pass
 				DataBase.srem('najva_autodel', i)
 				DataBase.delete('najva:{}:{}'.format(from_user, time_data))
 				DataBase.delete('najva_special:{}'.format(from_user))
