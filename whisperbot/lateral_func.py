@@ -309,11 +309,12 @@ async def getChatMember(ChatID, UserID):
 async def is_Channel_Member(channel, user):
     var = True
     send = await getChatMember(channel, user)
-    if not type(send) is types.chat_member.ChatMember:
+    types_c = types.chat_member
+    if type(send) is tuple:
         var = True
-    elif type(send) is types.chat_member.ChatMember and (
-        send.status == "kicked" or send.status == "left"
-    ):
+    elif type(send) is types_c.ChatMemberLeft:
+        var = False
+    elif type(send) is types_c.ChatMemberBanned:
         var = False
     return var
 
