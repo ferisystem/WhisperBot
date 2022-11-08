@@ -38,6 +38,16 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
                 if str(i).isdigit():
                     DataBase.sadd(f"najva_recent:{user_id}", i)
         else:
+            uSer = najva["users"][0]
+            if DataBase.sismember(f"blocks2:{uSer}", user_id):
+                uSer = f"<a href=\"tg://user?id={uSer}\">{uSer}</a>"
+                del user_steps[user_id]["najva"]
+                return await editText(
+                    inline_msg_id=msg.inline_message_id,
+                    text=langU["najva_user_blocked_you"].format(uSer),
+                    parse_mode="html",
+                    reply_markup=None,
+                )
             DataBase.hset(
                 "najva:{}:{}".format(user_id, najva["time"]),
                 "users",
@@ -119,6 +129,16 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
     ):
         ap = re_matches(r"^najvaS:(\d+)$", result_id)
         najva = user_steps[user_id]["najva"]
+        uSer = najva["users"]
+        if DataBase.sismember(f"blocks2:{uSer}", user_id):
+            uSer = f"<a href=\"tg://user?id={uSer}\">{uSer}</a>"
+            del user_steps[user_id]["najva"]
+            return await editText(
+                inline_msg_id=msg.inline_message_id,
+                text=langU["najva_user_blocked_you"].format(uSer),
+                parse_mode="html",
+                reply_markup=None,
+            )
         DataBase.hset(
             "najva:{}:{}".format(user_id, najva["time"]),
             "users",
@@ -170,6 +190,15 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
         ap = re_matches(r"^najvaS:(\d+):(\d+)$", result_id)
         najva = user_steps[user_id]["najva"]
         najva["users"] = ap[2]
+        if DataBase.sismember(f"blocks2:{ap[2]}", user_id):
+            uSer = f"<a href=\"tg://user?id={ap[2]}\">{ap[2]}</a>"
+            del user_steps[user_id]["najva"]
+            return await editText(
+                inline_msg_id=msg.inline_message_id,
+                text=langU["najva_user_blocked_you"].format(uSer),
+                parse_mode="html",
+                reply_markup=None,
+            )
         DataBase.hset(
             "najva:{}:{}".format(user_id, najva["time"]),
             "users",
