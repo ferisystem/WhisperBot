@@ -490,9 +490,9 @@ Gif, Video, Voice, Photo and Sticker
         "user_unbanned": "The user is freed from using the bot🟢",
         "no_name": "Hide",
         "delall": """
-This section is under construction and will be activated soon
+You have {} whispers to delete.
 
-Keep the bot chat unmuted to be notified when update arrived and activated 🤩
+⚠️If you click on yes, all your whispers will be deleted and the recipients will no longer be able to see them.
 """,
         "blocks2_empty": "⚠️ List is empty",
         "blocks2_list": """
@@ -548,6 +548,10 @@ Just enable Chat history for new members and your group will automatically becom
         """,
         "error_reply_najva": "An error occurred while register the replay whisper. It is suggested to remove yourself from the invisible admin",
         "najva_user_blocked_you": "user {} blocked you in whisper blocklist and you can't send whisper to him/her",
+        "najvas_sent_is_zero": "You haven't sent any whisper",
+        "wait_delall": "The bot is deleting {} your sent whisper...\nApproximate deletion time: {}",
+        "delall_najva_result": "Bot deleted {} Whisper. you can do this every 60 minutes",
+        "you_are_on_limit": "you can do this for every 1 hour. next time you can do: {}",
         "inline": {
             "title": {
                 "help_send": "How to send",
@@ -663,6 +667,7 @@ Go to Bot and send your media or message 👇
             "najva_settings_auto_del": "⏳Whisper auto delete ({})",
             "najva_settings_antisave": "🧨Whisper anti-save ({})",
             "minute": "{} minute",
+            "seconds": "{} seconds",
             "najva_settings_block": "⛔️Direct special whisper blacklist ({} user)",
             "najva_settings_del_all": "💢Delete all sent whisper💢",
             "back_najva": "Whisper page⬇️",
@@ -1170,7 +1175,11 @@ unlock inline
         "user_banned": "کاربر از استفاده ربات محروم شد🔴",
         "user_unbanned": "کاربر از استفاده ربات آزاد شد🟢",
         "no_name": "مخفی",
-        "delall": "این بخش فعال نیست. بزودی فعال میشه و از طریق ربات بهت اطلاع رسانی میشه.",
+        "delall": """
+شما {} نجوا برای حذف دارید.
+
+⚠️اگر روی بله بزنید، تمام نجواهای شما حذف میشود و دیگر امکان مشاهده آنها توسط دریافت کنندگان وجود ندارد.
+""",
         "blocks2_empty": "⚠️لیست بلاک ویژه مستقیم نجوا خالی است",
         "blocks2_list": """
 🚫 تعداد کاربران در لیست بلاک مستقیم: {}
@@ -1208,6 +1217,10 @@ unlock inline
         """,
         "error_reply_najva": "خطایی به هنگام ثبت نجوای ریپلای رخ داد. پیشنهاد میشود خود را از ادمین نامحسوس خارج کنید",
         "najva_user_blocked_you": "کاربر {} شما را در لیست بلاک نجوای خود قرار داده و نمیتوانید به او نجوا ارسال کنید",
+        "najvas_sent_is_zero": "شما هیچ نجوایی ارسال نکردید",
+        "wait_delall": "ربات در حال حذف {} نجوای ارسال شده از شماست.\nزمان تقریبی حذف: {}",
+        "delall_najva_result": "ربات {} نجوا را حذف کرد.\nشما این کار را هر 1 ساعت یکبار میتوانید انجام دهید",
+        "you_are_on_limit": "شما این کار را هر 1 ساعت یکبار میتوانید انجام دهید. زمان مجاز بعدی برای انجام: {}",
         "inline": {
             "title": {
                 "help_send": "آموزش ارسال نجوا",
@@ -1323,6 +1336,7 @@ unlock inline
             "najva_settings_auto_del": "⏳حذف خودکار نجوا ({})",
             "najva_settings_antisave": "🧨ضد ذخیره نجوا ({})",
             "minute": "{} دقیقه",
+            "seconds": "{} ثانیه",
             "najva_settings_block": "⛔️بلاک های نجوا ویژه مستقیم ({} نفر)",
             "najva_settings_del_all": "💢حذف کل نجواهای ارسال شده💢",
             "back_najva": "صفحه نجوا⬇️",
