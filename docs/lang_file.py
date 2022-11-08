@@ -544,6 +544,7 @@ If you have a suggestion or an idea, you can use say 🌹
 💡 Tutorial to convert a regular group to a supergroup:
 Just enable Chat history for new members and your group will automatically become a supergroup
         """,
+        "error_reply_najva": "An error occurred while register the replay whisper. It is suggested to remove yourself from the invisible admin",
         "inline": {
             "title": {
                 "help_send": "How to send",
@@ -1200,6 +1201,7 @@ unlock inline
 💡 آموزش تبدیل گروه معمولی به سوپرگروه:
 فقط کافیه تاریخچه گفتگو برای اعضای جدید(Chat history for new members) رو فعال کنید و گروه شما بصورت خودکار به سوپرگروه تبدیل میشه
         """,
+        "error_reply_najva": "خطایی به هنگام ثبت نجوای ریپلای رخ داد. پیشنهاد میشود خود را از ادمین نامحسوس خارج کنید",
         "inline": {
             "title": {
                 "help_send": "آموزش ارسال نجوا",
