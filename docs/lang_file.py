@@ -552,6 +552,7 @@ Just enable Chat history for new members and your group will automatically becom
         "wait_delall": "The bot is deleting {} your sent whisper...\nApproximate deletion time: {}",
         "delall_najva_result": "Bot deleted {} Whisper. you can do this every 60 minutes",
         "you_are_on_limit": "you can do this for every 1 hour. next time you can do: {}",
+        "najva_404": "⚠️Whisper not found. Either the whisper has been seen once or it has been deleted by the sender of the whisper",
         "inline": {
             "title": {
                 "help_send": "How to send",
@@ -1221,6 +1222,7 @@ unlock inline
         "wait_delall": "ربات در حال حذف {} نجوای ارسال شده از شماست.\nزمان تقریبی حذف: {}",
         "delall_najva_result": "ربات {} نجوا را حذف کرد.\nشما این کار را هر 1 ساعت یکبار میتوانید انجام دهید",
         "you_are_on_limit": "شما این کار را هر 1 ساعت یکبار میتوانید انجام دهید. زمان مجاز بعدی برای انجام: {}",
+        "najva_404": "⚠️نجوا پیدا نشد. یا نجوا یکبار دیده شده است یا توسط فرستنده نجوا حذف شده است",
         "inline": {
             "title": {
                 "help_send": "آموزش ارسال نجوا",
