@@ -557,11 +557,12 @@ async def message_process(msg: types.Message):
                     time_data = float(f"{ap[2]}.{ap[3]}")
                     hash_db = "najva:{}:{}".format(from_user, time_data)
                     msgid = DataBase.hget(hash_db, "msg_id")
+                    users_data = DataBase.hget(hash_db, "users")
                     anti_save = False
                     hash_db2 = f"setting_najva:{from_user}"
                     if DataBase.hget(hash_db2, "anti-save"):
                         anti_save = True
-                    if user_id == int(from_user):
+                    if user_id == int(from_user) and user_id != int(users_data):
                         inlineKeys = await show_speical_najva2_keys(
                             user_id, from_user
                         )
@@ -586,7 +587,6 @@ async def message_process(msg: types.Message):
                     special_msgID = DataBase.hget(
                         "najva_special:{}".format(from_user), "id"
                     )
-                    users_data = DataBase.hget(hash_db, "users")
                     file_id = DataBase.hget(hash_db, "file_id")
                     file_type = DataBase.hget(hash_db, "file_type")
                     source_id = DataBase.hget(hash_db, "source_id")
