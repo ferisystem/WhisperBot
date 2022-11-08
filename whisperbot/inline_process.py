@@ -279,60 +279,9 @@ async def inline_query_process(msg: types.InlineQuery):
         await answerInlineQuery(msg_id, results=[item1, item2], cache_time=1)
     if re.search(r"set$", input.lower()):
         set_desc = ln_in["desc"]
-        if DataBase.hget(f"setting_najva:{user_id}", "seen"):
-            seen = langU["is_power_on"]
-            title1 = ln_in["title"]["power_off"]
-            photo1 = pic_tick
-        else:
-            seen = langU["is_power_off"]
-            title1 = ln_in["title"]["power_on"]
-            photo1 = pic_cross
-        seen = set_desc["najva_seen"].format(seen)
-        if DataBase.hget(f"setting_najva:{user_id}", "recv"):
-            recv = langU["is_power_on"]
-            title2 = ln_in["title"]["power_off"]
-            photo2 = pic_tick
-        else:
-            recv = langU["is_power_off"]
-            title2 = ln_in["title"]["power_on"]
-            photo2 = pic_cross
-        recv = set_desc["najva_recv"].format(recv)
-        if DataBase.hget(f"setting_najva:{user_id}", "encrypt"):
-            encrypt = langU["is_power_on"]
-            title3 = ln_in["title"]["power_off"]
-            photo3 = pic_tick
-        else:
-            encrypt = langU["is_power_off"]
-            title3 = ln_in["title"]["power_on"]
-            photo3 = pic_cross
-        encrypt = set_desc["najva_encrypt"].format(encrypt)
-        if DataBase.hget(f"setting_najva:{user_id}", "noname"):
-            noname = langU["is_power_on"]
-            title4 = ln_in["title"]["power_off"]
-            photo4 = pic_tick
-        else:
-            noname = langU["is_power_off"]
-            title4 = ln_in["title"]["power_on"]
-            photo4 = pic_cross
-        noname = set_desc["najva_noname"].format(noname)
-        if DataBase.hget(f"setting_najva:{user_id}", "dispo"):
-            dispo = langU["is_power_on"]
-            title5 = ln_in["title"]["power_off"]
-            photo5 = pic_tick
-        else:
-            dispo = langU["is_power_off"]
-            title5 = ln_in["title"]["power_on"]
-            photo5 = pic_cross
-        dispo = set_desc["najva_dispo"].format(dispo)
-        if DataBase.hget(f"setting_najva:{user_id}", "antisave"):
-            antisave = langU["is_power_on"]
-            title6 = ln_in["title"]["power_off"]
-            photo6 = pic_tick
-        else:
-            antisave = langU["is_power_off"]
-            title6 = ln_in["title"]["power_on"]
-            photo6 = pic_cross
-        antisave = set_desc["najva_antisave"].format(antisave)
+        set_title = {}
+        set_photo = {}
+        items = []
         inlineKeys = iMarkup()
         inlineKeys.add(
             iButtun(
@@ -344,69 +293,29 @@ async def inline_query_process(msg: types.InlineQuery):
             parse_mode="HTML",
             disable_web_page_preview=False,
         )
-        item1 = InlineQueryResultArticle(
-            id=f"set:seen:{user_id}",
-            title=title1,
-            description=seen,
-            thumb_url=photo1,
-            thumb_width=512,
-            thumb_height=512,
-            input_message_content=input_content,
-            reply_markup=inlineKeys,
-        )
-        item2 = InlineQueryResultArticle(
-            id=f"set:recv:{user_id}",
-            title=title2,
-            description=recv,
-            thumb_url=photo2,
-            thumb_width=512,
-            thumb_height=512,
-            input_message_content=input_content,
-            reply_markup=inlineKeys,
-        )
-        item3 = InlineQueryResultArticle(
-            id=f"set:encrypt:{user_id}",
-            title=title3,
-            description=encrypt,
-            thumb_url=photo3,
-            thumb_width=512,
-            thumb_height=512,
-            input_message_content=input_content,
-            reply_markup=inlineKeys,
-        )
-        item4 = InlineQueryResultArticle(
-            id=f"set:noname:{user_id}",
-            title=title4,
-            description=noname,
-            thumb_url=photo4,
-            thumb_width=512,
-            thumb_height=512,
-            input_message_content=input_content,
-            reply_markup=inlineKeys,
-        )
-        item5 = InlineQueryResultArticle(
-            id=f"set:dispo:{user_id}",
-            title=title5,
-            description=dispo,
-            thumb_url=photo5,
-            thumb_width=512,
-            thumb_height=512,
-            input_message_content=input_content,
-            reply_markup=inlineKeys,
-        )
-        item6 = InlineQueryResultArticle(
-            id=f"set:antisave:{user_id}",
-            title=title6,
-            description=antisave,
-            thumb_url=photo6,
-            thumb_width=512,
-            thumb_height=512,
-            input_message_content=input_content,
-            reply_markup=inlineKeys,
-        )
+        for i in ("seen", "recv", "encrypt", "noname", "dispo", "antisave"):
+            if DataBase.hget(f"setting_najva:{user_id}", i):
+                status = langU["is_power_on"]
+                set_title[i] = ln_in["title"]["power_off"]
+                set_photo[i] = pic_tick
+            else:
+                status = langU["is_power_off"]
+                set_title[i] = ln_in["title"]["power_on"]
+                set_photo[i] = pic_cross
+            item = InlineQueryResultArticle(
+                id=f"set:{i}:{user_id}",
+                title=set_title[i],
+                description=set_desc[f"najva_{i}"].format(status),
+                thumb_url=set_photo[i],
+                thumb_width=512,
+                thumb_height=512,
+                input_message_content=input_content,
+                reply_markup=inlineKeys,
+            )
+            items.append(item)
         await answerInlineQuery(
             msg_id,
-            [item1, item2, item3, item4, item5, item6],
+            items,
             1,
             ln_in["title"]["all_set"],
             "set",
