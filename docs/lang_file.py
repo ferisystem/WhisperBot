@@ -547,6 +547,7 @@ If you have a suggestion or an idea, you can use say 🌹
 Just enable Chat history for new members and your group will automatically become a supergroup
         """,
         "error_reply_najva": "An error occurred while register the replay whisper. It is suggested to remove yourself from the invisible admin",
+        "najva_user_blocked_you": "user {} blocked you in whisper blocklist and you can't send whisper to him/her",
         "inline": {
             "title": {
                 "help_send": "How to send",
@@ -1206,6 +1207,7 @@ unlock inline
 فقط کافیه تاریخچه گفتگو برای اعضای جدید(Chat history for new members) رو فعال کنید و گروه شما بصورت خودکار به سوپرگروه تبدیل میشه
         """,
         "error_reply_najva": "خطایی به هنگام ثبت نجوای ریپلای رخ داد. پیشنهاد میشود خود را از ادمین نامحسوس خارج کنید",
+        "najva_user_blocked_you": "کاربر {} شما را در لیست بلاک نجوای خود قرار داده و نمیتوانید به او نجوا ارسال کنید",
         "inline": {
             "title": {
                 "help_send": "آموزش ارسال نجوا",
