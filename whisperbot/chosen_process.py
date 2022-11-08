@@ -73,6 +73,10 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
                     ),
                     "html",
                 )
+        DataBase.set(
+            f"najvas_sent:{user_id}:{najva['time']}",
+            msg.inline_message_id,
+        )
         DataBase.incr("stat_najva")
         for i in najva["users"]:
             if str(i).isdigit() and not DataBase.get(f"userProfs:{i}"):
@@ -96,6 +100,10 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
         DataBase.hset(
             "najva:{}:{}".format(user_id, najva["time"]), "users", "all"
         )
+        DataBase.set(
+            f"najvas_sent:{user_id}:{najva['time']}",
+            msg.inline_message_id,
+        )
         DataBase.incr("stat_najva")
         del user_steps[user_id]["najva"]
     if (
@@ -109,6 +117,10 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
         )
         DataBase.hset(
             "najva:{}:{}".format(user_id, najva["time"]), "users", "reply"
+        )
+        DataBase.set(
+            f"najvas_sent:{user_id}:{najva['time']}",
+            msg.inline_message_id,
         )
         if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
             DataBase.sadd(
@@ -139,6 +151,10 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
                 parse_mode="html",
                 reply_markup=None,
             )
+        DataBase.set(
+            f"najvas_sent:{user_id}:{najva['time']}",
+            msg.inline_message_id,
+        )
         DataBase.hset(
             "najva:{}:{}".format(user_id, najva["time"]),
             "users",
@@ -199,6 +215,10 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
                 parse_mode="html",
                 reply_markup=None,
             )
+        DataBase.set(
+            f"najvas_sent:{user_id}:{najva['time']}",
+            msg.inline_message_id,
+        )
         DataBase.hset(
             "najva:{}:{}".format(user_id, najva["time"]),
             "users",

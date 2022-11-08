@@ -757,9 +757,116 @@ async def callback_query_process(msg: types.CallbackQuery):
                         cache_time=10,
                     )
             elif ap[1] == "delall":
-                await answerCallbackQuery(
-                    msg, langU["delall"], show_alert=True, cache_time=3600
+                count = len(DataBase.keys(f"najva:{user_id}:*"))
+                if count == 0:
+                    return await answerCallbackQuery(
+                        msg,
+                        langU["najvas_sent_is_zero"],
+                        show_alert=True,
+                        cache_time=10,
+                    )
+                inlineKeys = najva_delall_keys(user_id)
+                await editText(
+                    chat_id,
+                    msg_id,
+                    0,
+                    langU["delall"].format(count),
+                    "html",
+                    inlineKeys
                 )
+        if re.match(r"^najva:delall:y:@(\d+)$", input):
+            najvas_keys = DataBase.keys(f"najva:{user_id}:*")
+            if len(najvas_keys) == 0:
+                await answerCallbackQuery(
+                    msg,
+                    langU["najvas_sent_is_zero"],
+                    show_alert=True
+                )
+                return await editText(
+                    chat_id,
+                    msg_id,
+                    0,
+                    langU["najva_settings"].format(GlobalValues().botName),
+                    "html",
+                    najva_settings_keys(user_id),
+                )
+            if DataBase.get(f"limit_delall:{user_id}"):
+                next_time = DataBase.ttl(f"limit_delall:{user_id}")
+                next_time = int(time()) + next_time
+                next_time = datetime.fromtimestamp(next_time)
+                next_time = next_time.strftime("%H:%M:%S")
+                await answerCallbackQuery(
+                    msg,
+                    langU["you_are_on_limit"].format(next_time),
+                    show_alert=True
+                )
+                return await editText(
+                    chat_id,
+                    msg_id,
+                    0,
+                    langU["najva_settings"].format(GlobalValues().botName),
+                    "html",
+                    najva_settings_keys(user_id),
+                )
+            count = len(najvas_keys) * 1
+            if count > 60:
+                count = float(count / 60)
+                text = "{:.2f}".format(count)
+                text = buttuns["minute"].format(text)
+            else:
+                text = "{:,}".format(count)
+                text = buttuns["seconds"].format(text)
+            await editText(
+                chat_id,
+                msg_id,
+                0,
+                langU["wait_delall"].format(len(najvas_keys), text)
+            )
+            count = 0
+            for i in najvas_keys:
+                null, from_user, time_data = i.split(':')
+                hash_db = i
+                seen_id = rds.hget(
+                    hash_db, "seen_id"
+                )
+                if seen_id:
+                    seen_id = seen_id.split(":")
+                    await delete_messages(seen_id[0], seen_id[1])
+                special_msgID = DataBase.hget(
+                    "najva_special:{}".format(from_user), "id"
+                )
+                DataBase.srem(
+                    "najva_autodel",
+                    f"{from_user}:{time_data}:{special_msgID}"
+                )
+                rds.delete(hash_db)
+                DataBase.delete("najva_special:{}".format(from_user))
+                msgID = DataBase.get(
+                    f"najvas_sent:{from_user}:{time_data}"
+                )
+                if msgID:
+                    await editMessageReplyMarkup(
+                        inline_message_id=msgID,
+                        reply_markup=najva_seen2_keys(
+                            user_id,
+                            from_user,
+                            time_data
+                        ),
+                    )
+                    DataBase.delete(
+                        f"najvas_sent:{from_user}:{time_data}"
+                    )
+                await asyncio.sleep(1)
+                count += 1
+                if count > 20:
+                    break
+            await editText(
+                chat_id,
+                msg_id,
+                0,
+                langU["delall_najva_result"].format(count)
+            )
+            DataBase.setex(f"limit_delall:{user_id}", 3600, "True")
         if re.match(r"^blocks2:all:@(\d+)$", input):
             inlineKeys = iMarkup()
             inlineKeys.add(
