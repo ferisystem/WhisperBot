@@ -556,6 +556,23 @@ def najva_recent_user_keys(uname_user, name_user, user_ID, UserID):
     return inlineKeys
 
 
+def najva_delall_keys(UserID):
+    hash = ":@{}".format(UserID)
+    langU = lang[lang_user(UserID)]
+    buttuns = langU["buttuns"]
+    inlineKeys = iMarkup()
+    inlineKeys.add(
+        iButtun(
+            buttuns["yes"],
+            callback_data="najva:delall:y{}".format(hash),
+        ),
+        iButtun(
+            buttuns["no"],
+            callback_data="najva:settings{}".format(hash),
+        ),
+    )
+    return inlineKeys
+    
 def najva_help_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
