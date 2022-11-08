@@ -732,7 +732,7 @@ async def message_process(msg: types.Message):
                     msg,
                     1,
                     langU["najva_help"],
-                    None,
+                    "html",
                     najva_help_keys(user_id),
                 )
             if re.match(r"^/settings$", input):
