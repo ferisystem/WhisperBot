@@ -651,11 +651,11 @@ def najva_help1_keys(UserID):
             callback_data="najva:help:noid{}".format(hash),
         )
     )
-    inlineKeys.add(
-        iButtun(
-            buttuns["helper_video"], callback_data="najva:vid:1{}".format(hash)
-        )
-    )
+    # inlineKeys.add(
+        # iButtun(
+            # buttuns["helper_video"], callback_data="najva:vid:1{}".format(hash)
+        # )
+    # )
     inlineKeys.add(
         iButtun(
             buttuns["example"],
@@ -676,11 +676,11 @@ def najva_help2_keys(UserID):
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
-    inlineKeys.add(
-        iButtun(
-            buttuns["helper_video"], callback_data="najva:vid:2{}".format(hash)
-        )
-    )
+    # inlineKeys.add(
+        # iButtun(
+            # buttuns["helper_video"], callback_data="najva:vid:2{}".format(hash)
+        # )
+    # )
     inlineKeys.add(
         iButtun(buttuns["example"], switch_inline_query="{}".format(UserID))
     )
