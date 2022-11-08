@@ -196,6 +196,7 @@ class GlobalValues:
         self.sudoUser = DataBase.hget("sudo", "user") or "None"
         self.sudo_users = (self.sudoID, self.botID) + sudo_users
         self.chLink = IDs_datas["chLink"]
+        self.chId = int(DataBase.hget("channel", "id") or 0)
 
 
 class CheckMsg:
