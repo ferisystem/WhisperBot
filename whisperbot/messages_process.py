@@ -96,6 +96,7 @@ async def message_process(msg: types.Message):
             which_user = DataBase.get("who_conneted:{}".format(user_id))
             DataBase.delete("who_conneted:{}".format(user_id))
             msg_ = await msg.forward(GlobalValues().logchat)
+            await delete_previous_message(user_id)
             await sendText(
                 chat_id,
                 msg,
@@ -347,7 +348,7 @@ async def message_process(msg: types.Message):
                             DataBase.set(
                                 "who_conneted:{}".format(user_id), ap[1]
                             )
-                            await sendText(
+                            msg_ = await sendText(
                                 chat_id,
                                 msg,
                                 1,
@@ -357,6 +358,11 @@ async def message_process(msg: types.Message):
                                 "md",
                                 inlineKeys,
                             )
+                            if not msg_[0] is False:
+                                DataBase.set(
+                                    "pre_msgbot:{}".format(user_id),
+                                    msg_[1].message_id
+                                )
                     else:
                         await sendText(
                             chat_id,
@@ -416,7 +422,7 @@ async def message_process(msg: types.Message):
                             DataBase.set(
                                 "who_conneted:{}".format(user_id), userID
                             )
-                            await sendText(
+                            msg_ = await sendText(
                                 chat_id,
                                 msg,
                                 1,
@@ -428,6 +434,11 @@ async def message_process(msg: types.Message):
                                 "md",
                                 inlineKeys,
                             )
+                            if not msg_[0] is False:
+                                DataBase.set(
+                                    "pre_msgbot:{}".format(user_id),
+                                    msg_[1].message_id
+                                )
                     else:
                         await sendText(
                             chat_id,
@@ -669,7 +680,7 @@ async def message_process(msg: types.Message):
                                 "who_conneted:{}".format(user_id), we_have
                             )
                             DataBase.incr("user.stats_anon:{}".format(we_have))
-                            await sendText(
+                            msg_ = await sendText(
                                 chat_id,
                                 msg,
                                 1,
@@ -681,6 +692,11 @@ async def message_process(msg: types.Message):
                                 "md",
                                 inlineKeys,
                             )
+                            if not msg_[0] is False:
+                                DataBase.set(
+                                    "pre_msgbot:{}".format(user_id),
+                                    msg_[1].message_id
+                                )
                     else:
                         await sendText(
                             chat_id, msg, 1, langU["link_expire_anon"], "md"
