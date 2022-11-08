@@ -242,7 +242,7 @@ async def message_process(msg: types.Message):
                 DataBase.get("ready_to_change_link:{}".format(user_id))
                 and not "/start" in input
             ):
-                if 12 < len(msg.text) < 3 or not msg.text.isalnum():
+                if (len(msg.text) > 12 or len(msg.text) < 3) or not msg.text.isalnum():
                     await sendText(
                         chat_id,
                         msg,
@@ -287,7 +287,7 @@ async def message_process(msg: types.Message):
                 DataBase.get("ready_to_change_name:{}".format(user_id))
                 and not "/start" in input
             ):
-                if 21 < len(msg.text):
+                if len(msg.text) > 21:
                     await sendText(
                         chat_id, msg, 1, langU["rules_cus_name_anon"], "md"
                     )
