@@ -613,21 +613,6 @@ async def inline_query_process(msg: types.InlineQuery):
                 )
             )
         items = []
-        input_content = InputTextMessageContent(
-            message_text=ln_in["text"]["najva_havn_text"],
-            parse_mode="HTML",
-            disable_web_page_preview=True,
-        )
-        item2 = InlineQueryResultArticle(
-            id="null",
-            title=ln_in["title"]["najva_havn_text"],
-            description=ln_in["desc"]["najva_havn_text"],
-            thumb_url=pic_cross,
-            thumb_width=512,
-            thumb_height=512,
-            input_message_content=input_content,
-        )
-        items.append(item2)
         count = 0
         for user in users:
             count += 1
