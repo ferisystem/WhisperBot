@@ -1640,6 +1640,12 @@ async def callback_query_process(msg: types.CallbackQuery):
             await editMessageReplyMarkup(
                 chat_id, msg_id, reply_markup=inlineKeys
             )
+        if 'none' in input:
+            await answerCallbackQuery(
+            msg,
+            langU["is_for_show"], 
+            show_alert=True,
+            cache_time=3600)
     else:
         msgID = msg.id
         msg_id = msg.inline_message_id
