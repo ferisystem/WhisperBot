@@ -156,6 +156,11 @@ async def bot_run(app):
             DataBase.hset("sudo", "id", bt1.id)
     except:
         print("Sudo Not Found!!!")
+    try:
+        bt1 = await bot.get_chat("@{}".format(IDs_datas["chUsername"]))
+        DataBase.hset("channel", "id", bt1.id)
+    except:
+        print("Channel Not Found!!!")
     await sendText(GlobalValues().sudoID, 0, 1, 'Bot has been Successfully Loaded')
     if not rds.hget(db, "linkyCH"):
         status = False
