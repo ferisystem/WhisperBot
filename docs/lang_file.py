@@ -47,7 +47,7 @@ With unique options in every section that is not like it in Telegram 🤩
         "fwdd_to_all": "forwarded {} successfully of {} users",
         "just_reply": "reply on a message",
         "stats": "آمار کامل ربات\n\nتعداد کل کاربران: {}\nتعداد بلاک شدگان: {}\nتعداد استفاده از نجوا: {}\nتعداد استفاده از ناشناس: {}",
-        "force_join": "for use bot you must to join us channel!\n\n🔺channel: @{0}\n@{0}",
+        "force_join": "for use bot you must to join us channel!\n\n🔺channel: {0}",
         "language": "میتوانید زبان ربات را تغییر دهید\nyou can change bot language\nSie können die Bot-Sprache ändern",
         "anon": """
 You may have heard of the <b>Anonymous Message</b> bot, or you may have seen examples of this type of bot 🤔
@@ -762,7 +762,7 @@ Go to Bot and send your media or message 👇
         "just_reply": "روی یک پیام ریپلای کنید",
         "maybe_spammer": "چــــــــــی؟ شما همین چند دقیقه پیش این رو دریافت کردید!!",
         "stats": "آمار کامل ربات\n\nتعداد کل کاربران: {}\nتعداد بلاک شدگان: {}\nتعداد استفاده از نجوا: {}\nتعداد استفاده از ناشناس: {}",
-        "force_join": "استفاده از ربات فقط در صورت عضویت در کانال ربات امکان پذیر است!\n\n🔺کانال: @{0}\n@{0}",
+        "force_join": "استفاده از ربات فقط در صورت عضویت در کانال ربات امکان پذیر است!\n\n🔺کانال: {0}",
         "language": "میتوانید زبان ربات را تغییر دهید\nyou can change bot language",
         "anon": """
 شاید اسم ربات پیام‌ناشناس به گوشِت خورده باشه یا نمونه‌هایی ازین دسته ربات‌هارو دیده باشی 🤔
