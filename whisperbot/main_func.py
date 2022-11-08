@@ -1060,3 +1060,25 @@ async def editMessageReplyMarkup(
         return a.args
     except Exception as e:
         print(e)
+
+
+async def downloadFileByID(
+    file_id,
+    destination,
+    timeout=30,
+    make_dirs=True,
+    ):
+    try:
+        result = await bot.download_file_by_id(
+            file_id=file_id,
+            destination=destination,
+            timeout=timeout,
+            make_dirs=make_dirs,
+        )
+        return result, True
+    except expts.BadRequest as a:
+        print(a)
+        return False, False
+    except Exception as e:
+        print(e)
+        return False, False
