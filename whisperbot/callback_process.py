@@ -79,7 +79,8 @@ async def callback_query_process(msg: types.CallbackQuery):
         if re.match(r"^joined$", input):
             chId = GlobalValues().chId
             channel_member = await is_Channel_Member(chId, user_id)
-            if chId != 0 and not channel_member:
+            force_join = DataBase.get("force_join")
+            if force_join and chId != 0 and not channel_member:
                 DataBase.setex(f"join_alarm:{user_id}", 120, "True")
                 inlineKeys = iMarkup()
                 inlineKeys.add(
@@ -105,6 +106,24 @@ async def callback_query_process(msg: types.CallbackQuery):
                 langU["start"].format(GlobalValues().botName),
                 "html",
                 start_keys(user_id),
+            )
+        if re.match(r"^forcejoin$", input):
+            if DataBase.get("force_join"):
+                DataBase.delete("force_join")
+                text = langU["force_join_deactive"]
+            else:
+                DataBase.set("force_join", "True")
+                text = langU["force_join_active"]
+            await answerCallbackQuery(
+                msg,
+                text,
+                show_alert=True,
+                cache_time=2,
+            )
+            await editMessageReplyMarkup(
+                chat_id,
+                msg_id,
+                reply_markup=start_keys(user_id),
             )
         if re.match(r"^backstart:@(\d+)$", input):
             DataBase.delete("sup:{}".format(user_id))

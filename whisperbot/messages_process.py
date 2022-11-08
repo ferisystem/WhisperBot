@@ -783,7 +783,8 @@ async def message_process(msg: types.Message):
                     await newUser(msg)
                 chId = GlobalValues().chId
                 channel_member = await is_Channel_Member(chId, user_id)
-                if chId != 0 and not channel_member:
+                force_join = DataBase.get("force_join")
+                if force_join and chId != 0 and not channel_member:
                     if DataBase.get(f"join_alarm:{user_id}"):
                         return False
                     DataBase.setex(f"join_alarm:{user_id}", 120, "True")
