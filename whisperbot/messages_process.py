@@ -945,6 +945,27 @@ async def message_process(msg: types.Message):
                             "users",
                             Uid,
                         )
+                        if msg.sender_chat:
+                            user_data = int(user_data)
+                            if user_data in user_steps and "najva" in user_steps[user_data]:
+                                najva = user_steps[user_data]["najva"]
+                                DataBase.hset(
+                                    "najva:{}:{}".format(user_data, time_data),
+                                    "text",
+                                    najva["text"],
+                                )
+                                DataBase.incr("stat_najva")
+                                del user_steps[user_data]["najva"]
+                            else:
+                                return await editText(
+                                    chat_id,
+                                    msg_id,
+                                    0,
+                                    langU["error_reply_najva"],
+                                    "HTML",
+                                )
+                        else:
+                            del user_steps[user_data]["najva"]
                         inlineKeys = iMarkup()
                         inlineKeys.add(
                             iButtun(
