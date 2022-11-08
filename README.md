@@ -178,8 +178,8 @@ This is a help for installation.
 ## Roadmap
 
 - [x] Anti-save for special Whispers
-- [ ] Delete all Whisper sent before
-- [ ] Block user from recent list user
+- [x] Delete all Whisper sent before
+- [x] Block user from recent list user
 - [ ] Multi-language Support
     - [x] Persian
     - [x] English
