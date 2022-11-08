@@ -1749,7 +1749,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 )
                 if seen_id:
                     seen_id = seen_id.split(":")
-                    await delete_messages(seen_id[0], seen_id)
+                    await delete_messages(seen_id[0], seen_id[1])
                 special_msgID = DataBase.hget(
                     "najva_special:{}".format(ap[1]), "id"
                 )
