@@ -1497,13 +1497,15 @@ async def callback_query_process(msg: types.CallbackQuery):
                 await editText(chat_id, msg_id, 0, langU["error_reg_najva"])
         if re.match(r"^showpv:(\d+):([-+]?\d*\.\d+|\d+)$", input):
             ap = re_matches(r"^showpv:(\d+):([-+]?\d*\.\d+|\d+)$", input)
+            from_user = ap[1]
+            time_data = ap[2]
+            hash_db = "najva:{}:{}".format(from_user, time_data)
+            if DataBase.hash_type(hash_db) != 'hash':
+                return await editText(chat_id, msg_id, 0, langU["najva_404"])
             try:
                 await _.delete()
             except:
                 pass
-            from_user = ap[1]
-            time_data = ap[2]
-            hash_db = "najva:{}:{}".format(from_user, time_data)
             anti_save = False
             if DataBase.hget(f"setting_najva:{from_user}", "anti-save"):
                 anti_save = True
