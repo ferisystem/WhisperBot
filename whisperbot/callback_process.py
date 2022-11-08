@@ -254,10 +254,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                         chat_id,
                         msg_id,
                         0,
-                        "#NewUser\n[{0}](tg://user?id={1}) > `{1}`\nStatus: Deactive🚫".format(
+                        "#NewUser\n<a href=\"tg://user?id={1}\">{0}</a> > <code>{1}</code>\nStatus: Deactive🚫".format(
                             getC, ap[1]
                         ),
-                        "md",
+                        "html",
                         keyboard,
                     )
                 except:
@@ -265,10 +265,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                         chat_id,
                         msg_id,
                         0,
-                        "#NewUser\n[{0}](tg://user?id={0}) > `{0}`\nStatus: Deactive🚫".format(
+                        "#NewUser\n<a href=\"tg://user?id={0}\">{0}</a> > <code>{0}</code>\nStatus: Deactive🚫".format(
                             ap[1]
                         ),
-                        "md",
+                        "html",
                         keyboard,
                     )
             await answerCallbackQuery(msg, alerttext)
@@ -284,10 +284,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                         chat_id,
                         msg_id,
                         0,
-                        "#NewUser\n[{0}](tg://user?id={1}) > `{1}`\nStatus: Active✅".format(
+                        "#NewUser\n<a href=\"tg://user?id={1}\">{0}</a> > <code>{1}</code>\nStatus: Active✅".format(
                             getC, ap[1]
                         ),
-                        "md",
+                        "html",
                         keyboard,
                     )
                 except:
@@ -295,10 +295,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                         chat_id,
                         msg_id,
                         0,
-                        "#NewUser\n[{0}](tg://user?id={0}) > `{0}`\nStatus: Active✅".format(
+                        "#NewUser\n<a href=\"tg://user?id={0}\">{0}</a> > <code>{0}</code>\nStatus: Active✅".format(
                             ap[1]
                         ),
-                        "md",
+                        "html",
                         keyboard,
                     )
             else:

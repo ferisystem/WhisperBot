@@ -52,10 +52,10 @@ async def newUser(msg):
         GlobalValues().sudoID,
         0,
         1,
-        "#NewUser\n{} > `{}`\nType: {}\nStatus: Active✅".format(
-            menMD(msg), msg.from_user.id, msg.text
+        "#NewUser\n{} > <code>{}</code>\nType: {}\nStatus: Active✅".format(
+            menHTML(msg), msg.from_user.id, msg.text
         ),
-        "md",
+        "html",
         blockKeys(msg.from_user.id),
     )
 
