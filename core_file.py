@@ -167,6 +167,10 @@ class DataBase:
     def keys(hash):
         hash = "{}.{}".format(db, hash)
         return rds.keys(hash)
+    
+    def hash_type(hash):
+        hash = "{}.{}".format(db, hash)
+        return rds.type(hash)
 
 
 class GlobalValues:
