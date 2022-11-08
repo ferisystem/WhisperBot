@@ -71,7 +71,7 @@ If there is something you want to tell me ☺️
 Maybe a criticism or maybe an affection or you just want to hang but you dont want me to know who sent it to me!
 even if you want to send a file (Photo, Sound, Video or...) that you want me to see
 
-📎 Send it through the link below.
+📎 Send it through the link below in {}.
 I won't know who but I will receive the message.
 ✅ Whenever I read it bot will notify you and I can respond you there
 
@@ -85,6 +85,10 @@ Enter an ID 😁
 
 🔗 Current Link:
 """,
+        "customize_link_anon2": """
+Your link changed ✅
+
+🔗New link:\n""",
         "insta_link_anon": """
 Due to the limitations of Instagram in placing links in the bio, you have to #Copy your link which is placed under the this message, in the #EditProfile section of Instagram, and then in Paste the #Website section
 
