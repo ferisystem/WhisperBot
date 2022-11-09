@@ -216,7 +216,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Alireza Fereidouni (Feri) - [@ferisystem](https://telegram.me/ferisystem) - alirezafereidouni@protonmail.com
+Alireza Fereidouni (Feri) - [@ferisystem](https://telegram.me/ferisystem) - alirezafereidouni@proton.me
 
 Project Link: [github.com/ferisystem/WhisperBot](https://github.com/ferisystem/WhisperBot)
 
@@ -227,7 +227,7 @@ Example Bot: [@WhisAnoBot](https://telegram.me/WhisAnoBot)
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
-* [Iman Seyed](https://github.com/mzd245)
+* [Iman Seyed](https://github.com/ImanSeyed)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
