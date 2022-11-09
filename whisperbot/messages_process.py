@@ -89,9 +89,12 @@ async def message_process(msg: types.Message):
                 await sendText(
                     chat_id, msg, 1, langU["sent_wait"], None, inlineKeys
                 )
+        input = ""
+        if msg.text:
+            input = msg.text
         if (
             DataBase.get("who_conneted:{}".format(user_id))
-            and not "/start" in msg.text
+            and not "/start" in input
         ):
             which_user = DataBase.get("who_conneted:{}".format(user_id))
             DataBase.delete("who_conneted:{}".format(user_id))
