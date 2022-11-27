@@ -65,7 +65,6 @@ async def sendText(
             reply_markup=markup,
             allow_sending_without_reply=True,
         )
-        DataBase.incr("amarBot.sendMsg")
         return True, result
     except expts.ChatNotFound as a:
         return a.args
