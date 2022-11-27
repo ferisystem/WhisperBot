@@ -69,12 +69,12 @@ def start_keys(UserID):
                 callback_data="forcejoin",
             ),
         )
-    inlineKeys.add(
-        iButtun(
-            langU["buttuns"]["channel"],
-            url="https://t.me/{}".format(IDs_datas["chUsername"]),
-        ),
-    )
+    # inlineKeys.add(
+        # iButtun(
+            # langU["buttuns"]["channel"],
+            # url="https://t.me/{}".format(IDs_datas["chUsername"]),
+        # ),
+    # )
     return inlineKeys
 
 
