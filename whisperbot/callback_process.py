@@ -54,7 +54,6 @@ async def callback_query_process(msg: types.CallbackQuery):
     # await answerCallbackQuery(msg, langU['you_accepted'])
     # DataBase.setex('user.alertNotMemberChannel:{}'.format(user_id), 3600, "True")
     if "message" in msg:
-        DataBase.incr("amarBot.callmsg")
         _ = msg.message
         msg_id = _.message_id
         chat_id = _.chat.id
@@ -67,15 +66,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             cPrint(
                 "{} Old Callback Skipped".format(_.date), 2, textColor="cyan"
             )
-            try:
-                await _.edit_reply_markup()
-            except:
-                pass
-            return AnswerCallbackQuery(
-                msg.id,
-                "این پنل قدیمی است دوباره پنل مربوطه را دریافت کنید!\nاگر پنل پرداختی است نگران نباشید :D",
-                True,
-            )
+            return False
         if re.match(r"^joined$", input):
             chId = GlobalValues().chId
             channel_member = await is_Channel_Member(chId, user_id)
