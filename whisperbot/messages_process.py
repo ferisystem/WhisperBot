@@ -112,8 +112,8 @@ async def message_process(msg: types.Message):
                 "inbox_user:{}".format(which_user),
                 f"{msg_.message_id}:{user_id}:{msg_id}:0:{int(time())}:no",
             )
-            DataBase.setex(f"is_stater:{user_id}>{which_user}", 86400 * 7, "True")
-            DataBase.delete(f"is_stater:{which_user}>{user_id}")
+            DataBase.setex(f"is_starter:{user_id}>{which_user}", 86400 * 7, "True")
+            DataBase.delete(f"is_starter:{which_user}>{user_id}")
             await sendText(
                 which_user, 0, 1, lang[lang_user(which_user)]["new_message"].format(msg_.message_id)
             )
@@ -490,11 +490,11 @@ async def message_process(msg: types.Message):
                                 user_id, ap[2], ap[3], show_sender, ap[5]
                             ),
                         )
-                        if DataBase.get(f"is_stater:{ap[2]}>{user_id}"):
+                        if DataBase.get(f"is_starter:{ap[2]}>{user_id}"):
                             DataBase.setex(
-                                f"is_stater:{ap[2]}>{user_id}", 86400 * 7, "True"
+                                f"is_starter:{ap[2]}>{user_id}", 86400 * 7, "True"
                             )
-                            DataBase.delete(f"is_stater:{user_id}>{ap[2]}")
+                            DataBase.delete(f"is_starter:{user_id}>{ap[2]}")
                             user_name = DataBase.get(
                                 "name_anon2:{}".format(user_id)
                             )
