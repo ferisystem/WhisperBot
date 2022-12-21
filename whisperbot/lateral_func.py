@@ -473,24 +473,26 @@ def saveUsername(msg, mode="message"):
         u = msg.from_user
         uid = u.id
         fn = u.first_name
-        rds.hset("userInfo:{}".format(u.id), "name", fn)
         us = u.username
-        if us and int(rds.hget("UsernamesIds", us.lower()) or "0") != int(
-            uid
-        ):
-            rds.hset("UsernamesIds", us.lower(), uid)
-            cPrint("@{} [{}] Saved".format(us, uid), 2, None, "magenta")
+        rds.hset("userInfo:{}".format(uid), "name", fn)
+        if us:
+            rds.hset("userInfo:{}".format(uid), "username", us)
+            userIds = rds.hget("UsernamesIds", us.lower())
+            if int(userIds or "0") != int(uid):
+                rds.hset("UsernamesIds", us.lower(), uid)
+                cPrint("@{} [{}] Saved".format(us, uid), 2, None, "magenta")
     elif mode == "inline" or mode == "callback":
         u = msg.from_user
         uid = u.id
         fn = u.first_name
-        rds.hset("userInfo:{}".format(u.id), "name", fn)
         us = u.username
-        if us and int(rds.hget("UsernamesIds", us.lower()) or "0") != int(
-            uid
-        ):
-            rds.hset("UsernamesIds", us.lower(), uid)
-            cPrint("@{} [{}] Saved".format(us, uid), 2, None, "magenta")
+        rds.hset("userInfo:{}".format(uid), "name", fn)
+        if us:
+            rds.hset("userInfo:{}".format(uid), "username", us)
+            userIds = rds.hget("UsernamesIds", us.lower())
+            if int(userIds or "0") != int(uid):
+                rds.hset("UsernamesIds", us.lower(), uid)
+                cPrint("@{} [{}] Saved".format(us, uid), 2, None, "magenta")
 
 
 def generate_link():
