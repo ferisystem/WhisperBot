@@ -538,6 +538,9 @@ Keep the bot chat unmuted to be notified when update arrived and activated 🤩
 Every once in a while, we offer a limited rate of free postage, which is sent to you through notification and the #gift tag.
 So always keep Bot chat on and don't delete it so you don't miss the free tariffs! 🤩
 """,
+        "ads_off": "Ads bottom of the bot buttuns, powered off",
+        "ads_on": "Ads bottom of the bot buttuns, powered on",
+        "ads_set": "Ads Seted.",
         "support2": """
 👉 If you have a problem in any section, please read the instructions in help section before telling us your problem.
 If your problem is not resolved, click on 'direct communication' and say your problems
@@ -1213,6 +1216,9 @@ unlock inline
 هر چند وقت یکبار بصورت محدود تعرفه پست رایگان ارائه میدیم که از طریق اطلاع رسانی و تگ #هدیه برای شما ارسال میشه
 پس همیشه چتِ ربات رو صدادار داشته باشید و پاک نکنید که تعرفه‌های رایگان رو از دست ندید! 🤩
 """,
+        "ads_off": "تبلیغات زیر دکمه های ربات خاموش شد",
+        "ads_on": "تبلیغات زیر دکمه های ربات روشن شد",
+        "ads_set": "تبلیغات تنظیم شد.",
         "support2": """
 👈 لطفا در صورت داشتن مشکل در هر بخش، قبل از گفتن مشکلتون راهنمای مربوط به اون بخش رو بخونید
 در صورتی که مشکل شما حل نشد، دکمه 'ارتباط مستقیم' رو لمس کنید
