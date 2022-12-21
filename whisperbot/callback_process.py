@@ -1745,12 +1745,16 @@ async def callback_query_process(msg: types.CallbackQuery):
                                 ),
                             )
                         else:
+                            name_user2 = None
+                            if DataBase.hget(f"setting_najva:{user_id}", "noname"):
+                                name_user2 = langU["no_name"]
+                            name_user = '<a href="tg://user?id={}">{}</a>'.format(
+                                        user_id, msg.from_user.first_name
+                                    )
                             await editText(
                                 inline_msg_id=msg_id,
                                 text=lang[lang_user(from_user)]["najva_seened"].format(
-                                    '<a href="tg://user?id={}">{}</a>'.format(
-                                        user_id, msg.from_user.first_name
-                                    )
+                                    name_user2 or name_user
                                 ),
                                 parse_mode="html",
                                 reply_markup=najva_seen_keys(
