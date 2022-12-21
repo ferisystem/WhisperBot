@@ -170,7 +170,7 @@ async def inline_query_process(msg: types.InlineQuery):
                 if k:
                     users[0] = k
             name_user2 = None
-            if DataBase.hget(f"setting_najva:{users[0]}", "noname"):
+            if DataBase.hget(f"setting_najva:{user_id}", "noname"):
                 name_user2 = langU["no_name"]
             name_user = await userInfos(users[0], info="name")
             input_content = InputTextMessageContent(
@@ -419,7 +419,7 @@ async def inline_query_process(msg: types.InlineQuery):
         else:
             name_user = user
         name_user2 = None
-        if DataBase.hget(f"setting_najva:{name_user}", "noname"):
+        if DataBase.hget(f"setting_najva:{user_id}", "noname"):
             name_user2 = langU["no_name"]
         name_user = await userInfos(name_user, info="name")
         input_content = InputTextMessageContent(
@@ -620,7 +620,7 @@ async def inline_query_process(msg: types.InlineQuery):
                 break
             name_user = user
             name_user2 = None
-            if DataBase.hget(f"setting_najva:{name_user}", "noname"):
+            if DataBase.hget(f"setting_najva:{user_id}", "noname"):
                 name_user2 = langU["no_name"]
             name_user = await userInfos(name_user, info="name")
             input_content = InputTextMessageContent(
