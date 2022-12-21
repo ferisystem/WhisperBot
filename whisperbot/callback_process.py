@@ -1546,7 +1546,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             except:
                 pass
             anti_save = False
-            if DataBase.hget(f"setting_najva:{from_user}", "anti-save"):
+            if DataBase.hget(f"setting_najva:{from_user}", "antisave"):
                 anti_save = True
             DataBase.set(
                 "najva_seen_time:{}:{}".format(from_user, time_data),

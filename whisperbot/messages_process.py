@@ -574,7 +574,7 @@ async def message_process(msg: types.Message):
                     users_data = DataBase.hget(hash_db, "users")
                     anti_save = False
                     hash_db2 = f"setting_najva:{from_user}"
-                    if DataBase.hget(hash_db2, "anti-save"):
+                    if DataBase.hget(hash_db2, "antisave"):
                         anti_save = True
                     if user_id == int(from_user) and user_id != int(users_data):
                         inlineKeys = await show_speical_najva2_keys(
