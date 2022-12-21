@@ -886,6 +886,28 @@ async def message_process(msg: types.Message):
                     chat_id, msg, 1, text, "md", start_keys(user_id)
                 )
             if isSudo(user_id):
+                if re.match(r"/setad (.*)$", input):
+                    ap = re_matches(r"/setad (.*)$", input)
+                    if ap[1] == 'off':
+                        DataBase.delete("have_ads")
+                        text = langU["ads_off"]
+                    elif ap[1] == 'on':
+                        DataBase.set("have_ads", 1)
+                        text = langU["ads_on"]
+                    elif msg.entities and msg.entities[-1].type == "url":
+                        offset_url = msg.entities[-1].offset
+                        length_url = msg.entities[-1].length
+                        the_url = msg.text[offset_url:offset_url+length_url+1]
+                        DataBase.hset(
+                            "info_ads",
+                            "buttuns",
+                            msg.text[:offset_url].replace('/setad ', '')
+                        )
+                        DataBase.hset("info_ads", "url", the_url)
+                        text = langU["ads_set"]
+                    else:
+                        return False
+                    await sendText(chat_id, msg, 1, text)
                 if re.match(r"/block (\d+)$", input):
                     ap = re_matches("/block (\d+)$", input)
                     if DataBase.get("isBan:{}".format(ap[1])):
