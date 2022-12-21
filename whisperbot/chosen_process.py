@@ -91,10 +91,10 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
                 # await asyncio.sleep(0.5)
         del user_steps[user_id]["najva"]
     if (
-        re.match(r"^najvaA:(\d+)$", result_id)
+        re.match(r"^najvaA\d:(\d+)$", result_id)
         and "najva" in user_steps[user_id]
     ):
-        ap = re_matches(r"^najvaA:(\d+)$", result_id)
+        ap = re_matches(r"^najvaA\d:(\d+)$", result_id)
         najva = user_steps[user_id]["najva"]
         DataBase.hset(
             "najva:{}:{}".format(user_id, najva["time"]), "text", najva["text"]
