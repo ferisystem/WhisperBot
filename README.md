@@ -242,5 +242,5 @@ Example Bot: [@WhisAnoBot](https://telegram.me/WhisAnoBot)
 [license-shield]: https://img.shields.io/github/license/ferisystem/WhisperBot.svg?style=for-the-badge
 [license-url]: https://github.com/ferisystem/WhisperBot/blob/main/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/alireza-fereidouni-852bb11b1
+[linkedin-url]: https://linkedin.com/in/alireza-fereidouni
 [product-screenshot]: img/screenshot.png
