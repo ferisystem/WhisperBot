@@ -1746,7 +1746,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                             )
                         else:
                             name_user2 = None
-                            if DataBase.hget(f"setting_najva:{user_id}", "noname"):
+                            if DataBase.hget(f"setting_najva:{from_user}", "noname"):
                                 name_user2 = langU["no_name"]
                             name_user = '<a href="tg://user?id={}">{}</a>'.format(
                                         user_id, msg.from_user.first_name
