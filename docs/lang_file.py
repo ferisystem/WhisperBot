@@ -222,7 +222,8 @@ I won't know who but I will receive the message.
         "link_expire_anon": "⚠️ This link does not belong to any user",
         "your_msg_seen": "☝️ This message viewed by {}",
         "anonymous": "#Anonymous",
-        "inbox_empty": "Your Anonymous messages box is Empty⚠️",
+        "inbox_empty": "Your Anonymous messages box is Empty⚠️\nif you want to get inbox old messages, click on /old_inbox",
+        "notice_old_inbox": "Loading the old messages of the anonymous message box ...\n⚠️Note that the beginning of each month old messages will be deleted. So be aware that it is not kept forever",
         "najva": """
 You can send a secret message (whisper) to whomever you want in the group by whispering, and no one but you and the target user can read that message 😁
 
@@ -930,7 +931,8 @@ t.me/{}?start={}
         "link_expire_anon": "⚠️لینکی که کلیک کردید متعلق به هیچ کاربری نیست یا عوض شده است",
         "your_msg_seen": "❗️پیام شما توسط {} خوانده شد",
         "anonymous": "#ناشناس",
-        "inbox_empty": "⚠️صندوق پیامهای دریافتی ناشناس شما خالی است",
+        "inbox_empty": "⚠️صندوق پیامهای دریافتی ناشناس شما خالی است\nاگر پیامهای قدیمی را میخواهید، روی /old_inbox بزنید",
+        "notice_old_inbox": "در حال بارگذاری پیامهای قدیمی صندوق پیام ناشناس...\n⚠️توجه داشته باشید که پیامهای قدیمی صندوق ابتدای هرماه پاک میشه پس مطلع باشید که تا ابد نگهداری نمیشود",
         "najva": """
 میتونید با این ربات توی گروه به هرکی دلتون خواست پیام مخفی(نجوا) بدید و هیچکس جز شما و کاربر مقصد نمیتونه اون پیام رو بخونه 😁
 
