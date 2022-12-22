@@ -73,7 +73,7 @@ async def inline_query_process(msg: types.InlineQuery):
             reply_markup=inlineKeys,
         )
         await answerInlineQuery(msg_id, results=[item1, item2], cache_time=1)
-    if not re.findall(r"@all ", input.lower()) and (
+    if not re.findall(r"@all", input.lower()) and (
         re.search(r"(?:(?<!\d)\d{6,10}(?!\d)) (.*)$", input)
         or re.search(r"(@[a-zA-Z0-9_]*) (.*)$", input)
     ):
@@ -321,7 +321,7 @@ async def inline_query_process(msg: types.InlineQuery):
             "set",
         )
     if (
-        not re.findall(r"@all ", input.lower())
+        not re.findall(r"@all", input.lower())
         and not re.findall(r"(?:(?<!\d)\d{6,10}(?!\d))", input)
         and not re.findall(r"(@[a-zA-Z0-9_]*)", input)
         and chat_type == "supergroup"
@@ -375,7 +375,7 @@ async def inline_query_process(msg: types.InlineQuery):
             ],
             cache_time=1,
         )
-    if not re.findall(r"@all ", input.lower()) and (
+    if not re.findall(r"@all", input.lower()) and (
         re.search(r"^(?:(?<!\d)\d{6,10}(?!\d))$", input)
         or re.search(r"^(@[a-zA-Z0-9_]*)$", input)
     ):
