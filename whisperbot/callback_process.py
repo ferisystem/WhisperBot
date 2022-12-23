@@ -1796,7 +1796,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         ):
                             DataBase.sadd(
                                 "najva_autodel",
-                                f"{from_user}:{time_data}:{msg_inline}",
+                                f"{from_user}:{time_data}:{msg_id}",
                             )
                 DataBase.incr(
                     "najva_seen_count:{}:{}".format(from_user, time_data)
