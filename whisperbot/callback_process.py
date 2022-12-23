@@ -1774,17 +1774,17 @@ async def callback_query_process(msg: types.CallbackQuery):
                             ),
                             int(time()),
                         )
-                        msg_inline = msg.inline_message_id
                         if DataBase.hget(f"setting_najva:{from_user}", "dispo"):
                             DataBase.srem(
                                 "najva_autodel",
-                                f"{from_user}:{time_data}:{msg_inline}"
+                                f"{from_user}:{time_data}:{msg_id}"
                             )
                             DataBase.delete(hash_db)
                             DataBase.delete("najva_special:{}".format(from_user))
                             await editMessageReplyMarkup(
-                                inline_message_id=msg_inline,
-                                reply_markup=najva_seen3_keys(
+                                inline_message_id=msg_id,
+                                reply_markup=najva_seen2_keys(
+                                    from_user,
                                     from_user,
                                     time_data
                                 ),
