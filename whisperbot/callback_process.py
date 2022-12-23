@@ -1693,6 +1693,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             from_user = ap[1]
             time_data = ap[2]
             hash_db = "najva:{}:{}".format(from_user, time_data)
+            dispo_is_on = DataBase.hget(f"setting_najva:{from_user}", "dispo")
             if DataBase.hash_type(hash_db) != 'hash':
                 return await editText(
                     inline_msg_id=msg_id,
@@ -1751,15 +1752,23 @@ async def callback_query_process(msg: types.CallbackQuery):
                             name_user = '<a href="tg://user?id={}">{}</a>'.format(
                                         user_id, msg.from_user.first_name
                                     )
+                            if dispo_is_on:
+                                inlineKeys = najva_seen2_keys(
+                                    from_user,
+                                    from_user,
+                                    time_data
+                                )
+                            else:
+                                inlineKeys = najva_seen_keys(
+                                    user_id, from_user, time_data
+                                )
                             await editText(
                                 inline_msg_id=msg_id,
                                 text=lang[lang_user(from_user)]["najva_seened"].format(
                                     name_user2 or name_user
                                 ),
                                 parse_mode="html",
-                                reply_markup=najva_seen_keys(
-                                    user_id, from_user, time_data
-                                ),
+                                reply_markup=inlineKeys,
                             )
                         DataBase.sadd(
                             "najva_seened:{}:{}".format(from_user, time_data),
@@ -1774,21 +1783,13 @@ async def callback_query_process(msg: types.CallbackQuery):
                             ),
                             int(time()),
                         )
-                        if DataBase.hget(f"setting_najva:{from_user}", "dispo"):
+                        if dispo_is_on:
                             DataBase.srem(
                                 "najva_autodel",
                                 f"{from_user}:{time_data}:{msg_id}"
                             )
                             DataBase.delete(hash_db)
                             DataBase.delete("najva_special:{}".format(from_user))
-                            await editMessageReplyMarkup(
-                                inline_message_id=msg_id,
-                                reply_markup=najva_seen2_keys(
-                                    from_user,
-                                    from_user,
-                                    time_data
-                                ),
-                            )
                         elif DataBase.hget(
                             f"setting_najva:{from_user}",
                             "autodel"
