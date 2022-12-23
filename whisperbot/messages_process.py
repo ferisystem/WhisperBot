@@ -1086,20 +1086,13 @@ async def message_process(msg: types.Message):
                                 "html",
                             )
                     else:
-                        if (
-                            DataBase.hget(
-                                "najva:{}:{}".format(user_data, time_data),
-                                "users",
-                            )
-                            == "reply"
-                        ):
-                            await editText(
-                                chat_id,
-                                msg_id,
-                                0,
-                                langU["didnt_enter_user"],
-                                "HTML",
-                            )
+                        await editText(
+                            chat_id,
+                            msg_id,
+                            0,
+                            langU["didnt_enter_user"],
+                            "HTML",
+                        )
     if isGroup(msg):
         try:
             if not DataBase.get(f"group.alerttext.{chat_id}"):

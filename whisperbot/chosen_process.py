@@ -117,9 +117,6 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
         DataBase.hset(
             "najva:{}:{}".format(user_id, najva["time"]), "text", najva["text"]
         )
-        DataBase.hset(
-            "najva:{}:{}".format(user_id, najva["time"]), "users", "reply"
-        )
         DataBase.set(
             f"najvas_sent:{user_id}:{najva['time']}",
             msg.inline_message_id,
