@@ -533,7 +533,7 @@ This section is under construction and will be activated soon
 Keep the bot chat unmuted to be notified when update arrived and activated 🤩
 """,
         "adsfree": """
-⭐️ #free ads on our Linky Channel (@{})
+⭐️ #free ads on our Linky Channel ({})
 
 Every once in a while, we offer a limited rate of free postage, which is sent to you through notification and the #gift tag.
 So always keep Bot chat on and don't delete it so you don't miss the free tariffs! 🤩
@@ -1211,7 +1211,7 @@ unlock inline
         "recent_user_del": "کاربر موردنظر از لیست اخیر حذف شد♨️",
         "block_recent": "این بخش بزودی فعال میشه👍🏻",
         "adsfree": """
-⭐️ تبلیغات #رایگان در لینکدونی ما (@{})
+⭐️ تبلیغات #رایگان در لینکدونی ما ({})
 
 هر چند وقت یکبار بصورت محدود تعرفه پست رایگان ارائه میدیم که از طریق اطلاع رسانی و تگ #هدیه برای شما ارسال میشه
 پس همیشه چتِ ربات رو صدادار داشته باشید و پاک نکنید که تعرفه‌های رایگان رو از دست ندید! 🤩
