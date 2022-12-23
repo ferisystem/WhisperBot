@@ -13,14 +13,16 @@ import sys
 # -------------------------------------------------------------------------------- #
 # کاراکتر
 if __name__ == "__main__":
-    if sys.argv[1] == "reset":
-        rds.delete(db)
-    elif sys.argv[1] == "set-support-gp":
-        rds.hdel(db, "supchat")
-    elif sys.argv[1] == "set-logs-ch":
-        rds.hdel(db, "logchat")
-    elif sys.argv[1] == "set-linky-ch":
-        rds.hdel(db, "linkyCH")
+    if len(sys.argv)>1:
+        matching = sys.argv[1]
+        if matching == "reset":
+            rds.delete(db)
+        elif matching == "set-support-gp":
+            rds.hdel(db, "supchat")
+        elif matching == "set-logs-ch":
+            rds.hdel(db, "logchat")
+        elif matching == "set-linky-ch":
+            rds.hdel(db, "linkyCH")
     app = get_new_configured_app(dispatcher=dp, path=GlobalValues().WEBHOOK_URL_PATH)
     app.on_startup.append(bot_run)
     app.on_shutdown.append(bot_off)
