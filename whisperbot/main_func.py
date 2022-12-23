@@ -6,6 +6,7 @@ import aiogram.utils.exceptions as expts
 from termcolor import colored, cprint
 from core_file import bot, DataBase
 from config_bot import IDs_datas
+import asyncio
 
 
 def cPrint(text, type=1, backColor="on_white", textColor="blue", modes=None):
@@ -837,9 +838,9 @@ async def copyMessage(
             caption,
             parse_mode,
             caption_entities,
-            disable_notification,
+            dis_notif,
             protect_content,
-            reply_to_message_id,
+            reply_msg,
             allow_sending_without_reply,
             reply_markup,
         )
@@ -855,7 +856,7 @@ async def copyMessage(
                     caption,
                     parse_mode,
                     caption_entities,
-                    disable_notification,
+                    dis_notif,
                     protect_content,
                     0,
                     allow_sending_without_reply,
@@ -879,7 +880,7 @@ async def copyMessage(
                     caption,
                     parse_mode,
                     caption_entities,
-                    disable_notification,
+                    dis_notif,
                     protect_content,
                     0,
                     allow_sending_without_reply,
