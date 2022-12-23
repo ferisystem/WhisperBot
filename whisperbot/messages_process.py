@@ -1047,6 +1047,7 @@ async def message_process(msg: types.Message):
                                 )
                         else:
                             try:
+                                await asyncio.sleep(1)
                                 del user_steps[user_data]["najva"]
                             except:
                                 pass
