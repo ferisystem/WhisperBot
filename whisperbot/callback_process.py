@@ -312,6 +312,16 @@ async def callback_query_process(msg: types.CallbackQuery):
                         await userInfos(userID),
                         userID,
                     )
+                keys = DataBase.keys("isBan:*")
+                for i in keys:
+                    n += 1
+                    userID = i.replace(f'{db}.isBan:', '')
+                    text = "{}{}- {} | {}\n".format(
+                        text,
+                        n,
+                        await userInfos(userID),
+                        userID,
+                    )
                 with open(
                     "docs/list_block.txt", mode="a", encoding="utf-8"
                 ) as file:
