@@ -659,3 +659,29 @@ async def inline_query_process(msg: types.InlineQuery):
             }
         )
         await answerInlineQuery(msg_id, results=items, cache_time=1)
+    if re.match(r"^me$", input):
+        input_content = InputTextMessageContent(
+            message_text=ln_in["text"]["my_id"].format(user_id),
+            parse_mode="HTML",
+            disable_web_page_preview=True
+        )
+        inlineKeys = iMarkup()
+        inlineKeys.add(
+            iButtun(
+                buttuns["najva_to"].format(user_name),
+                switch_inline_query_current_chat="{} {}".format(
+                    username, buttuns["example"]
+                ),
+            )
+        )
+        item1 = InlineQueryResultArticle(
+            id=f"myid:{user_id}",
+            title=ln_in["title"]["my_id"],
+            description=ln_in["desc"]["my_id"].format(user_id),
+            thumb_url=pic_atsign,
+            thumb_width=512,
+            thumb_height=512,
+            input_message_content=input_content,
+            reply_markup=inlineKeys,
+        )
+        await answerInlineQuery(msg_id, results=[item1, ], cache_time=1)
