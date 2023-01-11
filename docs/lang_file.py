@@ -2,6 +2,23 @@ lang = {
     "set_fa": "زبان ربات فارسی شد",
     "set_en": "bot language set on english",
     "set_de": "Demnächst...",
+    "de": {
+        "keys": "values",
+        "inline": {
+                "title": {
+                        "keys": "values",
+                },
+                "desc": {
+                        "keys": "values",
+                },
+                "text": {
+                        "keys": "values",
+                },
+        },
+        "buttuns": {
+                "keys": "values",
+        },
+    },
     "en": {
         "settings": "Your private settings",
         "ban_flood": 'User <i>{}</i> [<code>{}</code>] you banned for 1 day from bot because you spammed❌⛔️\n\n▫️support: <a href="https://t.me/{}?start=support">Connect</a>\n▫️Creator: @{}',
