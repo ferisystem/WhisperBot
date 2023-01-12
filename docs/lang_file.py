@@ -3,7 +3,7 @@ lang = {
     "set_en": "bot language set on english",
     "set_de": "Demnächst...",
     "de": {
-        "keys": "values",
+        "settings": "Deine Privateinstellungen",
         "inline": {
                 "title": {
                         "keys": "values",
