@@ -6,7 +6,18 @@ lang = {
         "settings": "Deine Privateinstellungen",
         "inline": {
                 "title": {
-                        "keys": "values",
+                        "help_send": "Wie senden",
+                        "my_id": "Senden meine NummericID",
+                        "najva_person": "Flüstern zu {}",
+                        "najva_group": "Gruppoe Flüstern ({} benutzer)",
+                        "najva_all": "Öffentlich",
+                        "all_set": "Alle Einstellungen ⚙️",
+                        "power_on": "Zum Einschalten antippen",
+                        "power_off": "Zum Auschalten antippen",
+                        "najva_reply": "Flüstern ohne ID",
+                        "najva_havn_text": "Flüstern",
+                        "najva_special": "Speziell Flüstern zu {}",
+                        "special_404": "⚠️Fehler",
                 },
                 "desc": {
                         "keys": "values",
