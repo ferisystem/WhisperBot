@@ -16,6 +16,7 @@ from config_bot import (
 	db
 )
 from whisperbot.lateral_func import (
+    local_id_user,
     userInfos,
     lang_user,
     isSudo
@@ -313,7 +314,8 @@ def anonymous_back_keys(UserID):
 
 
 def anonymous_send_again_keys(UserID, which_user):
-    hash = ":{}:@{}".format(which_user, UserID)
+    id_to_token = local_id_user(user_id=which_user)
+    hash = ":{}:@{}".format(id_to_token, UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
@@ -362,17 +364,19 @@ def anonymous_cus_name_keys(UserID):
 def anonymous_new_message_keys(
     UserID, TO_USER, MSG_ID, SHOW_SENDER, SENT_TIME
 ):
+    token_user = TO_USER
+    token_to_id = local_id_user(uniq_id=token_user)
     hash = ":{}:{}:{}:@{}".format(TO_USER, MSG_ID, SENT_TIME, UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
-    if DataBase.sismember("blocks:{}".format(UserID), TO_USER):
+    if DataBase.sismember("blocks:{}".format(UserID), token_to_id):
         buttun1 = buttuns["unblock"]
     else:
         buttun1 = buttuns["block"]
     inlineKeys = iMarkup()
     inlineKeys.add(
-        iButtun(buttun1, callback_data="anon:blo{}".format(hash)),
-        iButtun(buttuns["reply"], callback_data="anon:rep{}".format(hash)),
+        iButtun(buttun1, callback_data="anon:b{}".format(hash)),
+        iButtun(buttuns["reply"], callback_data="anon:r{}".format(hash)),
     )
     if SHOW_SENDER:
         inlineKeys.add(
@@ -388,7 +392,7 @@ def anonymous_new_message_keys(
         inlineKeys.add(iButtun(buttuns["from_who2"], callback_data="none:no"))
     inlineKeys.add(
         iButtun(
-            buttuns["sent_time"], callback_data="anon:stime{}".format(hash)
+            buttuns["sent_time"], callback_data="anon:t{}".format(hash.replace(f":{TO_USER}:{MSG_ID}", ""))
         )
     )
     return inlineKeys

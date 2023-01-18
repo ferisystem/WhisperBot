@@ -126,11 +126,13 @@ async def message_process(msg: types.Message):
                         input_ = input_.callback_data
                 except:
                     input_ = ""
-                if "anon:blo" in input_:
+                if input_.startswith("anon:b"):
                     ap = re_matches(
-                        r"^anon:blo:(\d+):(\d+):(\d+):@(\d+)$", input_
+                        r"^anon:b:(\w+):(\d+):(\d+):@(\d+)$", input_
                     )
-                    which_user = int(ap[1])
+                    token_user = ap[1]
+                    token_to_id = local_id_user(uniq_id=token_user)
+                    which_user = token_to_id
                     DataBase.incr("stat_anon")
                     if DataBase.sismember(
                         "blocks:{}".format(which_user), user_id
@@ -175,7 +177,7 @@ async def message_process(msg: types.Message):
                             1,
                             lang[lang_user(which_user)]["new_message"].format(msg_.message_id),
                         )
-                if "from_who" in input_:
+                if input_.startswith("from_who"):
                     ap = re_matches(r"^from_who:(\d+):(\d+)$", input_)
                     which_user = int(ap[1])
                     msgID = int(ap[2])
@@ -471,13 +473,15 @@ async def message_process(msg: types.Message):
                         ap = re_matches(
                             r"^(\d+):(\d+):(\d+):(\d+):(\d+):(yes|no)$", i
                         )
+                        which_user = ap[2]
+                        id_to_token = local_id_user(user_id=which_user)
                         if ap[6] == "yes":
-                            show_sender = int(ap[2])
+                            show_sender = int(which_user)
                         else:
                             show_sender = None
                         await asyncio.sleep(0.5)
                         anti_save = False
-                        hash_db = f"anti_save.anon:{ap[2]}"
+                        hash_db = f"anti_save.anon:{which_user}"
                         if DataBase.get(hash_db):
                             anti_save = True
                         await copyMessage(
@@ -487,24 +491,24 @@ async def message_process(msg: types.Message):
                             reply_msg=int(ap[4]),
                             protect_content=anti_save,
                             reply_markup=anonymous_new_message_keys(
-                                user_id, ap[2], ap[3], show_sender, ap[5]
+                                user_id, id_to_token, ap[3], show_sender, ap[5]
                             ),
                         )
-                        if DataBase.get(f"is_starter:{ap[2]}>{user_id}"):
+                        if DataBase.get(f"is_starter:{which_user}>{user_id}"):
                             DataBase.setex(
-                                f"is_starter:{ap[2]}>{user_id}", 86400 * 7, "True"
+                                f"is_starter:{which_user}>{user_id}", 86400 * 7, "True"
                             )
-                            DataBase.delete(f"is_starter:{user_id}>{ap[2]}")
+                            DataBase.delete(f"is_starter:{user_id}>{which_user}")
                             user_name = DataBase.get(
                                 "name_anon2:{}".format(user_id)
                             )
                         else:
-                            user_name = lang[lang_user(ap[2])]["anonymous"]
+                            user_name = lang[lang_user(which_user)]["anonymous"]
                         await sendText(
-                            ap[2],
+                            which_user,
                             ap[3],
                             1,
-                            lang[lang_user(ap[2])]["your_msg_seen"].format(user_name),
+                            lang[lang_user(which_user)]["your_msg_seen"].format(user_name),
                         )
                         DataBase.srem("inbox_user:{}".format(user_id), i)
                         DataBase.sadd("old_inbox_user:{}".format(user_id), i)
@@ -523,13 +527,15 @@ async def message_process(msg: types.Message):
                         ap = re_matches(
                             r"^(\d+):(\d+):(\d+):(\d+):(\d+):(yes|no)$", i
                         )
+                        which_user = ap[2]
+                        id_to_token = local_id_user(user_id=which_user)
                         if ap[6] == "yes":
-                            show_sender = int(ap[2])
+                            show_sender = int(which_user)
                         else:
                             show_sender = None
                         await asyncio.sleep(0.5)
                         anti_save = False
-                        hash_db = f"anti_save.anon:{ap[2]}"
+                        hash_db = f"anti_save.anon:{which_user}"
                         if DataBase.get(hash_db):
                             anti_save = True
                         await copyMessage(
@@ -539,7 +545,7 @@ async def message_process(msg: types.Message):
                             reply_msg=int(ap[4]),
                             protect_content=anti_save,
                             reply_markup=anonymous_new_message_keys(
-                                user_id, ap[2], ap[3], show_sender, ap[5]
+                                user_id, id_to_token, ap[3], show_sender, ap[5]
                             ),
                         )
                 else:

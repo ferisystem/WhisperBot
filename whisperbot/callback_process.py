@@ -557,34 +557,36 @@ async def callback_query_process(msg: types.CallbackQuery):
                 None,
                 anonymous_back_keys(user_id),
             )
-        if re.match(r"^anon:blo:(\d+):(\d+):(\d+):@(\d+)$", input):
-            ap = re_matches(r"^anon:blo:(\d+):(\d+):(\d+):@(\d+)$", input)
-            if DataBase.sismember("blocks:{}".format(user_id), ap[1]):
-                DataBase.srem("blocks:{}".format(user_id), ap[1])
+        if re.match(r"^anon:b:(\w+):(\d+):(\d+):@(\d+)$", input):
+            ap = re_matches(r"^anon:b:(\w+):(\d+):(\d+):@(\d+)$", input)
+            token_user = ap[1]
+            token_to_id = local_id_user(uniq_id=token_user)
+            if DataBase.sismember("blocks:{}".format(user_id), token_to_id):
+                DataBase.srem("blocks:{}".format(user_id), token_to_id)
                 text = langU["user_unblocked"]
             else:
-                DataBase.sadd("blocks:{}".format(user_id), ap[1])
+                DataBase.sadd("blocks:{}".format(user_id), token_to_id)
                 text = langU["user_blocked"]
             input_ = _.reply_markup.inline_keyboard[1][0].callback_data
             SHOW_SENDER = False
             if input_ == "none:yes":
-                SHOW_SENDER = ap[1]
+                SHOW_SENDER = token_to_id
             await answerCallbackQuery(msg, text, show_alert=True, cache_time=2)
             await editMessageReplyMarkup(
                 chat_id,
                 msg_id,
                 reply_markup=anonymous_new_message_keys(
-                    user_id, ap[1], ap[2], SHOW_SENDER, ap[3]
+                    user_id, token_user, ap[2], SHOW_SENDER, ap[3]
                 ),
             )
-        if re.match(r"^anon:rep:(\d+):(\d+):(\d+):@(\d+)$", input):
-            ap = re_matches(r"^anon:rep:(\d+):(\d+):(\d+):@(\d+)$", input)
+        if re.match(r"^anon:r:(\w+):(\d+):(\d+):@(\d+)$", input):
+            ap = re_matches(r"^anon:r:(\w+):(\d+):(\d+):@(\d+)$", input)
             await answerCallbackQuery(
                 msg, langU["help_reply_anon"], show_alert=True, cache_time=3600
             )
-        if re.match(r"^anon:stime:(\d+):(\d+):(\d+):@(\d+)$", input):
-            ap = re_matches(r"^anon:stime:(\d+):(\d+):(\d+):@(\d+)$", input)
-            ti_me = datetime.fromtimestamp(int(ap[3]))
+        if re.match(r"^anon:t:(\d+):@(\d+)$", input):
+            ap = re_matches(r"^anon:t:(\d+):@(\d+)$", input)
+            ti_me = datetime.fromtimestamp(int(ap[1]))
             ti_me = ti_me.strftime("%Y-%m-%d %H:%M:%S")
             ti_me = re_matches(r"(\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+)", ti_me)
             if user_steps[user_id]["lang"] == "fa":
@@ -665,23 +667,25 @@ async def callback_query_process(msg: types.CallbackQuery):
                 "html",
                 anonymous_keys(user_id),
             )
-        if re.match(r"^anon:sendmore:(\d+):@(\d+)$", input):
-            ap = re_matches(r"^anon:sendmore:(\d+):@(\d+)$", input)
+        if re.match(r"^anon:sendmore:(\w+):@(\d+)$", input):
+            ap = re_matches(r"^anon:sendmore:(\w+):@(\d+)$", input)
             hash = ":@{}".format(user_id)
+            token_user = ap[1]
+            token_to_id = local_id_user(uniq_id=token_user)
             inlineKeys = iMarkup()
             inlineKeys.add(
                 iButtun(
                     buttuns["cancel"], callback_data="backstart{}".format(hash)
                 )
             )
-            DataBase.set("who_conneted:{}".format(user_id), ap[1])
+            DataBase.set("who_conneted:{}".format(user_id), token_to_id)
             await _.edit_reply_markup()
             await sendText(
                 chat_id,
                 0,
                 1,
                 langU["user_connect_4send"].format(
-                    DataBase.get("name_anon2:{}".format(ap[1]))
+                    DataBase.get("name_anon2:{}".format(token_to_id))
                 ),
                 "md",
                 inlineKeys,
