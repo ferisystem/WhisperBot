@@ -180,6 +180,7 @@ This is a help for installation.
 - [x] Anti-save for special Whispers
 - [x] Delete all Whisper sent before
 - [x] Block user from recent list user
+- [x] Security-code for userIDs on reply-markups of Anonymous-Messages-Inbox
 - [ ] Multi-language Support
     - [x] Persian
     - [x] English
