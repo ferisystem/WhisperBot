@@ -15,6 +15,7 @@ from whisperbot.main_func import sendText, cPrint
 import aiogram.utils.exceptions as expts
 from config_bot import sudo_users
 from aiogram import types
+import secrets
 import random
 import string
 
@@ -510,6 +511,27 @@ def generate_uniqid():
             random.choices(string.ascii_letters + string.digits, k=29)
         )
     return text
+
+
+def local_id_user(user_id=None, uniq_id=None):
+	if uniq_id == "create":
+		uniq_id = secrets.token_hex(8)
+		if not DataBase.hget('token_to_id', uniq_id):
+			DataBase.hset("id_to_token", user_id, uniq_id)
+			DataBase.hset("token_to_id", uniq_id, user_id)
+			return uniq_id
+		else: # uniq_id was Dupplicate
+			return local_id_user(user_id, uniq_id=uniq_id)
+	elif uniq_id:
+		user_id = DataBase.hget("token_to_id", uniq_id)
+		if not user_id: # uniq_id not exist in DB
+			return "Not Exist"
+		return user_id
+	elif user_id:
+		uniq_id = DataBase.hget("id_to_token", user_id)
+		if not uniq_id: # uniq_id not exist in DB
+			return local_id_user(user_id, uniq_id="create")
+		return uniq_id
 
 
 async def delete_previous_message(UserID):
