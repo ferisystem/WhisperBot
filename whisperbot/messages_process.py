@@ -216,10 +216,10 @@ async def message_process(msg: types.Message):
                 allow = True
             if allow:
                 time_data = DataBase.hget(
-                    "najva_special:{}".format(user_id), "time"
+                    "whisper_special:{}".format(user_id), "time"
                 )
                 users_data = DataBase.hget(
-                    "najva:{}:{}".format(user_id, time_data), "users"
+                    "whisper:{}:{}".format(user_id, time_data), "users"
                 )
                 if "@" in users_data:
                     name_user = await userIds(users_data)
@@ -559,18 +559,18 @@ async def message_process(msg: types.Message):
                         chat_id,
                         msg,
                         1,
-                        langU["najva_settings"].format(GlobalValues().botName),
+                        langU["whisper_settings"].format(GlobalValues().botName),
                         "html",
-                        najva_settings_keys(user_id),
+                        whisper_settings_keys(user_id),
                     )
                 elif ap[1] == "help":
                     await sendText(
                         chat_id,
                         msg,
                         1,
-                        langU["najva_help"],
+                        langU["whisper_help"],
                         "html",
-                        najva_help_keys(user_id),
+                        whisper_help_keys(user_id),
                     )
                 elif ap[1] == "multi":
                     file = "docs/helps/help_group.jpg"
@@ -578,10 +578,10 @@ async def message_process(msg: types.Message):
                         await sendPhoto(
                             chat_id,
                             file,
-                            langU["najva_help_group"].format(GlobalValues().botUser),
+                            langU["whisper_help_group"].format(GlobalValues().botUser),
                             "html",
                             msg,
-                            reply_markup=najva_help3_keys(user_id),
+                            reply_markup=whisper_help3_keys(user_id),
                         )
                 elif ap[1] == "special":
                     file = "docs/helps/help_media.jpg"
@@ -589,10 +589,10 @@ async def message_process(msg: types.Message):
                         await sendPhoto(
                             chat_id,
                             file,
-                            langU["najva_help_media"].format(GlobalValues().botUser),
+                            langU["whisper_help_media"].format(GlobalValues().botUser),
                             "html",
                             msg,
-                            reply_markup=najva_help2_keys(user_id),
+                            reply_markup=whisper_help2_keys(user_id),
                         )
                 elif ap[1] == "reply":
                     file = "docs/helps/help_noid.mp4"
@@ -601,24 +601,24 @@ async def message_process(msg: types.Message):
                             chat_id,
                             msg,
                             file,
-                            langU["najva_help_noid"].format(GlobalValues().botUser),
+                            langU["whisper_help_noid"].format(GlobalValues().botUser),
                             "html",
                             supports_streaming=True,
-                            reply_markup=najva_help5_keys(user_id),
+                            reply_markup=whisper_help5_keys(user_id),
                         )
                 elif re.match(r"^(\d+)_(\d+)_(\d+)$", ap[1]):
                     ap = re_matches(r"^(\d+)_(\d+)_(\d+)$", ap[1])
                     from_user = ap[1]
                     time_data = float(f"{ap[2]}.{ap[3]}")
-                    hash_db = "najva:{}:{}".format(from_user, time_data)
+                    hash_db = "whisper:{}:{}".format(from_user, time_data)
                     msgid = DataBase.hget(hash_db, "msg_id")
                     users_data = DataBase.hget(hash_db, "users")
                     anti_save = False
-                    hash_db2 = f"setting_najva:{from_user}"
+                    hash_db2 = f"setting_whisper:{from_user}"
                     if DataBase.hget(hash_db2, "antisave"):
                         anti_save = True
                     if user_id == int(from_user) and user_id != int(users_data):
-                        inlineKeys = await show_speical_najva2_keys(
+                        inlineKeys = await show_speical_whisper2_keys(
                             user_id, from_user
                         )
                         return await copyMessage(
@@ -629,23 +629,23 @@ async def message_process(msg: types.Message):
                                 reply_markup=inlineKeys,
                         )
                     DataBase.set(
-                        "najva_seen_time:{}:{}".format(from_user, time_data),
+                        "whisper_seen_time:{}:{}".format(from_user, time_data),
                         int(time()),
                     )
                     DataBase.incr(
-                        "najva_seen_count:{}:{}".format(from_user, time_data)
+                        "whisper_seen_count:{}:{}".format(from_user, time_data)
                     )
                     DataBase.sadd(
-                        "najva_seened:{}:{}".format(from_user, time_data),
+                        "whisper_seened:{}:{}".format(from_user, time_data),
                         user_id,
                     )
                     special_msgID = DataBase.hget(
-                        "najva_special:{}".format(from_user), "id"
+                        "whisper_special:{}".format(from_user), "id"
                     )
                     file_id = DataBase.hget(hash_db, "file_id")
                     file_type = DataBase.hget(hash_db, "file_type")
                     source_id = DataBase.hget(hash_db, "source_id")
-                    inlineKeys = await show_speical_najva_keys(
+                    inlineKeys = await show_speical_whisper_keys(
                         user_id, from_user
                     )
                     msg_ = await copyMessage(
@@ -655,28 +655,28 @@ async def message_process(msg: types.Message):
                         protect_content=anti_save,
                         reply_markup=inlineKeys,
                     )
-                    if DataBase.hget(f"setting_najva:{from_user}", "seen"):
+                    if DataBase.hget(f"setting_whisper:{from_user}", "seen"):
                         await sendText(
                             from_user,
                             source_id,
                             1,
-                            lang[lang_user(from_user)]["speical_najva_seen"].format(
+                            lang[lang_user(from_user)]["speical_whisper_seen"].format(
                                 msg.from_user.first_name
                             ),
                         )
                     await editText(
                         inline_msg_id=special_msgID,
-                        text=lang[lang_user(from_user)]["speical_najva_seen2"].format(
+                        text=lang[lang_user(from_user)]["speical_whisper_seen2"].format(
                             msg.from_user.first_name
                         ),
                         parse_mode="html",
-                        reply_markup=najva_seen3_keys(from_user, time_data),
+                        reply_markup=whisper_seen3_keys(from_user, time_data),
                     )
-                    if DataBase.hget(f"setting_najva:{from_user}", "dispo"):
+                    if DataBase.hget(f"setting_whisper:{from_user}", "dispo"):
                         DataBase.delete(hash_db)
-                        DataBase.delete("najva_special:{}".format(from_user))
+                        DataBase.delete("whisper_special:{}".format(from_user))
                         DataBase.srem(
-                            "najva_autodel",
+                            "whisper_autodel",
                             f"{from_user}:{time_data}:{special_msgID}",
                         )
                     DataBase.hset(
@@ -768,17 +768,17 @@ async def message_process(msg: types.Message):
                     )
                     DataBase.setex("isBan:{}".format(user_id), 900, "True")
                 rds.setex(hash, 3, msgs + 1)
-            if re.match(r"^/najva$", input):
+            if re.match(r"^/whisper$", input):
                 await sendText(
                     chat_id,
                     msg,
                     1,
-                    langU["najva"].format(
+                    langU["whisper"].format(
                         GlobalValues().botUser,
                         GlobalValues().botName
                     ),
                     "html",
-                    najva_keys(user_id),
+                    whisper_keys(user_id),
                 )
             if re.match(r"^/nashenas$", input):
                 await sendText(
@@ -794,18 +794,18 @@ async def message_process(msg: types.Message):
                     chat_id,
                     msg,
                     1,
-                    langU["najva_help"],
+                    langU["whisper_help"],
                     "html",
-                    najva_help_keys(user_id),
+                    whisper_help_keys(user_id),
                 )
             if re.match(r"^/settings$", input):
                 await sendText(
                     chat_id,
                     msg,
                     1,
-                    langU["najva_settings"].format(GlobalValues().botName),
+                    langU["whisper_settings"].format(GlobalValues().botName),
                     "html",
-                    najva_settings_keys(user_id),
+                    whisper_settings_keys(user_id),
                 )
             if re.match(r"^/free$", input):
                 await sendText(chat_id, msg, 1, langU["adsfree"], None)
@@ -1018,49 +1018,49 @@ async def message_process(msg: types.Message):
                         if DataBase.sismember(f"blocks2:{Uid}", user_id):
                             uSer = f"<a href=\"tg://user?id={Uid}\">{Uname}</a>"
                             try:
-                                del user_steps[user_id]["najva"]
+                                del user_steps[user_id]["whisper"]
                             except:
                                 pass
                             return await editText(
                                 chat_id,
                                 msg_id,
                                 0,
-                                langU["najva_user_blocked_you"].format(uSer),
+                                langU["whisper_user_blocked_you"].format(uSer),
                                 "html",
                             )
                         DataBase.hset(
-                            "najva:{}:{}".format(user_data, time_data),
+                            "whisper:{}:{}".format(user_data, time_data),
                             "users",
                             Uid,
                         )
                         if msg.sender_chat:
-                            if user_data in user_steps and "najva" in user_steps[user_data]:
-                                najva = user_steps[user_data]["najva"]
+                            if user_data in user_steps and "whisper" in user_steps[user_data]:
+                                whisper = user_steps[user_data]["whisper"]
                                 DataBase.hset(
-                                    "najva:{}:{}".format(user_data, time_data),
+                                    "whisper:{}:{}".format(user_data, time_data),
                                     "text",
-                                    najva["text"],
+                                    whisper["text"],
                                 )
-                                DataBase.incr("stat_najva")
-                                del user_steps[user_data]["najva"]
+                                DataBase.incr("stat_whisper")
+                                del user_steps[user_data]["whisper"]
                             else:
                                 return await editText(
                                     chat_id,
                                     msg_id,
                                     0,
-                                    langU["error_reply_najva"],
+                                    langU["error_reply_whisper"],
                                     "HTML",
                                 )
                         else:
                             try:
                                 await asyncio.sleep(1)
-                                del user_steps[user_data]["najva"]
+                                del user_steps[user_data]["whisper"]
                             except:
                                 pass
                         inlineKeys = iMarkup()
                         inlineKeys.add(
                             iButtun(
-                                buttuns["show_najva"],
+                                buttuns["show_whisper"],
                                 callback_data="showN:{}:{}".format(
                                     user_data, time_data
                                 ),
@@ -1070,13 +1070,13 @@ async def message_process(msg: types.Message):
                             chat_id,
                             msg_id,
                             0,
-                            langU["inline"]["text"]["najva_person"].format(
+                            langU["inline"]["text"]["whisper_person"].format(
                                 Uname
                             ),
                             "HTML",
                             inlineKeys,
                         )
-                        if DataBase.hget(f"setting_najva:{Uid}", "recv"):
+                        if DataBase.hget(f"setting_whisper:{Uid}", "recv"):
                             await sendText(
                                 Uid,
                                 0,
@@ -1084,7 +1084,7 @@ async def message_process(msg: types.Message):
                                 '<a href="t.me/c/{}/{}">{}</a>'.format(
                                     str(chat_id).replace("-100", ""),
                                     msg_id,
-                                    lang[lang_user(Uid)]["new_najva"].format(
+                                    lang[lang_user(Uid)]["new_whisper"].format(
                                     msg.from_user.first_name,
                                     msg.chat.title
                                     ),

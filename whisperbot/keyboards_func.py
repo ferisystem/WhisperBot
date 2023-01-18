@@ -29,8 +29,8 @@ def start_keys(UserID):
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            langU["buttuns"]["najva_section"],
-            callback_data="najva{}".format(hash),
+            langU["buttuns"]["whisper_section"],
+            callback_data="whisper{}".format(hash),
         ),
         iButtun(
             langU["buttuns"]["anon_section"],
@@ -413,16 +413,16 @@ def anonymous_delete_blocks_keys(UserID):
     return inlineKeys
 
 
-def najva_keys(UserID):
+def whisper_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            buttuns["settings"], callback_data="najva:settings{}".format(hash)
+            buttuns["settings"], callback_data="whisper:settings{}".format(hash)
         ),
-        iButtun(buttuns["help"], callback_data="najva:help{}".format(hash)),
+        iButtun(buttuns["help"], callback_data="whisper:help{}".format(hash)),
     )
     inlineKeys.add(
         iButtun(buttuns["back"], callback_data="backstart{}".format(hash))
@@ -436,103 +436,103 @@ def rplac_tick(text):
     )
 
 
-def najva_settings_keys(UserID):
+def whisper_settings_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            buttuns["najva_settings_recents"].format(
-                DataBase.scard(f"najva_recent:{UserID}")
-                + DataBase.scard(f"najva_recent2:{UserID}")
+            buttuns["whisper_settings_recents"].format(
+                DataBase.scard(f"whisper_recent:{UserID}")
+                + DataBase.scard(f"whisper_recent2:{UserID}")
             ),
-            callback_data="najva:settings:recents{}".format(hash),
+            callback_data="whisper:settings:recents{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_settings_notif_seen"].format(
-                rplac_tick(DataBase.hget(f"setting_najva:{UserID}", "seen"))
+            buttuns["whisper_settings_notif_seen"].format(
+                rplac_tick(DataBase.hget(f"setting_whisper:{UserID}", "seen"))
             ),
-            callback_data="najva:settings1:seen{}".format(hash),
+            callback_data="whisper:settings1:seen{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_settings_notif_recv"].format(
-                rplac_tick(DataBase.hget(f"setting_najva:{UserID}", "recv"))
+            buttuns["whisper_settings_notif_recv"].format(
+                rplac_tick(DataBase.hget(f"setting_whisper:{UserID}", "recv"))
             ),
-            callback_data="najva:settings1:recv{}".format(hash),
+            callback_data="whisper:settings1:recv{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_settings_encrypt"].format(
-                rplac_tick(DataBase.hget(f"setting_najva:{UserID}", "encrypt"))
+            buttuns["whisper_settings_encrypt"].format(
+                rplac_tick(DataBase.hget(f"setting_whisper:{UserID}", "encrypt"))
             ),
-            callback_data="najva:settings1:encrypt{}".format(hash),
+            callback_data="whisper:settings1:encrypt{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_settings_no_name"].format(
-                rplac_tick(DataBase.hget(f"setting_najva:{UserID}", "noname"))
+            buttuns["whisper_settings_no_name"].format(
+                rplac_tick(DataBase.hget(f"setting_whisper:{UserID}", "noname"))
             ),
-            callback_data="najva:settings1:noname{}".format(hash),
+            callback_data="whisper:settings1:noname{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_settings_disposable"].format(
-                rplac_tick(DataBase.hget(f"setting_najva:{UserID}", "dispo"))
+            buttuns["whisper_settings_disposable"].format(
+                rplac_tick(DataBase.hget(f"setting_whisper:{UserID}", "dispo"))
             ),
-            callback_data="najva:settings1:dispo{}".format(hash),
+            callback_data="whisper:settings1:dispo{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_settings_antisave"].format(
-                rplac_tick(DataBase.hget(f"setting_najva:{UserID}", "antisave"))
+            buttuns["whisper_settings_antisave"].format(
+                rplac_tick(DataBase.hget(f"setting_whisper:{UserID}", "antisave"))
             ),
-            callback_data="najva:settings1:antisave{}".format(hash),
+            callback_data="whisper:settings1:antisave{}".format(hash),
         ),
     )
-    if DataBase.hget(f"setting_najva:{UserID}", "autodel"):
+    if DataBase.hget(f"setting_whisper:{UserID}", "autodel"):
         time_del = buttuns["minute"].format(
             DataBase.get(f"autodel_time:{UserID}") or 10
         )
     else:
         time_del = rplac_tick(
-            DataBase.hget(f"setting_najva:{UserID}", "autodel")
+            DataBase.hget(f"setting_whisper:{UserID}", "autodel")
         )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_settings_auto_del"].format(time_del),
-            callback_data="najva:settings1:autodel{}".format(hash),
+            buttuns["whisper_settings_auto_del"].format(time_del),
+            callback_data="whisper:settings1:autodel{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_settings_block"].format(
+            buttuns["whisper_settings_block"].format(
                 DataBase.scard(f"blocks2:{UserID}")
             ),
-            callback_data="najva:settings:blocks{}".format(hash),
+            callback_data="whisper:settings:blocks{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_settings_del_all"],
-            callback_data="najva:settings:delall{}".format(hash),
+            buttuns["whisper_settings_del_all"],
+            callback_data="whisper:settings:delall{}".format(hash),
         ),
     )
     inlineKeys.add(
-        iButtun(buttuns["back_najva"], callback_data="najva{}".format(hash))
+        iButtun(buttuns["back_whisper"], callback_data="whisper{}".format(hash))
     )
     return inlineKeys
 
 
-def najva_recent_user_keys(uname_user, name_user, user_ID, UserID):
+def whisper_recent_user_keys(uname_user, name_user, user_ID, UserID):
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
@@ -562,13 +562,13 @@ def najva_recent_user_keys(uname_user, name_user, user_ID, UserID):
     inlineKeys.add(
         iButtun(
             buttuns["back_nrec"],
-            callback_data=f"najva:settings:recents:@{UserID}",
+            callback_data=f"whisper:settings:recents:@{UserID}",
         ),
     )
     return inlineKeys
 
 
-def najva_delall_keys(UserID):
+def whisper_delall_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
@@ -576,88 +576,88 @@ def najva_delall_keys(UserID):
     inlineKeys.add(
         iButtun(
             buttuns["yes"],
-            callback_data="najva:delall:y{}".format(hash),
+            callback_data="whisper:delall:y{}".format(hash),
         ),
         iButtun(
             buttuns["no"],
-            callback_data="najva:settings{}".format(hash),
+            callback_data="whisper:settings{}".format(hash),
         ),
     )
     return inlineKeys
     
-def najva_help_keys(UserID):
+def whisper_help_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_send"],
-            callback_data="najva:help:send{}".format(hash),
+            buttuns["whisper_help_send"],
+            callback_data="whisper:help:send{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_media"],
-            callback_data="najva:help:media{}".format(hash),
+            buttuns["whisper_help_media"],
+            callback_data="whisper:help:media{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_group"],
-            callback_data="najva:help:group{}".format(hash),
+            buttuns["whisper_help_group"],
+            callback_data="whisper:help:group{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_broadcast"],
-            callback_data="najva:help:bd{}".format(hash),
+            buttuns["whisper_help_broadcast"],
+            callback_data="whisper:help:bd{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_noid"],
-            callback_data="najva:help:noid{}".format(hash),
+            buttuns["whisper_help_noid"],
+            callback_data="whisper:help:noid{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_short_set"],
-            callback_data="najva:help:shset{}".format(hash),
+            buttuns["whisper_help_short_set"],
+            callback_data="whisper:help:shset{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_prob"],
-            callback_data="najva:help:prob{}".format(hash),
+            buttuns["whisper_help_prob"],
+            callback_data="whisper:help:prob{}".format(hash),
         ),
     )
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_examp"],
-            callback_data="najva:help:examp{}".format(hash),
+            buttuns["whisper_help_examp"],
+            callback_data="whisper:help:examp{}".format(hash),
         ),
     )
     inlineKeys.add(
-        iButtun(buttuns["back_najva"], callback_data="najva{}".format(hash))
+        iButtun(buttuns["back_whisper"], callback_data="whisper{}".format(hash))
     )
     return inlineKeys
 
 
-def najva_help1_keys(UserID):
+def whisper_help1_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            buttuns["najva_help_noid"],
-            callback_data="najva:help:noid{}".format(hash),
+            buttuns["whisper_help_noid"],
+            callback_data="whisper:help:noid{}".format(hash),
         )
     )
     # inlineKeys.add(
         # iButtun(
-            # buttuns["helper_video"], callback_data="najva:vid:1{}".format(hash)
+            # buttuns["helper_video"], callback_data="whisper:vid:1{}".format(hash)
         # )
     # )
     inlineKeys.add(
@@ -668,21 +668,21 @@ def najva_help1_keys(UserID):
     )
     inlineKeys.add(
         iButtun(
-            buttuns["back_help_najva"],
-            callback_data="najva:help{}".format(hash),
+            buttuns["back_help_whisper"],
+            callback_data="whisper:help{}".format(hash),
         )
     )
     return inlineKeys
 
 
-def najva_help2_keys(UserID):
+def whisper_help2_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     # inlineKeys.add(
         # iButtun(
-            # buttuns["helper_video"], callback_data="najva:vid:2{}".format(hash)
+            # buttuns["helper_video"], callback_data="whisper:vid:2{}".format(hash)
         # )
     # )
     inlineKeys.add(
@@ -690,14 +690,14 @@ def najva_help2_keys(UserID):
     )
     inlineKeys.add(
         iButtun(
-            buttuns["back_help_najva"],
-            callback_data="najva:help{}".format(hash),
+            buttuns["back_help_whisper"],
+            callback_data="whisper:help{}".format(hash),
         )
     )
     return inlineKeys
 
 
-def najva_help3_keys(UserID):
+def whisper_help3_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
@@ -712,14 +712,14 @@ def najva_help3_keys(UserID):
     )
     inlineKeys.add(
         iButtun(
-            buttuns["back_help_najva"],
-            callback_data="najva:help{}".format(hash),
+            buttuns["back_help_whisper"],
+            callback_data="whisper:help{}".format(hash),
         )
     )
     return inlineKeys
 
 
-def najva_help4_keys(UserID):
+def whisper_help4_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
@@ -732,33 +732,33 @@ def najva_help4_keys(UserID):
     )
     inlineKeys.add(
         iButtun(
-            buttuns["back_help_najva"],
-            callback_data="najva:help{}".format(hash),
+            buttuns["back_help_whisper"],
+            callback_data="whisper:help{}".format(hash),
         )
     )
     return inlineKeys
 
 
-def najva_help5_keys(UserID):
+def whisper_help5_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            buttuns["helper_reply"], callback_data="najva:vid:5{}".format(hash)
+            buttuns["helper_reply"], callback_data="whisper:vid:5{}".format(hash)
         )
     )
     inlineKeys.add(
         iButtun(
-            buttuns["back_help_najva"],
-            callback_data="najva:help{}".format(hash),
+            buttuns["back_help_whisper"],
+            callback_data="whisper:help{}".format(hash),
         )
     )
     return inlineKeys
 
 
-def najva_help6_keys(UserID):
+def whisper_help6_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
@@ -766,35 +766,35 @@ def najva_help6_keys(UserID):
     inlineKeys.add(iButtun(buttuns["example"], switch_inline_query="set"))
     inlineKeys.add(
         iButtun(
-            buttuns["back_help_najva"],
-            callback_data="najva:help{}".format(hash),
+            buttuns["back_help_whisper"],
+            callback_data="whisper:help{}".format(hash),
         )
     )
     return inlineKeys
 
 
-def najva_help7_keys(UserID):
+def whisper_help7_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            buttuns["back_help_najva"],
-            callback_data="najva:help{}".format(hash),
+            buttuns["back_help_whisper"],
+            callback_data="whisper:help{}".format(hash),
         )
     )
     return inlineKeys
 
 
-def najva_help8_keys(UserID):
+def whisper_help8_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            buttuns["example_najva"],
+            buttuns["example_whisper"],
             switch_inline_query="{} {}".format(UserID, buttuns["example"]),
         )
     )
@@ -815,14 +815,14 @@ def najva_help8_keys(UserID):
     )
     inlineKeys.add(
         iButtun(
-            buttuns["back_help_najva"],
-            callback_data="najva:help{}".format(hash),
+            buttuns["back_help_whisper"],
+            callback_data="whisper:help{}".format(hash),
         )
     )
     return inlineKeys
 
 
-def najva_help9_keys(UserID):
+def whisper_help9_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
@@ -830,50 +830,50 @@ def najva_help9_keys(UserID):
     inlineKeys.add(
         iButtun(
             buttuns["helper_install"],
-            callback_data="najva:vid:6{}".format(hash),
+            callback_data="whisper:vid:6{}".format(hash),
         )
     )
     inlineKeys.add(
         iButtun(
-            buttuns["back_help_najva"],
-            callback_data="najva:help{}".format(hash),
+            buttuns["back_help_whisper"],
+            callback_data="whisper:help{}".format(hash),
         )
     )
     return inlineKeys
 
 
-def najva_autodel_keys(UserID):
+def whisper_autodel_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            buttuns["najva_settings_auto_del"].format(
-                rplac_tick(DataBase.hget(f"setting_najva:{UserID}", "autodel"))
+            buttuns["whisper_settings_auto_del"].format(
+                rplac_tick(DataBase.hget(f"setting_whisper:{UserID}", "autodel"))
             ),
-            callback_data="najva:autodel{}".format(hash),
+            callback_data="whisper:autodel{}".format(hash),
         )
     )
     inlineKeys.add(
         iButtun(
-            buttuns["back_nset"], callback_data="najva:settings{}".format(hash)
+            buttuns["back_nset"], callback_data="whisper:settings{}".format(hash)
         )
     )
     return inlineKeys
 
 
-def najva_autodel2_keys(UserID):
+def whisper_autodel2_keys(UserID):
     hash = ":@{}".format(UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup(row_width=6)
     inlineKeys.add(
         iButtun(
-            buttuns["najva_settings_auto_del"].format(
-                rplac_tick(DataBase.hget(f"setting_najva:{UserID}", "autodel"))
+            buttuns["whisper_settings_auto_del"].format(
+                rplac_tick(DataBase.hget(f"setting_whisper:{UserID}", "autodel"))
             ),
-            callback_data="najva:autodel{}".format(hash),
+            callback_data="whisper:autodel{}".format(hash),
         )
     )
     inlineKeys.add(
@@ -894,26 +894,26 @@ def najva_autodel2_keys(UserID):
     )
     inlineKeys.add(
         iButtun(
-            buttuns["back_nset"], callback_data="najva:settings{}".format(hash)
+            buttuns["back_nset"], callback_data="whisper:settings{}".format(hash)
         ),
     )
     return inlineKeys
 
 
-def najva_seen_keys(UserID, from_user, time_data):
+def whisper_seen_keys(UserID, from_user, time_data):
     hash = ":{}:{}".format(from_user, time_data)
     langU = lang[lang_user(from_user)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup(row_width=3)
     inlineKeys.add(
         iButtun(buttuns["stats"], callback_data="showS{}".format(hash)),
-        iButtun(buttuns["show_najva"], callback_data="showN{}".format(hash)),
-        iButtun(buttuns["delete"], callback_data="delNajva{}".format(hash)),
+        iButtun(buttuns["show_whisper"], callback_data="showN{}".format(hash)),
+        iButtun(buttuns["delete"], callback_data="delWhisper{}".format(hash)),
     )
     return inlineKeys
 
 
-def najva_seen2_keys(UserID, from_user, time_data):
+def whisper_seen2_keys(UserID, from_user, time_data):
     hash = ":{}:{}".format(from_user, time_data)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
@@ -924,13 +924,13 @@ def najva_seen2_keys(UserID, from_user, time_data):
     return inlineKeys
 
 
-def najva_seen3_keys(from_user, time_data):
+def whisper_seen3_keys(from_user, time_data):
     hash = ":{}:{}".format(from_user, time_data)
     langU = lang[lang_user(from_user)]
     buttuns = langU["buttuns"]
     inlineKeys = iMarkup()
     inlineKeys.add(
-        iButtun(buttuns["delete"], callback_data="delNajva{}".format(hash)),
+        iButtun(buttuns["delete"], callback_data="delWhisper{}".format(hash)),
         iButtun(buttuns["stats"], callback_data="showS{}".format(hash)),
     )
     ads = DataBase.get("have_ads")
@@ -953,7 +953,7 @@ def register_special_keys(UserID):
         iButtun(
             buttuns["anti_save"].format(
                 rplac_tick(
-                    DataBase.hget(f"setting_najva:{UserID}", "antisave")
+                    DataBase.hget(f"setting_whisper:{UserID}", "antisave")
                 )
             ),
             callback_data="special:antisave{}".format(hash),
@@ -966,10 +966,10 @@ def register_special_keys(UserID):
     )
     inlineKeys.add(
         iButtun(
-            buttuns["reg_najva"], callback_data="special:reg1{}".format(hash)
+            buttuns["reg_whisper"], callback_data="special:reg1{}".format(hash)
         ),
         iButtun(
-            buttuns["reg2_najva"], callback_data="special:reg2{}".format(hash)
+            buttuns["reg2_whisper"], callback_data="special:reg2{}".format(hash)
         ),
     )
     inlineKeys.add(
@@ -980,7 +980,7 @@ def register_special_keys(UserID):
     return inlineKeys
 
 
-async def show_speical_najva_keys(UserID, from_user):
+async def show_speical_whisper_keys(UserID, from_user):
     hash2 = ":{}:@{}".format(from_user, UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
@@ -996,7 +996,7 @@ async def show_speical_najva_keys(UserID, from_user):
     else:
         which_one = buttuns["block"]
     inlineKeys.add(
-        iButtun(buttuns["special_najva"], callback_data="none"),
+        iButtun(buttuns["special_whisper"], callback_data="none"),
         iButtun(name_user, url=call_url),
     )
     inlineKeys.add(
@@ -1008,7 +1008,7 @@ async def show_speical_najva_keys(UserID, from_user):
     return inlineKeys
 
 
-async def show_speical_najva2_keys(UserID, from_user):
+async def show_speical_whisper2_keys(UserID, from_user):
     hash2 = ":{}:@{}".format(from_user, UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
@@ -1024,13 +1024,13 @@ async def show_speical_najva2_keys(UserID, from_user):
     else:
         which_one = buttuns["block"]
     inlineKeys.add(
-        iButtun(buttuns["special_najva"], callback_data="none"),
+        iButtun(buttuns["special_whisper"], callback_data="none"),
         iButtun(name_user, url=call_url),
     )
     return inlineKeys
 
 
-def report_najva_keys(UserID, from_user, reply_id):
+def report_whisper_keys(UserID, from_user, reply_id):
     hash2 = ":{}:{}:@{}".format(from_user, reply_id, UserID)
     langU = lang[lang_user(UserID)]
     buttuns = langU["buttuns"]
@@ -1069,7 +1069,7 @@ def support_keys(UserID):
     inlineKeys = iMarkup()
     inlineKeys.add(
         iButtun(
-            buttuns["help_najva"], callback_data="najva:help{}".format(hash)
+            buttuns["help_whisper"], callback_data="whisper:help{}".format(hash)
         )
     )
     inlineKeys.add(

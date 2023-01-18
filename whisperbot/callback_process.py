@@ -347,7 +347,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             elif ap[1] == "stats":
                 stat_users = DataBase.scard("allUsers")
                 stat_block = DataBase.scard("isBanned")
-                stat_najva = DataBase.get("stat_najva")
+                stat_whisper = DataBase.get("stat_whisper")
                 stat_anon = DataBase.get("stat_anon")
                 await editText(
                     chat_id,
@@ -357,7 +357,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     .format(
                         stat_users,
                         stat_block,
-                        stat_najva,
+                        stat_whisper,
                         stat_anon,
                     )
                     .replace("None", "0"),
@@ -690,29 +690,29 @@ async def callback_query_process(msg: types.CallbackQuery):
                 "md",
                 inlineKeys,
             )
-        if re.match(r"^najva:@(\d+)$", input):
+        if re.match(r"^whisper:@(\d+)$", input):
             await editText(
                 chat_id,
                 msg_id,
                 0,
-                langU["najva"].format(GlobalValues().botUser, GlobalValues().botName),
+                langU["whisper"].format(GlobalValues().botUser, GlobalValues().botName),
                 "html",
-                najva_keys(user_id),
+                whisper_keys(user_id),
             )
-        if re.match(r"^najva:settings:@(\d+)$", input):
+        if re.match(r"^whisper:settings:@(\d+)$", input):
             await editText(
                 chat_id,
                 msg_id,
                 0,
-                langU["najva_settings"].format(GlobalValues().botName),
+                langU["whisper_settings"].format(GlobalValues().botName),
                 "html",
-                najva_settings_keys(user_id),
+                whisper_settings_keys(user_id),
             )
-        if re.match(r"^najva:settings:(.*):@(\d+)$", input):
-            ap = re_matches(r"^najva:settings:(.*):@(\d+)$", input)
+        if re.match(r"^whisper:settings:(.*):@(\d+)$", input):
+            ap = re_matches(r"^whisper:settings:(.*):@(\d+)$", input)
             if ap[1] == "recents":
-                recent = DataBase.smembers("najva_recent:{}".format(user_id))
-                recent2 = DataBase.smembers("najva_recent2:{}".format(user_id))
+                recent = DataBase.smembers("whisper_recent:{}".format(user_id))
+                recent2 = DataBase.smembers("whisper_recent2:{}".format(user_id))
                 if len(recent) > 0 or len(recent2) > 0:
                     text = langU["recent_list"].format(
                         len(recent) + len(recent2)
@@ -723,8 +723,8 @@ async def callback_query_process(msg: types.CallbackQuery):
                     for i in recent:
                         name_user = await userInfos(i, "name")
                         if "Deleted" in name_user:
-                            DataBase.srem(f"najva_recent:{user_id}", i)
-                            DataBase.srem(f"najva_recent2:{user_id}", i)
+                            DataBase.srem(f"whisper_recent:{user_id}", i)
+                            DataBase.srem(f"whisper_recent2:{user_id}", i)
                         elif not i in members:
                             members.add(i)
                             count += 1
@@ -739,8 +739,8 @@ async def callback_query_process(msg: types.CallbackQuery):
                     for i in recent2:
                         name_user = await userInfos(i, "name")
                         if "Deleted" in name_user:
-                            DataBase.srem(f"najva_recent:{user_id}", i)
-                            DataBase.srem(f"najva_recent2:{user_id}", i)
+                            DataBase.srem(f"whisper_recent:{user_id}", i)
+                            DataBase.srem(f"whisper_recent2:{user_id}", i)
                         elif not i in members:
                             members.add(i)
                             count += 1
@@ -753,11 +753,11 @@ async def callback_query_process(msg: types.CallbackQuery):
                             if len(members) > 22:
                                 break
                         elif i in members:
-                            DataBase.srem(f"najva_recent2:{user_id}", i)
+                            DataBase.srem(f"whisper_recent2:{user_id}", i)
                     inlineKeys.add(
                         iButtun(
                             buttuns["back_nset"],
-                            callback_data=f"najva:settings:@{user_id}",
+                            callback_data=f"whisper:settings:@{user_id}",
                         ),
                         iButtun(
                             buttuns["delall"],
@@ -795,7 +795,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     inlineKeys.add(
                         iButtun(
                             buttuns["back_nset"],
-                            callback_data=f"najva:settings:@{user_id}",
+                            callback_data=f"whisper:settings:@{user_id}",
                         ),
                         iButtun(
                             buttuns["delall"],
@@ -811,15 +811,15 @@ async def callback_query_process(msg: types.CallbackQuery):
                         cache_time=10,
                     )
             elif ap[1] == "delall":
-                count = len(DataBase.keys(f"najva:{user_id}:*"))
+                count = len(DataBase.keys(f"whisper:{user_id}:*"))
                 if count == 0:
                     return await answerCallbackQuery(
                         msg,
-                        langU["najvas_sent_is_zero"],
+                        langU["whispers_sent_is_zero"],
                         show_alert=True,
                         cache_time=10,
                     )
-                inlineKeys = najva_delall_keys(user_id)
+                inlineKeys = whisper_delall_keys(user_id)
                 await editText(
                     chat_id,
                     msg_id,
@@ -828,21 +828,21 @@ async def callback_query_process(msg: types.CallbackQuery):
                     "html",
                     inlineKeys
                 )
-        if re.match(r"^najva:delall:y:@(\d+)$", input):
-            najvas_keys = DataBase.keys(f"najva:{user_id}:*")
-            if len(najvas_keys) == 0:
+        if re.match(r"^whisper:delall:y:@(\d+)$", input):
+            whispers_keys = DataBase.keys(f"whisper:{user_id}:*")
+            if len(whispers_keys) == 0:
                 await answerCallbackQuery(
                     msg,
-                    langU["najvas_sent_is_zero"],
+                    langU["whispers_sent_is_zero"],
                     show_alert=True
                 )
                 return await editText(
                     chat_id,
                     msg_id,
                     0,
-                    langU["najva_settings"].format(GlobalValues().botName),
+                    langU["whisper_settings"].format(GlobalValues().botName),
                     "html",
-                    najva_settings_keys(user_id),
+                    whisper_settings_keys(user_id),
                 )
             if DataBase.get(f"limit_delall:{user_id}"):
                 next_time = DataBase.ttl(f"limit_delall:{user_id}")
@@ -858,11 +858,11 @@ async def callback_query_process(msg: types.CallbackQuery):
                     chat_id,
                     msg_id,
                     0,
-                    langU["najva_settings"].format(GlobalValues().botName),
+                    langU["whisper_settings"].format(GlobalValues().botName),
                     "html",
-                    najva_settings_keys(user_id),
+                    whisper_settings_keys(user_id),
                 )
-            count = len(najvas_keys) * 1
+            count = len(whispers_keys) * 1
             if count > 60:
                 count = float(count / 60)
                 text = "{:.2f}".format(count)
@@ -874,10 +874,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["wait_delall"].format(len(najvas_keys), text)
+                langU["wait_delall"].format(len(whispers_keys), text)
             )
             count = 0
-            for i in najvas_keys:
+            for i in whispers_keys:
                 null, from_user, time_data = i.split(':')
                 hash_db = i
                 seen_id = rds.hget(
@@ -887,28 +887,28 @@ async def callback_query_process(msg: types.CallbackQuery):
                     seen_id = seen_id.split(":")
                     await delete_messages(seen_id[0], seen_id[1])
                 special_msgID = DataBase.hget(
-                    "najva_special:{}".format(from_user), "id"
+                    "whisper_special:{}".format(from_user), "id"
                 )
                 DataBase.srem(
-                    "najva_autodel",
+                    "whisper_autodel",
                     f"{from_user}:{time_data}:{special_msgID}"
                 )
                 rds.delete(hash_db)
-                DataBase.delete("najva_special:{}".format(from_user))
+                DataBase.delete("whisper_special:{}".format(from_user))
                 msgID = DataBase.get(
-                    f"najvas_sent:{from_user}:{time_data}"
+                    f"whispers_sent:{from_user}:{time_data}"
                 )
                 if msgID:
                     await editMessageReplyMarkup(
                         inline_message_id=msgID,
-                        reply_markup=najva_seen2_keys(
+                        reply_markup=whisper_seen2_keys(
                             user_id,
                             from_user,
                             time_data
                         ),
                     )
                     DataBase.delete(
-                        f"najvas_sent:{from_user}:{time_data}"
+                        f"whispers_sent:{from_user}:{time_data}"
                     )
                 await asyncio.sleep(1)
                 count += 1
@@ -918,7 +918,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["delall_najva_result"].format(count)
+                langU["delall_whisper_result"].format(count)
             )
             DataBase.setex(f"limit_delall:{user_id}", 3600, "True")
         if re.match(r"^blocks2:all:@(\d+)$", input):
@@ -926,7 +926,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             inlineKeys.add(
                 iButtun(
                     buttuns["no"],
-                    callback_data=f"najva:settings:blocks:@{user_id}",
+                    callback_data=f"whisper:settings:blocks:@{user_id}",
                 ),
                 iButtun(
                     buttuns["yes"],
@@ -943,9 +943,9 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["najva_settings"].format(GlobalValues().botName),
+                langU["whisper_settings"].format(GlobalValues().botName),
                 "html",
-                najva_settings_keys(user_id),
+                whisper_settings_keys(user_id),
             )
         if re.match(r"^blocks2:(\d+):@(\d+)$", input):
             ap = re_matches(r"^blocks2:(\d+):@(\d+)$", input)
@@ -962,7 +962,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             inlineKeys.add(
                 iButtun(
                     buttuns["no"],
-                    callback_data=f"najva:settings:blocks:@{user_id}",
+                    callback_data=f"whisper:settings:blocks:@{user_id}",
                 ),
                 iButtun(
                     buttuns["yes"],
@@ -987,16 +987,16 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["najva_settings"].format(GlobalValues().botName),
+                langU["whisper_settings"].format(GlobalValues().botName),
                 "html",
-                najva_settings_keys(user_id),
+                whisper_settings_keys(user_id),
             )
         if re.match(r"^recent:all:@(\d+)$", input):
             inlineKeys = iMarkup()
             inlineKeys.add(
                 iButtun(
                     buttuns["no"],
-                    callback_data=f"najva:settings:recents:@{user_id}",
+                    callback_data=f"whisper:settings:recents:@{user_id}",
                 ),
                 iButtun(
                     buttuns["yes"],
@@ -1007,8 +1007,8 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id, msg_id, 0, langU["sure_del_recent"], None, inlineKeys
             )
         if re.match(r"^recent:all:y:@(\d+)$", input):
-            DataBase.delete(f"najva_recent:{user_id}")
-            DataBase.delete(f"najva_recent2:{user_id}")
+            DataBase.delete(f"whisper_recent:{user_id}")
+            DataBase.delete(f"whisper_recent2:{user_id}")
             await answerCallbackQuery(
                 msg, langU["delall_recent"], show_alert=True
             )
@@ -1016,15 +1016,15 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["najva_settings"].format(GlobalValues().botName),
+                langU["whisper_settings"].format(GlobalValues().botName),
                 "html",
-                najva_settings_keys(user_id),
+                whisper_settings_keys(user_id),
             )
         if re.match(r"^recent:(\d+):@(\d+)$", input):
             ap = re_matches(r"^recent:(\d+):@(\d+)$", input)
             uname_user = await userInfos(int(ap[1]), info="username")
             name_user = await userInfos(int(ap[1]), info="name")
-            inlineKeys = najva_recent_user_keys(
+            inlineKeys = whisper_recent_user_keys(
                 uname_user,
                 name_user,
                 int(ap[1]),
@@ -1040,8 +1040,8 @@ async def callback_query_process(msg: types.CallbackQuery):
             )
         if re.match(r"^recent:(\d+):y:@(\d+)$", input):
             ap = re_matches(r"^recent:(\d+):y:@(\d+)$", input)
-            DataBase.srem(f"najva_recent:{user_id}", ap[1])
-            DataBase.srem(f"najva_recent2:{user_id}", ap[1])
+            DataBase.srem(f"whisper_recent:{user_id}", ap[1])
+            DataBase.srem(f"whisper_recent2:{user_id}", ap[1])
             await answerCallbackQuery(
                 msg, langU["recent_user_del"], show_alert=True
             )
@@ -1049,9 +1049,9 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 msg_id,
                 0,
-                langU["najva_settings"].format(GlobalValues().botName),
+                langU["whisper_settings"].format(GlobalValues().botName),
                 "html",
-                najva_settings_keys(user_id),
+                whisper_settings_keys(user_id),
             )
         if re.match(r"^recent:(\d+):b:@(\d+)$", input):
             ap = re_matches(r"^recent:(\d+):b:@(\d+)$", input)
@@ -1061,14 +1061,14 @@ async def callback_query_process(msg: types.CallbackQuery):
             name_user = await userInfos(who_user, info="name")
             if DataBase.sismember(hash_db, who_user):
                 DataBase.srem(f"blocks2:{user_id}", who_user)
-                text = langU["user_unblocked_najva"]
+                text = langU["user_unblocked_whisper"]
             else:
                 DataBase.sadd(f"blocks2:{user_id}", who_user)
-                text = langU["user_blocked_najva"]
+                text = langU["user_blocked_whisper"]
             await answerCallbackQuery(
                 msg, text, show_alert=True, cache_time=5
             )
-            inlineKeys = najva_recent_user_keys(
+            inlineKeys = whisper_recent_user_keys(
                 uname_user,
                 name_user,
                 who_user,
@@ -1082,7 +1082,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 "html",
                 inlineKeys,
             )
-        if re.match(r"^najva:help:@(\d+)$", input):
+        if re.match(r"^whisper:help:@(\d+)$", input):
             try:
                 await _.delete()
             except:
@@ -1091,15 +1091,15 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 _.reply_to_message,
                 1,
-                langU["najva_help"],
+                langU["whisper_help"],
                 "html",
-                najva_help_keys(user_id),
+                whisper_help_keys(user_id),
             )
-        if re.match(r"^najva:settings1:(.*):@(\d+)$", input):
-            ap = re_matches(r"^najva:settings1:(.*):@(\d+)$", input)
+        if re.match(r"^whisper:settings1:(.*):@(\d+)$", input):
+            ap = re_matches(r"^whisper:settings1:(.*):@(\d+)$", input)
             if ap[1] == "autodel":
                 if DataBase.hget(
-                    "setting_najva:{}".format(user_id), "autodel"
+                    "setting_whisper:{}".format(user_id), "autodel"
                 ):
                     await editText(
                         chat_id,
@@ -1107,7 +1107,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                         0,
                         langU["autodel"],
                         None,
-                        najva_autodel2_keys(user_id),
+                        whisper_autodel2_keys(user_id),
                     )
                 else:
                     await editText(
@@ -1116,41 +1116,41 @@ async def callback_query_process(msg: types.CallbackQuery):
                         0,
                         langU["autodel"],
                         None,
-                        najva_autodel_keys(user_id),
+                        whisper_autodel_keys(user_id),
                     )
             else:
-                if DataBase.hget("setting_najva:{}".format(user_id), ap[1]):
-                    DataBase.hdel("setting_najva:{}".format(user_id), ap[1])
-                    text = langU["najva_setoff_{}".format(ap[1])]
+                if DataBase.hget("setting_whisper:{}".format(user_id), ap[1]):
+                    DataBase.hdel("setting_whisper:{}".format(user_id), ap[1])
+                    text = langU["whisper_setoff_{}".format(ap[1])]
                 else:
-                    DataBase.hset("setting_najva:{}".format(user_id), ap[1], 1)
-                    text = langU["najva_seton_{}".format(ap[1])]
+                    DataBase.hset("setting_whisper:{}".format(user_id), ap[1], 1)
+                    text = langU["whisper_seton_{}".format(ap[1])]
                 await answerCallbackQuery(
                     msg, text, show_alert=True, cache_time=2
                 )
                 await editMessageReplyMarkup(
-                    chat_id, msg_id, reply_markup=najva_settings_keys(user_id)
+                    chat_id, msg_id, reply_markup=whisper_settings_keys(user_id)
                 )
-        if re.match(r"^najva:autodel:@(\d+)$", input):
-            ap = re_matches(r"^najva:autodel:@(\d+)$", input)
-            if DataBase.hget("setting_najva:{}".format(user_id), "autodel"):
-                DataBase.hdel("setting_najva:{}".format(user_id), "autodel")
-                text = langU["najva_setoff_autodel"]
+        if re.match(r"^whisper:autodel:@(\d+)$", input):
+            ap = re_matches(r"^whisper:autodel:@(\d+)$", input)
+            if DataBase.hget("setting_whisper:{}".format(user_id), "autodel"):
+                DataBase.hdel("setting_whisper:{}".format(user_id), "autodel")
+                text = langU["whisper_setoff_autodel"]
                 await answerCallbackQuery(msg, text, cache_time=2)
                 await editMessageReplyMarkup(
-                    chat_id, msg_id, reply_markup=najva_autodel_keys(user_id)
+                    chat_id, msg_id, reply_markup=whisper_autodel_keys(user_id)
                 )
             else:
                 if not DataBase.get("autodel_time:{}".format(user_id)):
                     DataBase.set("autodel_time:{}".format(user_id), 10)
-                text = langU["najva_seton_autodel"]
-                DataBase.hset("setting_najva:{}".format(user_id), "autodel", 1)
+                text = langU["whisper_seton_autodel"]
+                DataBase.hset("setting_whisper:{}".format(user_id), "autodel", 1)
                 await answerCallbackQuery(msg, text, cache_time=2)
                 await editMessageReplyMarkup(
-                    chat_id, msg_id, reply_markup=najva_autodel2_keys(user_id)
+                    chat_id, msg_id, reply_markup=whisper_autodel2_keys(user_id)
                 )
-        if re.match(r"^najva:help:(.*):@(\d+)$", input):
-            ap = re_matches(r"^najva:help:(.*):@(\d+)$", input)
+        if re.match(r"^whisper:help:(.*):@(\d+)$", input):
+            ap = re_matches(r"^whisper:help:(.*):@(\d+)$", input)
             try:
                 await _.delete()
             except:
@@ -1161,10 +1161,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                     await sendPhoto(
                         chat_id,
                         file,
-                        langU["najva_help_send"].format(GlobalValues().botUser),
+                        langU["whisper_help_send"].format(GlobalValues().botUser),
                         "html",
                         _.reply_to_message,
-                        reply_markup=najva_help1_keys(user_id),
+                        reply_markup=whisper_help1_keys(user_id),
                     )
             elif ap[1] == "media":
                 file = "docs/helps/help_media.jpg"
@@ -1172,10 +1172,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                     await sendPhoto(
                         chat_id,
                         file,
-                        langU["najva_help_media"].format(GlobalValues().botUser),
+                        langU["whisper_help_media"].format(GlobalValues().botUser),
                         "html",
                         _.reply_to_message,
-                        reply_markup=najva_help2_keys(user_id),
+                        reply_markup=whisper_help2_keys(user_id),
                     )
             elif ap[1] == "group":
                 file = "docs/helps/help_group.jpg"
@@ -1183,10 +1183,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                     await sendPhoto(
                         chat_id,
                         file,
-                        langU["najva_help_group"].format(GlobalValues().botUser),
+                        langU["whisper_help_group"].format(GlobalValues().botUser),
                         "html",
                         _.reply_to_message,
-                        reply_markup=najva_help3_keys(user_id),
+                        reply_markup=whisper_help3_keys(user_id),
                     )
             elif ap[1] == "bd":
                 file = "docs/helps/help_bd.jpg"
@@ -1194,10 +1194,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                     await sendPhoto(
                         chat_id,
                         file,
-                        langU["najva_help_bd"].format(GlobalValues().botUser),
+                        langU["whisper_help_bd"].format(GlobalValues().botUser),
                         "html",
                         _.reply_to_message,
-                        reply_markup=najva_help4_keys(user_id),
+                        reply_markup=whisper_help4_keys(user_id),
                     )
             elif ap[1] == "noid":
                 file = "docs/helps/help_noid.mp4"
@@ -1206,10 +1206,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                         chat_id,
                         _.reply_to_message,
                         file,
-                        langU["najva_help_noid"].format(GlobalValues().botUser),
+                        langU["whisper_help_noid"].format(GlobalValues().botUser),
                         "html",
                         supports_streaming=True,
-                        reply_markup=najva_help5_keys(user_id),
+                        reply_markup=whisper_help5_keys(user_id),
                     )
             elif ap[1] == "shset":
                 file = "docs/helps/help_shset.jpg"
@@ -1217,10 +1217,10 @@ async def callback_query_process(msg: types.CallbackQuery):
                     await sendPhoto(
                         chat_id,
                         file,
-                        langU["najva_help_shset"].format(GlobalValues().botUser),
+                        langU["whisper_help_shset"].format(GlobalValues().botUser),
                         "html",
                         _.reply_to_message,
-                        reply_markup=najva_help6_keys(user_id),
+                        reply_markup=whisper_help6_keys(user_id),
                     )
             elif ap[1] == "prob":
                 file = "docs/helps/help_prob.jpg"
@@ -1228,38 +1228,38 @@ async def callback_query_process(msg: types.CallbackQuery):
                     await sendPhoto(
                         chat_id,
                         file,
-                        langU["najva_help_prob"].format(GlobalValues().botUser),
+                        langU["whisper_help_prob"].format(GlobalValues().botUser),
                         "html",
                         _.reply_to_message,
-                        reply_markup=najva_help7_keys(user_id),
+                        reply_markup=whisper_help7_keys(user_id),
                     )
             elif ap[1] == "examp":
                 await sendText(
                     chat_id,
                     _.reply_to_message,
                     1,
-                    langU["najva_help_examp"],
+                    langU["whisper_help_examp"],
                     "html",
-                    najva_help8_keys(user_id),
+                    whisper_help8_keys(user_id),
                 )
-        if re.match(r"^najva:vid:(\d+):@(\d+)$", input):
-            ap = re_matches(r"^najva:vid:(\d+):@(\d+)$", input)
+        if re.match(r"^whisper:vid:(\d+):@(\d+)$", input):
+            ap = re_matches(r"^whisper:vid:(\d+):@(\d+)$", input)
             try:
                 await _.delete()
             except:
                 pass
-            keyboard = najva_help7_keys(user_id)
+            keyboard = whisper_help7_keys(user_id)
             if ap[1] == "5":
-                keyboard = najva_help9_keys(user_id)
+                keyboard = whisper_help9_keys(user_id)
             elif ap[1] == "6":
-                keyboard = najva_help5_keys(user_id)
+                keyboard = whisper_help5_keys(user_id)
             file = f"docs/helps/vid-{ap[1]}.mp4"
             with open(file, "rb") as file:
                 await sendVideo(
                     chat_id,
                     _.reply_to_message,
                     file,
-                    langU[f"najva_vid-{ap[1]}"].format(GlobalValues().botUser),
+                    langU[f"whisper_vid-{ap[1]}"].format(GlobalValues().botUser),
                     "html",
                     supports_streaming=True,
                     reply_markup=keyboard,
@@ -1273,7 +1273,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     int(old_autodel_time) + int(ap[1]),
                 )
                 await editMessageReplyMarkup(
-                    chat_id, msg_id, reply_markup=najva_autodel2_keys(user_id)
+                    chat_id, msg_id, reply_markup=whisper_autodel2_keys(user_id)
                 )
             else:
                 await answerCallbackQuery(
@@ -1281,19 +1281,19 @@ async def callback_query_process(msg: types.CallbackQuery):
                 )
         if re.match(r"^special:cancel:@(\d+)", input):
             time_data = DataBase.hget(
-                "najva_special:{}".format(user_id), "time"
+                "whisper_special:{}".format(user_id), "time"
             )
             special_msgID = DataBase.hget(
-                "najva_special:{}".format(user_id), "id"
+                "whisper_special:{}".format(user_id), "id"
             )
-            DataBase.delete("najva:{}:{}".format(user_id, time_data))
-            DataBase.delete("najva_special:{}".format(user_id))
+            DataBase.delete("whisper:{}:{}".format(user_id, time_data))
+            DataBase.delete("whisper_special:{}".format(user_id))
             DataBase.delete("ready_to_recv_special:{}".format(user_id))
             DataBase.srem(
-                "najva_autodel", f"{user_id}:{time_data}:{special_msgID}"
+                "whisper_autodel", f"{user_id}:{time_data}:{special_msgID}"
             )
             await editText(
-                inline_msg_id=special_msgID, text=langU["special_najva_cancel"]
+                inline_msg_id=special_msgID, text=langU["special_whisper_cancel"]
             )
             try:
                 await _.delete()
@@ -1302,12 +1302,12 @@ async def callback_query_process(msg: types.CallbackQuery):
             await answerCallbackQuery(msg, langU["canceled"], cache_time=3600)
         if re.match(r"^special:antisave:@(\d+)", input):
             ap = re_matches(r"^special:antisave:@(\d+)", input)
-            if DataBase.hget("setting_najva:{}".format(user_id), "antisave"):
-                DataBase.hdel("setting_najva:{}".format(user_id), 'antisave')
-                text = langU["najva_setoff_antisave"]
+            if DataBase.hget("setting_whisper:{}".format(user_id), "antisave"):
+                DataBase.hdel("setting_whisper:{}".format(user_id), 'antisave')
+                text = langU["whisper_setoff_antisave"]
             else:
-                DataBase.hset("setting_najva:{}".format(user_id), "antisave", "True")
-                text = langU["najva_seton_antisave"]
+                DataBase.hset("setting_whisper:{}".format(user_id), "antisave", "True")
+                text = langU["whisper_seton_antisave"]
             await answerCallbackQuery(msg, text, show_alert=True, cache_time=2)
             await editMessageReplyMarkup(
                 chat_id, msg_id, reply_markup=register_special_keys(user_id)
@@ -1317,11 +1317,11 @@ async def callback_query_process(msg: types.CallbackQuery):
                 msg_ = await reply_msg.forward(GlobalValues().logchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
                 time_data = DataBase.hget(
-                    "najva_special:{}".format(user_id), "time"
+                    "whisper_special:{}".format(user_id), "time"
                 )
-                hash_db = "najva:{}:{}".format(user_id, time_data)
+                hash_db = "whisper:{}:{}".format(user_id, time_data)
                 special_msgID = DataBase.hget(
-                    "najva_special:{}".format(user_id), "id"
+                    "whisper_special:{}".format(user_id), "id"
                 )
                 DataBase.delete("ready_to_recv_special:{}".format(user_id))
                 DataBase.hset(
@@ -1344,15 +1344,15 @@ async def callback_query_process(msg: types.CallbackQuery):
                     "msg_id",
                     msg_.message_id,
                 )
-                if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
+                if DataBase.hget(f"setting_whisper:{user_id}", "autodel"):
                     DataBase.sadd(
-                        "najva_autodel",
+                        "whisper_autodel",
                         f"{user_id}:{time_data}:{special_msgID}",
                     )
                 inlineKeys = iMarkup()
                 inlineKeys.add(
                     iButtun(
-                        buttuns["show_najva"],
+                        buttuns["show_whisper"],
                         callback_data="shown:{}:{}".format(user_id, time_data),
                     )
                 )
@@ -1364,20 +1364,20 @@ async def callback_query_process(msg: types.CallbackQuery):
                 else:
                     name_user = users_data
                 name_user2 = None
-                if DataBase.hget(f"setting_najva:{name_user}", "noname"):
+                if DataBase.hget(f"setting_whisper:{name_user}", "noname"):
                     name_user2 = langU["no_name"]
                 name_user = await userInfos(name_user, info="name")
                 await editText(
                     inline_msg_id=special_msgID,
-                    text=langU["special_najva_registered"].format(
+                    text=langU["special_whisper_registered"].format(
                         name_user2 or name_user
                     ),
                     parse_mode="html",
                     reply_markup=inlineKeys,
                 )
-                await editText(chat_id, msg_id, 0, langU["reg_najva"])
+                await editText(chat_id, msg_id, 0, langU["reg_whisper"])
             except Exception as e:
-                await editText(chat_id, msg_id, 0, langU["error_reg_najva"])
+                await editText(chat_id, msg_id, 0, langU["error_reg_whisper"])
         if re.match(r"^special:reg2:@(\d+)", input):
             try:
                 find_ID, find_type, can_hide = find_media_id(reply_msg)
@@ -1391,11 +1391,11 @@ async def callback_query_process(msg: types.CallbackQuery):
                 msg_ = await reply_msg.forward(GlobalValues().logchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
                 time_data = DataBase.hget(
-                    "najva_special:{}".format(user_id), "time"
+                    "whisper_special:{}".format(user_id), "time"
                 )
-                hash_db = "najva:{}:{}".format(user_id, time_data)
+                hash_db = "whisper:{}:{}".format(user_id, time_data)
                 special_msgID = DataBase.hget(
-                    "najva_special:{}".format(user_id), "id"
+                    "whisper_special:{}".format(user_id), "id"
                 )
                 DataBase.delete("ready_to_recv_special:{}".format(user_id))
                 DataBase.hset(
@@ -1418,15 +1418,15 @@ async def callback_query_process(msg: types.CallbackQuery):
                     "msg_id",
                     msg_.message_id,
                 )
-                if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
+                if DataBase.hget(f"setting_whisper:{user_id}", "autodel"):
                     DataBase.sadd(
-                        "najva_autodel",
+                        "whisper_autodel",
                         f"{user_id}:{time_data}:{special_msgID}",
                     )
                 inlineKeys = iMarkup()
                 inlineKeys.add(
                     iButtun(
-                        buttuns["show_najva"],
+                        buttuns["show_whisper"],
                         switch_inline_query_current_chat="sp{}.{}".format(
                             user_id, time_data
                         ),
@@ -1440,30 +1440,30 @@ async def callback_query_process(msg: types.CallbackQuery):
                 else:
                     name_user = users_data
                 name_user2 = None
-                if DataBase.hget(f"setting_najva:{name_user}", "noname"):
+                if DataBase.hget(f"setting_whisper:{name_user}", "noname"):
                     name_user2 = langU["no_name"]
                 name_user = await userInfos(name_user, info="name")
                 await editText(
                     inline_msg_id=special_msgID,
-                    text=langU["special_najva_registered"].format(
+                    text=langU["special_whisper_registered"].format(
                         name_user2 or name_user
                     ),
                     parse_mode="html",
                     reply_markup=inlineKeys,
                 )
-                await editText(chat_id, msg_id, 0, langU["reg2_najva"])
+                await editText(chat_id, msg_id, 0, langU["reg2_whisper"])
             except Exception as e:
-                await editText(chat_id, msg_id, 0, langU["error_reg_najva"])
+                await editText(chat_id, msg_id, 0, langU["error_reg_whisper"])
         if re.match(r"^special:sendpv:@(\d+)", input):
             try:
                 msg_ = await reply_msg.forward(GlobalValues().logchat)
                 find_ID, find_type, can_hide = find_media_id(msg_)
                 time_data = DataBase.hget(
-                    "najva_special:{}".format(user_id), "time"
+                    "whisper_special:{}".format(user_id), "time"
                 )
-                hash_db = "najva:{}:{}".format(user_id, time_data)
+                hash_db = "whisper:{}:{}".format(user_id, time_data)
                 special_msgID = DataBase.hget(
-                    "najva_special:{}".format(user_id), "id"
+                    "whisper_special:{}".format(user_id), "id"
                 )
                 DataBase.hset(
                     hash_db,
@@ -1485,15 +1485,15 @@ async def callback_query_process(msg: types.CallbackQuery):
                     "msg_id",
                     msg_.message_id,
                 )
-                if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
+                if DataBase.hget(f"setting_whisper:{user_id}", "autodel"):
                     DataBase.sadd(
-                        "najva_autodel",
+                        "whisper_autodel",
                         f"{user_id}:{time_data}:{special_msgID}",
                     )
                 inlineKeys = iMarkup()
                 inlineKeys.add(
                     iButtun(
-                        buttuns["show_najva"],
+                        buttuns["show_whisper"],
                         callback_data="showpv:{}:{}".format(
                             user_id, time_data
                         ),
@@ -1509,18 +1509,18 @@ async def callback_query_process(msg: types.CallbackQuery):
                 if not id_user:
                     return await answerCallbackQuery(
                         msg,
-                        langU["cant_sent_najva_pv"],
+                        langU["cant_sent_whisper_pv"],
                         show_alert=True,
                         cache_time=3600,
                     )
                 DataBase.delete("ready_to_recv_special:{}".format(user_id))
                 name_user2 = None
-                if DataBase.hget(f"setting_najva:{id_user}", "noname"):
+                if DataBase.hget(f"setting_whisper:{id_user}", "noname"):
                     name_user2 = langU["no_name"]
                 name_user = await userInfos(id_user, info="name")
                 await editText(
                     inline_msg_id=special_msgID,
-                    text=langU["special_najva_registered"].format(
+                    text=langU["special_whisper_registered"].format(
                         name_user2 or name_user
                     ),
                     parse_mode="html",
@@ -1529,7 +1529,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     id_user,
                     0,
                     1,
-                    lang[lang_user(id_user)]["receive_new_najva_pv"].format(
+                    lang[lang_user(id_user)]["receive_new_whisper_pv"].format(
                         msg.from_user.first_name
                     ),
                     "html",
@@ -1539,7 +1539,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     chat_id,
                     msg_id,
                     0,
-                    langU["sent_najva_pv"].format(
+                    langU["sent_whisper_pv"].format(
                         '<a href="tg://user?id={}">{}</a>'.format(
                             id_user, name_user
                         )
@@ -1547,33 +1547,33 @@ async def callback_query_process(msg: types.CallbackQuery):
                     "html",
                 )
             except Exception as e:
-                await editText(chat_id, msg_id, 0, langU["error_reg_najva"])
+                await editText(chat_id, msg_id, 0, langU["error_reg_whisper"])
         if re.match(r"^showpv:(\d+):([-+]?\d*\.\d+|\d+)$", input):
             ap = re_matches(r"^showpv:(\d+):([-+]?\d*\.\d+|\d+)$", input)
             from_user = ap[1]
             time_data = ap[2]
-            hash_db = "najva:{}:{}".format(from_user, time_data)
+            hash_db = "whisper:{}:{}".format(from_user, time_data)
             if DataBase.hash_type(hash_db) != 'hash':
-                return await editText(chat_id, msg_id, 0, langU["najva_404"])
+                return await editText(chat_id, msg_id, 0, langU["whisper_404"])
             try:
                 await _.delete()
             except:
                 pass
             anti_save = False
-            if DataBase.hget(f"setting_najva:{from_user}", "antisave"):
+            if DataBase.hget(f"setting_whisper:{from_user}", "antisave"):
                 anti_save = True
             DataBase.set(
-                "najva_seen_time:{}:{}".format(from_user, time_data),
+                "whisper_seen_time:{}:{}".format(from_user, time_data),
                 int(time()),
             )
             DataBase.incr(
-                "najva_seen_count:{}:{}".format(from_user, time_data)
+                "whisper_seen_count:{}:{}".format(from_user, time_data)
             )
             DataBase.sadd(
-                "najva_seened:{}:{}".format(from_user, time_data), user_id
+                "whisper_seened:{}:{}".format(from_user, time_data), user_id
             )
             special_msgID = DataBase.hget(
-                "najva_special:{}".format(from_user), "id"
+                "whisper_special:{}".format(from_user), "id"
             )
             users_data = DataBase.hget(
                 hash_db, "users"
@@ -1590,7 +1590,7 @@ async def callback_query_process(msg: types.CallbackQuery):
             msgid = DataBase.hget(
                 hash_db, "msg_id"
             )
-            inlineKeys = await show_speical_najva_keys(user_id, from_user)
+            inlineKeys = await show_speical_whisper_keys(user_id, from_user)
             msg_ = await copyMessage(
                 chat_id,
                 GlobalValues().logchat,
@@ -1598,32 +1598,32 @@ async def callback_query_process(msg: types.CallbackQuery):
                 protect_content=anti_save,
                 reply_markup=inlineKeys,
             )
-            if DataBase.hget(f"setting_najva:{from_user}", "seen"):
+            if DataBase.hget(f"setting_whisper:{from_user}", "seen"):
                 await sendText(
                     from_user,
                     source_id,
                     1,
-                    lang[lang_user(from_user)]["speical_najva_seen"].format(
+                    lang[lang_user(from_user)]["speical_whisper_seen"].format(
                         msg.from_user.first_name
                     ),
                 )
             await editText(
                 inline_msg_id=special_msgID,
-                text=lang[lang_user(from_user)]["speical_najva_seen2"].format(
+                text=lang[lang_user(from_user)]["speical_whisper_seen2"].format(
                     msg.from_user.first_name
                 ),
                 parse_mode="html",
-                reply_markup=najva_seen3_keys(from_user, time_data),
+                reply_markup=whisper_seen3_keys(from_user, time_data),
             )
-            if DataBase.hget(f"setting_najva:{from_user}", "dispo"):
+            if DataBase.hget(f"setting_whisper:{from_user}", "dispo"):
                 special_msgID = DataBase.hget(
-                    "najva_special:{}".format(from_user), "id"
+                    "whisper_special:{}".format(from_user), "id"
                 )
                 DataBase.srem(
-                    "najva_autodel", f"{from_user}:{time_data}:{special_msgID}"
+                    "whisper_autodel", f"{from_user}:{time_data}:{special_msgID}"
                 )
                 DataBase.delete(hash_db)
-                DataBase.delete("najva_special:{}".format(from_user))
+                DataBase.delete("whisper_special:{}".format(from_user))
             DataBase.hset(
                 hash_db,
                 "seen_id",
@@ -1638,7 +1638,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 DataBase.sadd("blocks2:{}".format(user_id), ap[1])
                 text = langU["user_blocked"]
             await answerCallbackQuery(msg, text, show_alert=True, cache_time=2)
-            inlineKeys = await show_speical_najva_keys(user_id, ap[1])
+            inlineKeys = await show_speical_whisper_keys(user_id, ap[1])
             await editMessageReplyMarkup(
                 chat_id, msg_id, reply_markup=inlineKeys
             )
@@ -1648,9 +1648,9 @@ async def callback_query_process(msg: types.CallbackQuery):
                 chat_id,
                 _,
                 1,
-                langU["report_special_najva"],
+                langU["report_special_whisper"],
                 "html",
-                report_najva_keys(user_id, ap[1], msg_id),
+                report_whisper_keys(user_id, ap[1], msg_id),
             )
         if re.match(r"^report:cancel:(\d+)@(\d+)$", input):
             ap = re_matches(r"^report:cancel:(\d+)@(\d+)$", input)
@@ -1678,7 +1678,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 "html",
                 ban_user_keys(from_user, GlobalValues().sudoID),
             )
-            await editText(chat_id, msg_id, 0, langU["reported_special_najva"])
+            await editText(chat_id, msg_id, 0, langU["reported_special_whisper"])
             await _.reply_to_message.delete()
         if re.match(r"^banuser:(\d+)$", input):
             ap = re_matches(r"^banuser:(\d+)$", input)
@@ -1706,12 +1706,12 @@ async def callback_query_process(msg: types.CallbackQuery):
             ap = re_matches(r"^shown:(\d+):([-+]?\d*\.\d+|\d+)$", input)
             from_user = ap[1]
             time_data = ap[2]
-            hash_db = "najva:{}:{}".format(from_user, time_data)
-            dispo_is_on = DataBase.hget(f"setting_najva:{from_user}", "dispo")
+            hash_db = "whisper:{}:{}".format(from_user, time_data)
+            dispo_is_on = DataBase.hget(f"setting_whisper:{from_user}", "dispo")
             if DataBase.hash_type(hash_db) != 'hash':
                 return await editText(
                     inline_msg_id=msg_id,
-                    text=langU["najva_404"]
+                    text=langU["whisper_404"]
                 )
             text_data = DataBase.hget(hash_db, "text")
             users_data = DataBase.hget(hash_db, "users")
@@ -1734,20 +1734,20 @@ async def callback_query_process(msg: types.CallbackQuery):
                 )
                 if (
                     DataBase.scard(
-                        "najva_seened:{}:{}".format(from_user, time_data)
+                        "whisper_seened:{}:{}".format(from_user, time_data)
                     )
                     == 0
                     and is_allow
                 ):
                     if (
-                        DataBase.hget(f"setting_najva:{from_user}", "seen")
+                        DataBase.hget(f"setting_whisper:{from_user}", "seen")
                         and users_data != "all"
                     ):
                         await sendText(
                             from_user,
                             0,
                             1,
-                            lang[lang_user(from_user)]["najva_seened"].format(
+                            lang[lang_user(from_user)]["whisper_seened"].format(
                                 msg.from_user.first_name
                             ),
                         )
@@ -1755,79 +1755,79 @@ async def callback_query_process(msg: types.CallbackQuery):
                         if len(users_data) == 1:
                             await editMessageReplyMarkup(
                                 inline_message_id=msg_id,
-                                reply_markup=najva_seen_keys(
+                                reply_markup=whisper_seen_keys(
                                     user_id, from_user, time_data
                                 ),
                             )
                         else:
                             name_user2 = None
-                            if DataBase.hget(f"setting_najva:{from_user}", "noname"):
+                            if DataBase.hget(f"setting_whisper:{from_user}", "noname"):
                                 name_user2 = langU["no_name"]
                             name_user = '<a href="tg://user?id={}">{}</a>'.format(
                                         user_id, msg.from_user.first_name
                                     )
                             if dispo_is_on:
-                                inlineKeys = najva_seen2_keys(
+                                inlineKeys = whisper_seen2_keys(
                                     from_user,
                                     from_user,
                                     time_data
                                 )
                             else:
-                                inlineKeys = najva_seen_keys(
+                                inlineKeys = whisper_seen_keys(
                                     user_id, from_user, time_data
                                 )
                             await editText(
                                 inline_msg_id=msg_id,
-                                text=lang[lang_user(from_user)]["najva_seened"].format(
+                                text=lang[lang_user(from_user)]["whisper_seened"].format(
                                     name_user2 or name_user
                                 ),
                                 parse_mode="html",
                                 reply_markup=inlineKeys,
                             )
                         DataBase.sadd(
-                            "najva_seened:{}:{}".format(from_user, time_data),
+                            "whisper_seened:{}:{}".format(from_user, time_data),
                             user_id,
                         )
                     if str(users_data).isdigit() and not DataBase.get(
-                        "najva_seen_time:{}:{}".format(from_user, time_data)
+                        "whisper_seen_time:{}:{}".format(from_user, time_data)
                     ):
                         DataBase.set(
-                            "najva_seen_time:{}:{}".format(
+                            "whisper_seen_time:{}:{}".format(
                                 from_user, time_data
                             ),
                             int(time()),
                         )
                         if dispo_is_on:
                             DataBase.srem(
-                                "najva_autodel",
+                                "whisper_autodel",
                                 f"{from_user}:{time_data}:{msg_id}"
                             )
                             DataBase.delete(hash_db)
-                            DataBase.delete("najva_special:{}".format(from_user))
+                            DataBase.delete("whisper_special:{}".format(from_user))
                         elif DataBase.hget(
-                            f"setting_najva:{from_user}",
+                            f"setting_whisper:{from_user}",
                             "autodel"
                         ):
                             DataBase.sadd(
-                                "najva_autodel",
+                                "whisper_autodel",
                                 f"{from_user}:{time_data}:{msg_id}",
                             )
                 DataBase.incr(
-                    "najva_seen_count:{}:{}".format(from_user, time_data)
+                    "whisper_seen_count:{}:{}".format(from_user, time_data)
                 )
             else:
                 DataBase.sadd(
-                    "najva_nosy:{}:{}".format(from_user, time_data), user_id
+                    "whisper_nosy:{}:{}".format(from_user, time_data), user_id
                 )
                 await answerCallbackQuery(
                     msg,
-                    langU["najva_not_for_you"],
+                    langU["whisper_not_for_you"],
                     show_alert=True,
                     cache_time=3600,
                 )
-        if re.match(r"^delnajva:(\d+):([-+]?\d*\.\d+|\d+)$", input):
-            ap = re_matches(r"^delnajva:(\d+):([-+]?\d*\.\d+|\d+)$", input)
-            hash_db = "najva:{}:{}".format(ap[1], ap[2])
+        if re.match(r"^delwhisper:(\d+):([-+]?\d*\.\d+|\d+)$", input):
+            ap = re_matches(r"^delwhisper:(\d+):([-+]?\d*\.\d+|\d+)$", input)
+            hash_db = "whisper:{}:{}".format(ap[1], ap[2])
             if user_id == int(ap[1]):
                 seen_id = DataBase.hget(
                     hash_db, "seen_id"
@@ -1836,21 +1836,21 @@ async def callback_query_process(msg: types.CallbackQuery):
                     seen_id = seen_id.split(":")
                     await delete_messages(seen_id[0], seen_id[1])
                 special_msgID = DataBase.hget(
-                    "najva_special:{}".format(ap[1]), "id"
+                    "whisper_special:{}".format(ap[1]), "id"
                 )
                 DataBase.srem(
-                    "najva_autodel", f"{ap[1]}:{ap[2]}:{special_msgID}"
+                    "whisper_autodel", f"{ap[1]}:{ap[2]}:{special_msgID}"
                 )
                 DataBase.delete(hash_db)
-                DataBase.delete("najva_special:{}".format(ap[1]))
-                await answerCallbackQuery(msg, langU["najva_deleted"])
+                DataBase.delete("whisper_special:{}".format(ap[1]))
+                await answerCallbackQuery(msg, langU["whisper_deleted"])
                 await editMessageReplyMarkup(
                     inline_message_id=msg_id,
-                    reply_markup=najva_seen2_keys(user_id, ap[1], ap[2]),
+                    reply_markup=whisper_seen2_keys(user_id, ap[1], ap[2]),
                 )
             else:
                 await answerCallbackQuery(
-                    msg, langU["must_be_owner_najva"],
+                    msg, langU["must_be_owner_whisper"],
                     show_alert=True, cache_time=3600
                 )
         if re.match(r"^shows:(\d+):([-+]?\d*\.\d+|\d+)$", input):
@@ -1859,22 +1859,22 @@ async def callback_query_process(msg: types.CallbackQuery):
             if user_id != int(from_user):
                 await answerCallbackQuery(
                     msg,
-                    langU["must_be_owner_najva"],
+                    langU["must_be_owner_whisper"],
                     show_alert=True,
                     cache_time=3600,
                 )
                 return False
             seen_time = DataBase.get(
-                "najva_seen_time:{}:{}".format(from_user, time_data)
+                "whisper_seen_time:{}:{}".format(from_user, time_data)
             )
             seen_count = DataBase.get(
-                "najva_seen_count:{}:{}".format(from_user, time_data)
+                "whisper_seen_count:{}:{}".format(from_user, time_data)
             )
             seened_users = DataBase.smembers(
-                "najva_seened:{}:{}".format(from_user, time_data)
+                "whisper_seened:{}:{}".format(from_user, time_data)
             )
             nosy_users = DataBase.smembers(
-                "najva_nosy:{}:{}".format(from_user, time_data)
+                "whisper_nosy:{}:{}".format(from_user, time_data)
             )
             if len(nosy_users) > 0:
                 nosy_users_text = ""
@@ -1923,13 +1923,13 @@ async def callback_query_process(msg: types.CallbackQuery):
                         )
                     name_user = list(
                         DataBase.smembers(
-                            "najva_seened:{}:{}".format(from_user, time_data)
+                            "whisper_seened:{}:{}".format(from_user, time_data)
                         )
                     )[0]
                     name_user = await userInfos(name_user, info="name")
                     await answerCallbackQuery(
                         msg,
-                        langU["seen_najva_person"].format(
+                        langU["seen_whisper_person"].format(
                             seen_time,
                             seen_count,
                             name_user,
@@ -1948,7 +1948,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                             )
                         await answerCallbackQuery(
                             msg,
-                            langU["seen_najva_group"].format(
+                            langU["seen_whisper_group"].format(
                                 seen_count,
                                 len(seened_users),
                                 seened_users_text,
@@ -1960,7 +1960,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                     else:
                         await answerCallbackQuery(
                             msg,
-                            langU["seen_najva_all"].format(seen_count),
+                            langU["seen_whisper_all"].format(seen_count),
                             show_alert=True,
                             cache_time=3,
                         )

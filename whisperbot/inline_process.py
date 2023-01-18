@@ -56,7 +56,7 @@ async def inline_query_process(msg: types.InlineQuery):
         inlineKeys = iMarkup()
         inlineKeys.add(
             iButtun(
-                buttuns["najva_to"].format(user_name),
+                buttuns["whisper_to"].format(user_name),
                 switch_inline_query_current_chat="{} {}".format(
                     username, buttuns["example"]
                 ),
@@ -92,7 +92,7 @@ async def inline_query_process(msg: types.InlineQuery):
         inlineKeys = iMarkup()
         inlineKeys.add(
             iButtun(
-                buttuns["show_najva"],
+                buttuns["show_whisper"],
                 callback_data="showN:{}:{}".format(user_id, ti_me),
             )
         )
@@ -106,14 +106,14 @@ async def inline_query_process(msg: types.InlineQuery):
             )
         if text == "":
             input_content = InputTextMessageContent(
-                message_text=ln_in["text"]["najva_havn_text"],
+                message_text=ln_in["text"]["whisper_havn_text"],
                 parse_mode="HTML",
                 disable_web_page_preview=True,
             )
             item1 = InlineQueryResultArticle(
                 id="null",
-                title=ln_in["title"]["najva_havn_text"],
-                description=ln_in["desc"]["najva_havn_text"],
+                title=ln_in["title"]["whisper_havn_text"],
+                description=ln_in["desc"]["whisper_havn_text"],
                 thumb_url=pic_cross,
                 thumb_width=512,
                 thumb_height=512,
@@ -144,18 +144,18 @@ async def inline_query_process(msg: types.InlineQuery):
                 else:
                     name_users = "{}\n{}".format(name_user, name_users)
             input_content = InputTextMessageContent(
-                message_text=ln_in["text"]["najva_group"].format(
+                message_text=ln_in["text"]["whisper_group"].format(
                     len(users), name_users
                 ),
                 parse_mode="HTML",
                 disable_web_page_preview=True,
             )
             item1 = InlineQueryResultArticle(
-                id=f"najvaP:{user_id}",
-                title=ln_in["title"]["najva_group"].format(
+                id=f"whisperP:{user_id}",
+                title=ln_in["title"]["whisper_group"].format(
                     len(users)
                 ),
-                description=ln_in["desc"]["najva_group"].format(
+                description=ln_in["desc"]["whisper_group"].format(
                     len(text)
                 ),
                 thumb_url=pic_group,
@@ -170,22 +170,22 @@ async def inline_query_process(msg: types.InlineQuery):
                 if k:
                     users[0] = k
             name_user2 = None
-            if DataBase.hget(f"setting_najva:{user_id}", "noname"):
+            if DataBase.hget(f"setting_whisper:{user_id}", "noname"):
                 name_user2 = langU["no_name"]
             name_user = await userInfos(users[0], info="name")
             input_content = InputTextMessageContent(
-                message_text=ln_in["text"]["najva_person"].format(
+                message_text=ln_in["text"]["whisper_person"].format(
                     name_user2 or name_user
                 ),
                 parse_mode="HTML",
                 disable_web_page_preview=False,
             )
             item1 = InlineQueryResultArticle(
-                id=f"najvaP:{user_id}",
-                title=ln_in["title"]["najva_person"].format(
+                id=f"whisperP:{user_id}",
+                title=ln_in["title"]["whisper_person"].format(
                     name_user
                 ),
-                description=ln_in["desc"]["najva_person"].format(
+                description=ln_in["desc"]["whisper_person"].format(
                     len(text)
                 ),
                 thumb_url=pic_message,
@@ -196,7 +196,7 @@ async def inline_query_process(msg: types.InlineQuery):
             )
         user_steps[user_id].update(
             {
-                "najva": {
+                "whisper": {
                     "time": ti_me,
                     "text": text,
                     "users": users,
@@ -223,7 +223,7 @@ async def inline_query_process(msg: types.InlineQuery):
                 callback_data="showS:{}:{}".format(user_id, ti_me),
             ),
             iButtun(
-                buttuns["show_najva"],
+                buttuns["show_whisper"],
                 callback_data="showN:{}:{}".format(user_id, ti_me),
             ),
         )
@@ -236,14 +236,14 @@ async def inline_query_process(msg: types.InlineQuery):
                 )
             )
         input_content = InputTextMessageContent(
-            message_text=ln_in["text"]["najva_all"],
+            message_text=ln_in["text"]["whisper_all"],
             parse_mode="HTML",
             disable_web_page_preview=False,
         )
         item1 = InlineQueryResultArticle(
-            id=f"najvaA:{user_id}",
-            title=ln_in["title"]["najva_all"],
-            description=ln_in["desc"]["najva_all"].format(len(text)),
+            id=f"whisperA:{user_id}",
+            title=ln_in["title"]["whisper_all"],
+            description=ln_in["desc"]["whisper_all"].format(len(text)),
             thumb_url=pic_all,
             thumb_width=512,
             thumb_height=512,
@@ -251,14 +251,14 @@ async def inline_query_process(msg: types.InlineQuery):
             reply_markup=inlineKeys,
         )
         input_content = InputTextMessageContent(
-            message_text=ln_in["text"]["najva_all2"],
+            message_text=ln_in["text"]["whisper_all2"],
             parse_mode="HTML",
             disable_web_page_preview=False,
         )
         item2 = InlineQueryResultArticle(
-            id=f"najvaA2:{user_id}",
-            title=ln_in["title"]["najva_all"],
-            description=ln_in["desc"]["najva_all2"].format(
+            id=f"whisperA2:{user_id}",
+            title=ln_in["title"]["whisper_all"],
+            description=ln_in["desc"]["whisper_all2"].format(
                 len(text)
             ),
             thumb_url=pic_all,
@@ -269,7 +269,7 @@ async def inline_query_process(msg: types.InlineQuery):
         )
         user_steps[user_id].update(
             {
-                "najva": {
+                "whisper": {
                     "time": ti_me,
                     "text": text,
                     "users": "all",
@@ -294,7 +294,7 @@ async def inline_query_process(msg: types.InlineQuery):
             disable_web_page_preview=False,
         )
         for i in ("seen", "recv", "encrypt", "noname", "dispo", "antisave"):
-            if DataBase.hget(f"setting_najva:{user_id}", i):
+            if DataBase.hget(f"setting_whisper:{user_id}", i):
                 status = langU["is_power_on"]
                 set_title[i] = ln_in["title"]["power_off"]
                 set_photo[i] = pic_tick
@@ -305,7 +305,7 @@ async def inline_query_process(msg: types.InlineQuery):
             item = InlineQueryResultArticle(
                 id=f"set:{i}:{user_id}",
                 title=set_title[i],
-                description=set_desc[f"najva_{i}"].format(status),
+                description=set_desc[f"whisper_{i}"].format(status),
                 thumb_url=set_photo[i],
                 thumb_width=512,
                 thumb_height=512,
@@ -332,7 +332,7 @@ async def inline_query_process(msg: types.InlineQuery):
         inlineKeys = iMarkup()
         inlineKeys.add(
             iButtun(
-                buttuns["show_najva"],
+                buttuns["show_whisper"],
                 callback_data="showN2:{}:{}".format(user_id, ti_me),
             )
         )
@@ -345,14 +345,14 @@ async def inline_query_process(msg: types.InlineQuery):
                 )
             )
         input_content = InputTextMessageContent(
-            message_text=ln_in["text"]["najva_reply"],
+            message_text=ln_in["text"]["whisper_reply"],
             parse_mode="HTML",
             disable_web_page_preview=True,
         )
         item1 = InlineQueryResultArticle(
-            id=f"najvaR:{user_id}",
-            title=ln_in["title"]["najva_reply"],
-            description=ln_in["desc"]["najva_reply"],
+            id=f"whisperR:{user_id}",
+            title=ln_in["title"]["whisper_reply"],
+            description=ln_in["desc"]["whisper_reply"],
             thumb_url=pic_message,
             thumb_width=512,
             thumb_height=512,
@@ -361,7 +361,7 @@ async def inline_query_process(msg: types.InlineQuery):
         )
         user_steps[user_id].update(
             {
-                "najva": {
+                "whisper": {
                     "time": ti_me,
                     "text": text,
                     "users": "reply",
@@ -400,14 +400,14 @@ async def inline_query_process(msg: types.InlineQuery):
                 )
             )
         input_content = InputTextMessageContent(
-            message_text=ln_in["text"]["najva_havn_text"],
+            message_text=ln_in["text"]["whisper_havn_text"],
             parse_mode="HTML",
             disable_web_page_preview=True,
         )
         item2 = InlineQueryResultArticle(
             id="null",
-            title=ln_in["title"]["najva_havn_text"],
-            description=ln_in["desc"]["najva_havn_text"],
+            title=ln_in["title"]["whisper_havn_text"],
+            description=ln_in["desc"]["whisper_havn_text"],
             thumb_url=pic_cross,
             thumb_width=512,
             thumb_height=512,
@@ -419,20 +419,20 @@ async def inline_query_process(msg: types.InlineQuery):
         else:
             name_user = user
         name_user2 = None
-        if DataBase.hget(f"setting_najva:{user_id}", "noname"):
+        if DataBase.hget(f"setting_whisper:{user_id}", "noname"):
             name_user2 = langU["no_name"]
         name_user = await userInfos(name_user, info="name")
         input_content = InputTextMessageContent(
-            message_text=ln_in["text"]["najva_special"].format(
+            message_text=ln_in["text"]["whisper_special"].format(
                 name_user2 or name_user
             ),
             parse_mode="HTML",
             disable_web_page_preview=True,
         )
         item1 = InlineQueryResultArticle(
-            id=f"najvaS:{user_id}",
-            title=ln_in["title"]["najva_special"].format(name_user),
-            description=ln_in["desc"]["najva_special"],
+            id=f"whisperS:{user_id}",
+            title=ln_in["title"]["whisper_special"].format(name_user),
+            description=ln_in["desc"]["whisper_special"],
             thumb_url=pic_special,
             thumb_width=512,
             thumb_height=512,
@@ -441,7 +441,7 @@ async def inline_query_process(msg: types.InlineQuery):
         )
         user_steps[user_id].update(
             {
-                "najva": {
+                "whisper": {
                     "time": ti_me,
                     "text": None,
                     "users": user,
@@ -454,15 +454,15 @@ async def inline_query_process(msg: types.InlineQuery):
         from_user = ap[1]
         time_data = float(f"{ap[2]}.{ap[3]}")
         special_msgID = DataBase.hget(
-            "najva_special:{}".format(from_user), "id"
+            "whisper_special:{}".format(from_user), "id"
         )
         users_data = DataBase.hget(
-            "najva:{}:{}".format(from_user, time_data), "users"
+            "whisper:{}:{}".format(from_user, time_data), "users"
         )
         if not str(user_id) in users_data and not str(username) in users_data:
             if special_msgID:
                 return DataBase.sadd(
-                    "najva_nosy:{}:{}".format(from_user, time_data), user_id
+                    "whisper_nosy:{}:{}".format(from_user, time_data), user_id
                 )
             else:
                 return False
@@ -489,16 +489,16 @@ async def inline_query_process(msg: types.InlineQuery):
                 cache_time=3600,
             )
         file_id = DataBase.hget(
-            "najva:{}:{}".format(from_user, time_data), "file_id"
+            "whisper:{}:{}".format(from_user, time_data), "file_id"
         )
         file_type = DataBase.hget(
-            "najva:{}:{}".format(from_user, time_data), "file_type"
+            "whisper:{}:{}".format(from_user, time_data), "file_type"
         )
         source_id = DataBase.hget(
-            "najva:{}:{}".format(from_user, time_data), "source_id"
+            "whisper:{}:{}".format(from_user, time_data), "source_id"
         )
         msg_ID = DataBase.hget(
-            "najva:{}:{}".format(from_user, time_data), "msg_id"
+            "whisper:{}:{}".format(from_user, time_data), "msg_id"
         )
         input_content = InputTextMessageContent(
             message_text=langU["cant_send_hide"],
@@ -540,7 +540,7 @@ async def inline_query_process(msg: types.InlineQuery):
             )
         if item1:
             if DataBase.hget(
-                f"setting_najva:{from_user}", "seen"
+                f"setting_whisper:{from_user}", "seen"
             ) and not DataBase.get(
                 "notif_before:{}:{}".format(from_user, time_data)
             ):
@@ -551,38 +551,38 @@ async def inline_query_process(msg: types.InlineQuery):
                     from_user,
                     source_id,
                     1,
-                    lang[lang_user(from_user)]["speical_najva_seen"].format(
+                    lang[lang_user(from_user)]["speical_whisper_seen"].format(
                         msg.from_user.first_name
                     ),
                 )
                 await editText(
                     inline_msg_id=special_msgID,
-                    text=lang[lang_user(from_user)]["speical_najva_seen2"].format(
+                    text=lang[lang_user(from_user)]["speical_whisper_seen2"].format(
                         msg.from_user.first_name
                     ),
                     parse_mode="html",
-                    reply_markup=najva_seen3_keys(from_user, time_data),
+                    reply_markup=whisper_seen3_keys(from_user, time_data),
                 )
                 DataBase.set(
-                    "najva_seen_time:{}:{}".format(from_user, time_data),
+                    "whisper_seen_time:{}:{}".format(from_user, time_data),
                     int(time()),
                 )
                 DataBase.incr(
-                    "najva_seen_count:{}:{}".format(from_user, time_data)
+                    "whisper_seen_count:{}:{}".format(from_user, time_data)
                 )
                 DataBase.sadd(
-                    "najva_seened:{}:{}".format(from_user, time_data), user_id
+                    "whisper_seened:{}:{}".format(from_user, time_data), user_id
                 )
-                if DataBase.hget(f"setting_najva:{from_user}", "dispo"):
+                if DataBase.hget(f"setting_whisper:{from_user}", "dispo"):
                     special_msgID = DataBase.hget(
-                        "najva_special:{}".format(from_user), "id"
+                        "whisper_special:{}".format(from_user), "id"
                     )
                     DataBase.srem(
-                        "najva_autodel",
+                        "whisper_autodel",
                         f"{from_user}:{time_data}:{special_msgID}",
                     )
-                    DataBase.delete("najva:{}:{}".format(from_user, time_data))
-                    DataBase.delete("najva_special:{}".format(from_user))
+                    DataBase.delete("whisper:{}:{}".format(from_user, time_data))
+                    DataBase.delete("whisper_special:{}".format(from_user))
             await answerInlineQuery(
                 msg_id,
                 results=[
@@ -592,7 +592,7 @@ async def inline_query_process(msg: types.InlineQuery):
                 cache_time=3600,
             )
     if re.match(r"^\*$", input):
-        users = DataBase.smembers(f"najva_recent2:{user_id}")
+        users = DataBase.smembers(f"whisper_recent2:{user_id}")
         if len(users) == 0:
             return False
         users = list(users)
@@ -620,11 +620,11 @@ async def inline_query_process(msg: types.InlineQuery):
                 break
             name_user = user
             name_user2 = None
-            if DataBase.hget(f"setting_najva:{user_id}", "noname"):
+            if DataBase.hget(f"setting_whisper:{user_id}", "noname"):
                 name_user2 = langU["no_name"]
             name_user = await userInfos(name_user, info="name")
             input_content = InputTextMessageContent(
-                message_text=ln_in["text"]["najva_special"].format(
+                message_text=ln_in["text"]["whisper_special"].format(
                     name_user2 or name_user
                 ),
                 parse_mode="HTML",
@@ -637,11 +637,11 @@ async def inline_query_process(msg: types.InlineQuery):
                 # file_path = pic_user
             file_path = pic_user
             item1 = InlineQueryResultArticle(
-                id=f"najvaS:{user_id}:{user}",
-                title=ln_in["title"]["najva_special"].format(
+                id=f"whisperS:{user_id}:{user}",
+                title=ln_in["title"]["whisper_special"].format(
                     name_user
                 ),
-                description=ln_in["desc"]["najva_special"],
+                description=ln_in["desc"]["whisper_special"],
                 thumb_url=file_path,
                 thumb_width=512,
                 thumb_height=512,
@@ -651,7 +651,7 @@ async def inline_query_process(msg: types.InlineQuery):
             items.append(item1)
         user_steps[user_id].update(
             {
-                "najva": {
+                "whisper": {
                     "time": ti_me,
                     "text": None,
                     "users": "x",
@@ -668,7 +668,7 @@ async def inline_query_process(msg: types.InlineQuery):
         inlineKeys = iMarkup()
         inlineKeys.add(
             iButtun(
-                buttuns["najva_to"].format(user_name),
+                buttuns["whisper_to"].format(user_name),
                 switch_inline_query_current_chat="{} {}".format(
                     username, buttuns["example"]
                 ),

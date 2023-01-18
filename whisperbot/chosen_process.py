@@ -20,53 +20,53 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
     print(colored("resultID", "yellow"), colored(result_id, "white"))
     print()
     if (
-        re.match(r"^najvaP:(\d+)$", result_id)
-        and "najva" in user_steps[user_id]
+        re.match(r"^whisperP:(\d+)$", result_id)
+        and "whisper" in user_steps[user_id]
     ):
-        ap = re_matches(r"^najvaP:(\d+)$", result_id)
-        najva = user_steps[user_id]["najva"]
+        ap = re_matches(r"^whisperP:(\d+)$", result_id)
+        whisper = user_steps[user_id]["whisper"]
         DataBase.hset(
-            "najva:{}:{}".format(user_id, najva["time"]), "text", najva["text"]
+            "whisper:{}:{}".format(user_id, whisper["time"]), "text", whisper["text"]
         )
-        if len(najva["users"]) > 1:
+        if len(whisper["users"]) > 1:
             DataBase.hset(
-                "najva:{}:{}".format(user_id, najva["time"]),
+                "whisper:{}:{}".format(user_id, whisper["time"]),
                 "users",
-                str(najva["users"]),
+                str(whisper["users"]),
             )
-            for i in najva["users"]:
+            for i in whisper["users"]:
                 if str(i).isdigit():
-                    DataBase.sadd(f"najva_recent:{user_id}", i)
+                    DataBase.sadd(f"whisper_recent:{user_id}", i)
         else:
-            uSer = najva["users"][0]
+            uSer = whisper["users"][0]
             if DataBase.sismember(f"blocks2:{uSer}", user_id):
                 uSer = f"<a href=\"tg://user?id={uSer}\">{uSer}</a>"
-                del user_steps[user_id]["najva"]
+                del user_steps[user_id]["whisper"]
                 return await editText(
                     inline_msg_id=msg.inline_message_id,
-                    text=langU["najva_user_blocked_you"].format(uSer),
+                    text=langU["whisper_user_blocked_you"].format(uSer),
                     parse_mode="html",
                     reply_markup=None,
                 )
             DataBase.hset(
-                "najva:{}:{}".format(user_id, najva["time"]),
+                "whisper:{}:{}".format(user_id, whisper["time"]),
                 "users",
-                najva["users"][0],
+                whisper["users"][0],
             )
-            if str(najva["users"][0]).isdigit():
-                DataBase.sadd(f"najva_recent:{user_id}", najva["users"][0])
-            if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
+            if str(whisper["users"][0]).isdigit():
+                DataBase.sadd(f"whisper_recent:{user_id}", whisper["users"][0])
+            if DataBase.hget(f"setting_whisper:{user_id}", "autodel"):
                 DataBase.sadd(
-                    "najva_autodel",
-                    f"{user_id}:{najva['time']}:{msg.inline_message_id}",
+                    "whisper_autodel",
+                    f"{user_id}:{whisper['time']}:{msg.inline_message_id}",
                 )
-        for i in najva["users"]:
-            if DataBase.hget(f"setting_najva:{i}", "recv"):
+        for i in whisper["users"]:
+            if DataBase.hget(f"setting_whisper:{i}", "recv"):
                 await sendText(
                     i,
                     0,
                     1,
-                    lang[lang_user(i)]["you_recv_najva"].format(
+                    lang[lang_user(i)]["you_recv_whisper"].format(
                         '<a href="tg://user?id={}">{}</a>'.format(
                             user_id, user_name
                         )
@@ -74,11 +74,11 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
                     "html",
                 )
         DataBase.set(
-            f"najvas_sent:{user_id}:{najva['time']}",
+            f"whispers_sent:{user_id}:{whisper['time']}",
             msg.inline_message_id,
         )
-        DataBase.incr("stat_najva")
-        # for i in najva["users"]:
+        DataBase.incr("stat_whisper")
+        # for i in whisper["users"]:
             # if str(i).isdigit() and not DataBase.get(f"userProfs:{i}"):
                 # DataBase.setex(f"userProfs:{i}", 604800, 1)
                 # profiles = await getUserProfilePhotos(i)
@@ -89,94 +89,94 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
                     # have_prof = profiles[1].photos[0][1].file_id
                     # await downloadFileByID(have_prof, f"docs/profiles/{i}.jpg")
                 # await asyncio.sleep(0.5)
-        del user_steps[user_id]["najva"]
+        del user_steps[user_id]["whisper"]
     if (
-        re.match(r"^najvaA\d*:(\d+)$", result_id)
-        and "najva" in user_steps[user_id]
+        re.match(r"^whisperA\d*:(\d+)$", result_id)
+        and "whisper" in user_steps[user_id]
     ):
-        ap = re_matches(r"^najvaA\d*:(\d+)$", result_id)
-        najva = user_steps[user_id]["najva"]
+        ap = re_matches(r"^whisperA\d*:(\d+)$", result_id)
+        whisper = user_steps[user_id]["whisper"]
         DataBase.hset(
-            "najva:{}:{}".format(user_id, najva["time"]), "text", najva["text"]
+            "whisper:{}:{}".format(user_id, whisper["time"]), "text", whisper["text"]
         )
         DataBase.hset(
-            "najva:{}:{}".format(user_id, najva["time"]), "users", "all"
+            "whisper:{}:{}".format(user_id, whisper["time"]), "users", "all"
         )
         DataBase.set(
-            f"najvas_sent:{user_id}:{najva['time']}",
+            f"whispers_sent:{user_id}:{whisper['time']}",
             msg.inline_message_id,
         )
-        DataBase.incr("stat_najva")
-        del user_steps[user_id]["najva"]
+        DataBase.incr("stat_whisper")
+        del user_steps[user_id]["whisper"]
     if (
-        re.match(r"^najvaR:(\d+)$", result_id)
-        and "najva" in user_steps[user_id]
+        re.match(r"^whisperR:(\d+)$", result_id)
+        and "whisper" in user_steps[user_id]
     ):
-        ap = re_matches(r"^najvaR:(\d+)$", result_id)
-        najva = user_steps[user_id]["najva"]
+        ap = re_matches(r"^whisperR:(\d+)$", result_id)
+        whisper = user_steps[user_id]["whisper"]
         DataBase.hset(
-            "najva:{}:{}".format(user_id, najva["time"]), "text", najva["text"]
+            "whisper:{}:{}".format(user_id, whisper["time"]), "text", whisper["text"]
         )
         DataBase.set(
-            f"najvas_sent:{user_id}:{najva['time']}",
+            f"whispers_sent:{user_id}:{whisper['time']}",
             msg.inline_message_id,
         )
-        if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
+        if DataBase.hget(f"setting_whisper:{user_id}", "autodel"):
             DataBase.sadd(
-                "najva_autodel",
-                f"{user_id}:{najva['time']}:{msg.inline_message_id}",
+                "whisper_autodel",
+                f"{user_id}:{whisper['time']}:{msg.inline_message_id}",
             )
-        DataBase.incr("stat_najva")
-        del user_steps[user_id]["najva"]
+        DataBase.incr("stat_whisper")
+        del user_steps[user_id]["whisper"]
     if re.match(r"^set:(.*):(\d+)$", result_id):
         ap = re_matches(r"^set:(.*):(\d+)$", result_id)
-        if DataBase.hget(f"setting_najva:{user_id}", ap[1]):
-            DataBase.hdel(f"setting_najva:{user_id}", ap[1])
+        if DataBase.hget(f"setting_whisper:{user_id}", ap[1]):
+            DataBase.hdel(f"setting_whisper:{user_id}", ap[1])
         else:
-            DataBase.hset(f"setting_najva:{user_id}", ap[1], 1)
+            DataBase.hset(f"setting_whisper:{user_id}", ap[1], 1)
     if (
-        re.match(r"^najvaS:(\d+)$", result_id)
-        and "najva" in user_steps[user_id]
+        re.match(r"^whisperS:(\d+)$", result_id)
+        and "whisper" in user_steps[user_id]
     ):
-        ap = re_matches(r"^najvaS:(\d+)$", result_id)
-        najva = user_steps[user_id]["najva"]
-        uSer = najva["users"]
+        ap = re_matches(r"^whisperS:(\d+)$", result_id)
+        whisper = user_steps[user_id]["whisper"]
+        uSer = whisper["users"]
         if DataBase.sismember(f"blocks2:{uSer}", user_id):
             uSer = f"<a href=\"tg://user?id={uSer}\">{uSer}</a>"
-            del user_steps[user_id]["najva"]
+            del user_steps[user_id]["whisper"]
             return await editText(
                 inline_msg_id=msg.inline_message_id,
-                text=langU["najva_user_blocked_you"].format(uSer),
+                text=langU["whisper_user_blocked_you"].format(uSer),
                 parse_mode="html",
                 reply_markup=None,
             )
         DataBase.set(
-            f"najvas_sent:{user_id}:{najva['time']}",
+            f"whispers_sent:{user_id}:{whisper['time']}",
             msg.inline_message_id,
         )
         DataBase.hset(
-            "najva:{}:{}".format(user_id, najva["time"]),
+            "whisper:{}:{}".format(user_id, whisper["time"]),
             "users",
-            najva["users"],
+            whisper["users"],
         )
         DataBase.hset(
-            "najva_special:{}".format(user_id), "time", najva["time"]
+            "whisper_special:{}".format(user_id), "time", whisper["time"]
         )
         DataBase.hset(
-            "najva_special:{}".format(user_id), "id", msg.inline_message_id
+            "whisper_special:{}".format(user_id), "id", msg.inline_message_id
         )
         DataBase.setex(
             "ready_to_recv_special:{}".format(user_id), 1800, "True"
         )
-        if str(najva["users"]).isdigit():
-            DataBase.sadd(f"najva_recent2:{user_id}", najva["users"])
-        if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
+        if str(whisper["users"]).isdigit():
+            DataBase.sadd(f"whisper_recent2:{user_id}", whisper["users"])
+        if DataBase.hget(f"setting_whisper:{user_id}", "autodel"):
             DataBase.sadd(
-                "najva_autodel",
-                f"{user_id}:{najva['time']}:{msg.inline_message_id}",
+                "whisper_autodel",
+                f"{user_id}:{whisper['time']}:{msg.inline_message_id}",
             )
-        DataBase.incr("stat_najva")
-        del user_steps[user_id]["najva"]
+        DataBase.incr("stat_whisper")
+        del user_steps[user_id]["whisper"]
         inlineKeys = iMarkup()
         inlineKeys.add(
             iButtun(
@@ -185,12 +185,12 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
             ),
         )
         msg_ = await sendText(
-            user_id, 0, 1, langU["send_special_najva"], "html", inlineKeys
+            user_id, 0, 1, langU["send_special_whisper"], "html", inlineKeys
         )
         if not msg_[0] is False:
             DataBase.set("pre_msgbot:{}".format(user_id), msg_[1].message_id)
-        # if str(najva["users"]).isdigit():
-            # i = najva["users"]
+        # if str(whisper["users"]).isdigit():
+            # i = whisper["users"]
             # if not DataBase.get(f"userProfs:{i}"):
                 # DataBase.setex(f"userProfs:{i}", 604800, 1)
                 # profiles = await getUserProfilePhotos(i)
@@ -201,48 +201,48 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
                     # have_prof = profiles[1].photos[0][1].file_id
                     # await downloadFileByID(have_prof, f"docs/profiles/{i}.jpg")
     if (
-        re.match(r"^najvaS:(\d+):(\d+)$", result_id)
-        and "najva" in user_steps[user_id]
+        re.match(r"^whisperS:(\d+):(\d+)$", result_id)
+        and "whisper" in user_steps[user_id]
     ):
-        ap = re_matches(r"^najvaS:(\d+):(\d+)$", result_id)
-        najva = user_steps[user_id]["najva"]
-        najva["users"] = ap[2]
+        ap = re_matches(r"^whisperS:(\d+):(\d+)$", result_id)
+        whisper = user_steps[user_id]["whisper"]
+        whisper["users"] = ap[2]
         if DataBase.sismember(f"blocks2:{ap[2]}", user_id):
             uSer = f"<a href=\"tg://user?id={ap[2]}\">{ap[2]}</a>"
-            del user_steps[user_id]["najva"]
+            del user_steps[user_id]["whisper"]
             return await editText(
                 inline_msg_id=msg.inline_message_id,
-                text=langU["najva_user_blocked_you"].format(uSer),
+                text=langU["whisper_user_blocked_you"].format(uSer),
                 parse_mode="html",
                 reply_markup=None,
             )
         DataBase.set(
-            f"najvas_sent:{user_id}:{najva['time']}",
+            f"whispers_sent:{user_id}:{whisper['time']}",
             msg.inline_message_id,
         )
         DataBase.hset(
-            "najva:{}:{}".format(user_id, najva["time"]),
+            "whisper:{}:{}".format(user_id, whisper["time"]),
             "users",
-            najva["users"],
+            whisper["users"],
         )
         DataBase.hset(
-            "najva_special:{}".format(user_id), "time", najva["time"]
+            "whisper_special:{}".format(user_id), "time", whisper["time"]
         )
         DataBase.hset(
-            "najva_special:{}".format(user_id), "id", msg.inline_message_id
+            "whisper_special:{}".format(user_id), "id", msg.inline_message_id
         )
         DataBase.setex(
             "ready_to_recv_special:{}".format(user_id), 1800, "True"
         )
-        if str(najva["users"]).isdigit():
-            DataBase.sadd(f"najva_recent2:{user_id}", najva["users"])
-        if DataBase.hget(f"setting_najva:{user_id}", "autodel"):
+        if str(whisper["users"]).isdigit():
+            DataBase.sadd(f"whisper_recent2:{user_id}", whisper["users"])
+        if DataBase.hget(f"setting_whisper:{user_id}", "autodel"):
             DataBase.sadd(
-                "najva_autodel",
-                f"{user_id}:{najva['time']}:{msg.inline_message_id}",
+                "whisper_autodel",
+                f"{user_id}:{whisper['time']}:{msg.inline_message_id}",
             )
-        DataBase.incr("stat_najva")
-        del user_steps[user_id]["najva"]
+        DataBase.incr("stat_whisper")
+        del user_steps[user_id]["whisper"]
         inlineKeys = iMarkup()
         inlineKeys.add(
             iButtun(
@@ -251,12 +251,12 @@ async def chosen_inline_process(msg: types.ChosenInlineResult):
             ),
         )
         msg_ = await sendText(
-            user_id, 0, 1, langU["send_special_najva"], "html", inlineKeys
+            user_id, 0, 1, langU["send_special_whisper"], "html", inlineKeys
         )
         if not msg_[0] is False:
             DataBase.set("pre_msgbot:{}".format(user_id), msg_[1].message_id)
-        # if str(najva["users"]).isdigit():
-            # i = najva["users"]
+        # if str(whisper["users"]).isdigit():
+            # i = whisper["users"]
             # if not DataBase.get(f"userProfs:{i}"):
                 # DataBase.setex(f"userProfs:{i}", 604800, 1)
                 # profiles = await getUserProfilePhotos(i)

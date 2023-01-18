@@ -8,15 +8,15 @@ lang = {
                 "title": {
                         "help_send": "Wie senden",
                         "my_id": "Senden meine NummericID",
-                        "najva_person": "Flüstern zu {}",
-                        "najva_group": "Gruppoe Flüstern ({} benutzer)",
-                        "najva_all": "Öffentlich",
+                        "whisper_person": "Flüstern zu {}",
+                        "whisper_group": "Gruppoe Flüstern ({} benutzer)",
+                        "whisper_all": "Öffentlich",
                         "all_set": "Alle Einstellungen ⚙️",
                         "power_on": "Zum Einschalten antippen",
                         "power_off": "Zum Auschalten antippen",
-                        "najva_reply": "Flüstern ohne ID",
-                        "najva_havn_text": "Flüstern",
-                        "najva_special": "Speziell Flüstern zu {}",
+                        "whisper_reply": "Flüstern ohne ID",
+                        "whisper_havn_text": "Flüstern",
+                        "whisper_special": "Speziell Flüstern zu {}",
                         "special_404": "⚠️Fehler",
                 },
                 "desc": {
@@ -207,8 +207,8 @@ Message ID: #id_{}
 """,
         "user_blocked": "user blocked🚫",
         "user_unblocked": "user Unblocked⭕️",
-        "user_blocked_najva": "user blocked🚫\nfrom now, the user can't sent whisper to you",
-        "user_unblocked_najva": "user Unblocked⭕️",
+        "user_blocked_whisper": "user blocked🚫\nfrom now, the user can't sent whisper to you",
+        "user_unblocked_whisper": "user Unblocked⭕️",
         "help_reply_anon": """
 Answer can be media or file in addition to text 😁
 To reply, you can also reply to the user by replying to the desired message 💡
@@ -225,12 +225,12 @@ Enabled Anti-Save Anonymous messages✅
 ⚠️From now on, when you send Anonymous message to users, they can't save or forward or take screenshot your messages
         """,
         "lock_anon_deactive": "Disabled Anti-Save Anonymous messages❌",
-        "najva_seton_antisave": """
+        "whisper_seton_antisave": """
 Enabled Anti-Save Whisper messages✅
 
 ⚠️From now on, when you send special whisper message to users, they can't save or forward or take screenshot your messages
         """,
-        "najva_setoff_antisave": "Disabled Anti-Save special whisper messages❌",
+        "whisper_setoff_antisave": "Disabled Anti-Save special whisper messages❌",
         "besure_del_all_blocks": "❗️ Do you want all blocked users to be Unblocked?",
         "blocks_clear_anon": "All blocked users Unblocked ✅",
         "blocks_empty_anon": "There is no user in the block list⚠️",
@@ -252,7 +252,7 @@ I won't know who but I will receive the message.
         "anonymous": "#Anonymous",
         "inbox_empty": "Your Anonymous messages box is Empty⚠️\nif you want to get inbox old messages, click on /old_inbox",
         "notice_old_inbox": "Loading the old messages of the anonymous message box ...\n⚠️Note that the beginning of each month old messages will be deleted. So be aware that it is not kept forever",
-        "najva": """
+        "whisper": """
 You can send a secret message (whisper) to whomever you want in the group by whispering, and no one but you and the target user can read that message 😁
 
 The bot works inline(remotely), which means you do not need to take the bot to the group! Just type in the Bot ID ( @{} ) wherever you need it 🤩
@@ -269,7 +269,7 @@ And...
 
 💡 <b>You need to go to the <u>Guide</u> page to be able to use these features</b>
 """,
-        "najva_settings": """
+        "whisper_settings": """
 <b>🔄 What is recent users list?</b>
 Users who read your whisper or you send whisper to them, it will be added to the recent list.
 
@@ -294,40 +294,40 @@ If enabled, your special whisper or whisper will be automatically deleted after 
 <b>⛔️ What is special whisper blacklist?</b>
 Users who send you a special direct whisper will be included in this list if you block them.
 """,
-        "najva_help": "💡 Whisper section guide:",
-        "najva_seton_seen": """
+        "whisper_help": "💡 Whisper section guide:",
+        "whisper_seton_seen": """
 The notification of seen whispers is activated✅
 
 🔹From now on, you will be notified if your whisper is read
 """,
-        "najva_setoff_seen": "The notification of seen whispers is deactivated❌",
-        "najva_seton_recv": """
+        "whisper_setoff_seen": "The notification of seen whispers is deactivated❌",
+        "whisper_seton_recv": """
 Whisper receive notification activated✅
 
 🔹From now on, if someone whispers to you via a recent list or numbericID or username, the bot will notify you
 """,
-        "najva_setoff_recv": "Whisper receive notification deactivated❌",
-        "najva_seton_encrypt": """
+        "whisper_setoff_recv": "Whisper receive notification deactivated❌",
+        "whisper_seton_encrypt": """
 Convert to Encrypted whisper activated✅
 
 🔹From now on, your whispers texts will be displayed encrypted in the chat
 """,
-        "najva_setoff_encrypt": "Convert to Encrypted whisper deactivated❌",
-        "najva_seton_noname": """
+        "whisper_setoff_encrypt": "Convert to Encrypted whisper deactivated❌",
+        "whisper_seton_noname": """
 Concealment of destination user in sent whispers activated✅
 
 🔹From now on, the destination username will not be displayed in the whispers you send
 """,
-        "najva_setoff_noname": "Concealment of destination user in sent whispers deactivated❌",
-        "najva_seton_dispo": """
+        "whisper_setoff_noname": "Concealment of destination user in sent whispers deactivated❌",
+        "whisper_seton_dispo": """
 Disposable whispers activated✅
 
 🔹From now on, your whispers will be deleted after being read
 """,
-        "najva_setoff_dispo": "Disposable whispers deactivated❌",
-        "najva_seton_autodel": "Auto delete activated✅",
-        "najva_setoff_autodel": "Auto delete deactivated❌",
-        "najva_help_send": """
+        "whisper_setoff_dispo": "Disposable whispers deactivated❌",
+        "whisper_seton_autodel": "Auto delete activated✅",
+        "whisper_setoff_autodel": "Auto delete deactivated❌",
+        "whisper_help_send": """
 💬 To send a whisper, like the picture above, first type the Bot ID, then write your text, and finally the ID or numeric ID of the destination user
 Example :
 👉 <code>@{0} @username Hi</code>
@@ -341,7 +341,7 @@ Just forward a message from that user here
 
 🔥 Use the button below to send a whisper without having to enter an ID and numericID 👇
 """,
-        "najva_help_media": """
+        "whisper_help_media": """
 🎁 With special whisper you can send any type of file and media (such as movies, videos, photos) and even long text 😁
 
 👉 There are two ways to send a special whisper, as shown in the photo above :
@@ -361,7 +361,7 @@ Example :
 🤔 How do I see a user's numericID?
 Just forward a message from that user here
 """,
-        "najva_help_group": """
+        "whisper_help_group": """
 👥 With multi-person whispering, you can send a whisper to several people at the same time!
 ❕ <b>It does not matter if you use an ID or a numericID</b>
 
@@ -376,7 +376,7 @@ Example :
 🤔 <b>How do I see a user's numericID?</b>
 Just forward a message from that user here
 """,
-        "najva_help_bd": """
+        "whisper_help_bd": """
 ♾ This way you can send a whisper to everyone (public whisper)
 
 👉 After writing the {0} ID, write the whisper text and then put the all ID like the image above and go to the public whisper section
@@ -390,7 +390,7 @@ Example :
 🤩 <b>Golden Tip</b>:
 By sending a public whisper, you increase the curiosity of your channel or group users to read your text (especially if you pin the public whisper)
 """,
-        "najva_help_noid": """
+        "whisper_help_noid": """
 💬 To send a whisper with a replay and without entering user ID, do the following steps as shown above:
 Add {0} to your group by Add administrator and give it the Delete messages permission 
 
@@ -408,13 +408,13 @@ Follow the instructions in the help section, wherever you want to whisper, just 
 
 <b>And to send a whisper, see the guide below</b> 👇
 """,
-        "najva_help_shset": """
+        "whisper_help_shset": """
 ⚙️ With the settings shortcut, you can enable or disable some features wherever you are without having to go to the {0} chat
 
 👉 After writing the {0} ID, type (set) word to open the settings list.
 Then you can enable or disable the features by clicking on them
 """,
-        "najva_help_prob": """
+        "whisper_help_prob": """
 🎥 Video tutorial to solve all the problems of whispering in the group
 
 <b>This tutorial is for users for whom the following things happen</b> 👇
@@ -429,10 +429,10 @@ Then you can enable or disable the features by clicking on them
 
 <b>If you have done the above and still have problems, go to support section</b>
 """,
-        "najva_help_examp": "💡 Examples:",
-        "najva_vid-1": "🎥 Video tutorial for sending whisper",
-        "najva_vid-2": "🎥 Video tutorial for sending special whisper",
-        "najva_vid-5": """
+        "whisper_help_examp": "💡 Examples:",
+        "whisper_vid-1": "🎥 Video tutorial for sending whisper",
+        "whisper_vid-2": "🎥 Video tutorial for sending special whisper",
+        "whisper_vid-5": """
 🎥 Video tutorial of whispering with replay
 
 👉 To send whisper, just reply to the message of the desired user, then type the {0} ID and write your message
@@ -441,7 +441,7 @@ Whisper will sent to the sender of that message you replayed. Simply 🤩
 
 ❕ The steps are exactly like sending a normal whisper, with the difference that as long as you have {0} in your group, you no longer need to enter the user ID or numericID
 """,
-        "najva_vid-6": """
+        "whisper_vid-6": """
 💬 To send a whisper with a replay and without entering user ID, do the following steps as shown above:
 Add {0} to your group by Add administrator and give it the Delete messages permission 
 
@@ -459,7 +459,7 @@ Follow the instructions in the help section, wherever you want to whisper, just 
 
 <b>And to send a whisper, see the guide below</b> 👇
 """,
-        "you_recv_najva": "🔔💬 A whisper from ({}) sent for you",
+        "you_recv_whisper": "🔔💬 A whisper from ({}) sent for you",
         "is_power_on": "On✅",
         "is_power_off": "Off❌",
         "autodel": """
@@ -468,23 +468,23 @@ Follow the instructions in the help section, wherever you want to whisper, just 
 """,
         "autodel_must_1": "⚠️The set time must be at least 1 minute",
         "didnt_enter_user": "⚠️ It seems that you did not enter the destination user's ID",
-        "najva_not_for_you": "This whisper not sent for you",
-        "najva_seened": "👁‍🗨 The whisper was seen by {}",
-        "najva_deleted": "The whisper deleted🗑",
-        "must_be_owner_najva": "⚠️you must be sender of the whisper",
+        "whisper_not_for_you": "This whisper not sent for you",
+        "whisper_seened": "👁‍🗨 The whisper was seen by {}",
+        "whisper_deleted": "The whisper deleted🗑",
+        "must_be_owner_whisper": "⚠️you must be sender of the whisper",
         "no_one_seen": "⚠️No one saw the whisper",
         "nobody_nosy": "Nobody",
         "nosies": "Nosy(s):\n{}",
-        "seen_najva_person": "first seen:\n{}\n{} seen by ({})\n{}",
-        "seen_najva_group": "seen count: {}\n{} user seen:\n{}\n{}",
-        "seen_najva_all": "seen by {} user(s)",
-        "new_najva": "↪️💬 A whisper sent to you from ({}) in the ({}) group",
-        "send_special_najva": """
+        "seen_whisper_person": "first seen:\n{}\n{} seen by ({})\n{}",
+        "seen_whisper_group": "seen count: {}\n{} user seen:\n{}\n{}",
+        "seen_whisper_all": "seen by {} user(s)",
+        "new_whisper": "↪️💬 A whisper sent to you from ({}) in the ({}) group",
+        "send_special_whisper": """
 ☑️ Send or forward a message/media
 Or on message '<u>this</u>' Reply it (Up to 48 hours ago messages)
 """,
         "canceled": "Canceled❌",
-        "special_najva_cancel": "❌ The special whisper was canceled by the sender",
+        "special_whisper_cancel": "❌ The special whisper was canceled by the sender",
         "now_allow_type": """
 ⚠️ Is not allowed
 🔹 Allowed to send: Long Text, Sticker, Voice, Music, Gif, Video, VideoMessage, Photo, File, Contact, Location
@@ -499,25 +499,25 @@ This section is under construction and will be activated soon
 
 Keep the bot chat unmuted to be notified when update arrived and activated 🤩
 """,
-        "reg_najva": "Special whisper is set ✅",
-        "reg2_najva": "Special whisper is set to hidden ✅",
-        "error_reg_najva": "⚠️Error. I think you deleted your message!",
-        "special_najva_registered": "📬 A special whisper for ({}) sent",
+        "reg_whisper": "Special whisper is set ✅",
+        "reg2_whisper": "Special whisper is set to hidden ✅",
+        "error_reg_whisper": "⚠️Error. I think you deleted your message!",
+        "special_whisper_registered": "📬 A special whisper for ({}) sent",
         "cant_hide": """
 ⚠️You can only send the following items as hidden whispers:
 Gif, Video, Voice, Photo and Sticker
 """,
-        "sent_najva_pv": "✅ Directly to ({}) sent",
-        "receive_new_najva_pv": "🔔🎁 A special whisper from ({}) sent for you",
-        "speical_najva_seen": "☝️ This special whisper viewed by ({})",
-        "speical_najva_seen2": "📭 Special whisper was observed by ({})",
+        "sent_whisper_pv": "✅ Directly to ({}) sent",
+        "receive_new_whisper_pv": "🔔🎁 A special whisper from ({}) sent for you",
+        "speical_whisper_seen": "☝️ This special whisper viewed by ({})",
+        "speical_whisper_seen2": "📭 Special whisper was observed by ({})",
         "cant_send_hide": "⚠️ This special whisper was sent as hidden and you can not see it in the chat or save it!",
-        "cant_sent_najva_pv": "The bot don't know that user! use numberID for send special whisper directly",
-        "report_special_najva": """
+        "cant_sent_whisper_pv": "The bot don't know that user! use numberID for send special whisper directly",
+        "report_special_whisper": """
 🔹 If this message contains immoral or porn content, be sure to report it!
 👉🏻 By sending a report, the message will be sent to the robot support and will be checked, and if it contains inappropriate content, the user will be restricted from the bot.
 """,
-        "reported_special_najva": "The message was reported ✅",
+        "reported_special_whisper": "The message was reported ✅",
         "reported_this_user": "❗️User ({}) has reported this message that was sent to him by ({}). You can limit the user with your approval from the robot",
         "user_banned": "The user was banned from using the bot🔴",
         "user_unbanned": "The user is freed from using the bot🟢",
@@ -582,13 +582,13 @@ If you have a suggestion or an idea, you can use say 🌹
 💡 Tutorial to convert a regular group to a supergroup:
 Just enable Chat history for new members and your group will automatically become a supergroup
         """,
-        "error_reply_najva": "An error occurred while register the replay whisper. It is suggested to remove yourself from the invisible admin",
-        "najva_user_blocked_you": "user {} blocked you in whisper blocklist and you can't send whisper to him/her",
-        "najvas_sent_is_zero": "You haven't sent any whisper",
+        "error_reply_whisper": "An error occurred while register the replay whisper. It is suggested to remove yourself from the invisible admin",
+        "whisper_user_blocked_you": "user {} blocked you in whisper blocklist and you can't send whisper to him/her",
+        "whispers_sent_is_zero": "You haven't sent any whisper",
         "wait_delall": "The bot is deleting {} your sent whisper...\nApproximate deletion time: {}",
-        "delall_najva_result": "Bot deleted {} Whisper. you can do this every 60 minutes",
+        "delall_whisper_result": "Bot deleted {} Whisper. you can do this every 60 minutes",
         "you_are_on_limit": "you can do this for every 1 hour. next time you can do: {}",
-        "najva_404": "⚠️Whisper not found. Either the whisper has been seen once or it has been deleted by the sender of the whisper",
+        "whisper_404": "⚠️Whisper not found. Either the whisper has been seen once or it has been deleted by the sender of the whisper",
         "is_for_show": "this is for show",
         "force_join_active": "activated✅!\nfrom now, users must be join in channel to use bot",
         "force_join_deactive": "deactivated❌",
@@ -596,33 +596,33 @@ Just enable Chat history for new members and your group will automatically becom
             "title": {
                 "help_send": "How to send",
                 "my_id": "Send my numbericID",
-                "najva_person": "Whisper to {}",
-                "najva_group": "Group whisper ({} user)",
-                "najva_all": "Public",
+                "whisper_person": "Whisper to {}",
+                "whisper_group": "Group whisper ({} user)",
+                "whisper_all": "Public",
                 "all_set": "All Settings ⚙️",
                 "power_on": "Tap to power on",
                 "power_off": "Tap to power off",
-                "najva_reply": "Whisper without ID",
-                "najva_havn_text": "Whisper",
-                "najva_special": "Special whisper to {}",
+                "whisper_reply": "Whisper without ID",
+                "whisper_havn_text": "Whisper",
+                "whisper_special": "Special whisper to {}",
                 "special_404": "⚠️Error",
             },
             "desc": {
                 "help_send": "💡if you do not know how to send. click here",
                 "my_id": "🆔My numbericID: {}",
-                "najva_person": "💬Send whisper by numbericID/username\n{} of 200",
-                "najva_group": "👥Send group whisper\n{} of 200",
-                "najva_all": "💬Send whisper\n{} of 200",
-                "najva_all2": "🔑Send encrypted whisper\n{} of 200",
-                "najva_seen": "👁‍🗨Whisper seen notification: {}",
-                "najva_recv": "🔔Whisper receive notification: {}",
-                "najva_encrypt": "🔑Encrypted whisper: {}",
-                "najva_noname": "❔Nameless whisper: {}",
-                "najva_dispo": "🗑Disposable whisper: {}",
-                "najva_antisave": "🧨Whisper anti-save: {}",
-                "najva_reply": "Whisper without ID in group. Click",
-                "najva_havn_text": "⚠️No text",
-                "najva_special": "🎁Send special whisper by ID/username",
+                "whisper_person": "💬Send whisper by numbericID/username\n{} of 200",
+                "whisper_group": "👥Send group whisper\n{} of 200",
+                "whisper_all": "💬Send whisper\n{} of 200",
+                "whisper_all2": "🔑Send encrypted whisper\n{} of 200",
+                "whisper_seen": "👁‍🗨Whisper seen notification: {}",
+                "whisper_recv": "🔔Whisper receive notification: {}",
+                "whisper_encrypt": "🔑Encrypted whisper: {}",
+                "whisper_noname": "❔Nameless whisper: {}",
+                "whisper_dispo": "🗑Disposable whisper: {}",
+                "whisper_antisave": "🧨Whisper anti-save: {}",
+                "whisper_reply": "Whisper without ID in group. Click",
+                "whisper_havn_text": "⚠️No text",
+                "whisper_special": "🎁Send special whisper by ID/username",
                 "special_404": "⚠️whisper not found",
             },
             "text": {
@@ -641,14 +641,14 @@ Just enable Chat history for new members and your group will automatically becom
 👥 To send a whisper to multiple people at once, <a href='t.me/{0}?start=multi'>click here</a> and start the bot
 """,
                 "my_id": "🆔 My numericID: {}",
-                "najva_person": "📬 An whisper for ({}) sent",
-                "najva_group": "📬 A group whisper for ({}) Person sent\n{}",
-                "najva_all": "⭐️ An public whisper sent",
-                "najva_all2": "⭐️ An public encrypted whisper sent:\n▓▓",
+                "whisper_person": "📬 An whisper for ({}) sent",
+                "whisper_group": "📬 A group whisper for ({}) Person sent\n{}",
+                "whisper_all": "⭐️ An public whisper sent",
+                "whisper_all2": "⭐️ An public encrypted whisper sent:\n▓▓",
                 "setting_changed": "Changes were applied ✅",
-                "najva_reply": "📭",
-                "najva_havn_text": "⚠️ It seems you did not enter any text for whisper",
-                "najva_special": """
+                "whisper_reply": "📭",
+                "whisper_havn_text": "⚠️ It seems you did not enter any text for whisper",
+                "whisper_special": """
 🎁 A special whisper to be sent to ({}) was set
 
 🔹 <b>Allowed to send: Long Text, Sticker, Voice, Music, Gif, Video, VideoMessage, Photo, File, Contact, Location</b>
@@ -659,7 +659,7 @@ Go to Bot and send your media or message 👇
             },
         },
         "buttuns": {
-            "najva_section": "💬Whisper",
+            "whisper_section": "💬Whisper",
             "anon_section": "Anonymous message💌",
             "language": "🌎زبان | Language",
             "adsfree": "📣 Free AD group & channel 📣",
@@ -696,51 +696,51 @@ Go to Bot and send your media or message 👇
             "from_who2": "🖋sener: Anonymous user",
             "settings": "Settings🔧",
             "help": "💡Guide",
-            "help_najva": "Whispering help💬",
+            "help_whisper": "Whispering help💬",
             "sent_time": "⏰Sent time",
-            "najva_settings_recents": "🔄Recent users list ({} User)",
-            "najva_settings_notif_seen": "👁‍🗨Seen notice ({})",
-            "najva_settings_notif_recv": "🔔Receive notice ({})",
-            "najva_settings_encrypt": "🔑Encrypted whisper ({})",
-            "najva_settings_no_name": "🧩Nameless whisper ({})",
-            "najva_settings_disposable": "✨Disposable whisper ({})",
-            "najva_settings_auto_del": "⏳Whisper auto delete ({})",
-            "najva_settings_antisave": "🧨Whisper anti-save ({})",
+            "whisper_settings_recents": "🔄Recent users list ({} User)",
+            "whisper_settings_notif_seen": "👁‍🗨Seen notice ({})",
+            "whisper_settings_notif_recv": "🔔Receive notice ({})",
+            "whisper_settings_encrypt": "🔑Encrypted whisper ({})",
+            "whisper_settings_no_name": "🧩Nameless whisper ({})",
+            "whisper_settings_disposable": "✨Disposable whisper ({})",
+            "whisper_settings_auto_del": "⏳Whisper auto delete ({})",
+            "whisper_settings_antisave": "🧨Whisper anti-save ({})",
             "minute": "{} minute",
             "seconds": "{} seconds",
-            "najva_settings_block": "⛔️Direct special whisper blacklist ({} user)",
-            "najva_settings_del_all": "💢Delete all sent whisper💢",
-            "back_najva": "Whisper page⬇️",
-            "najva_help_send": "💬Send Whisper",
-            "najva_help_media": "🎁Send media(special whisper)",
-            "najva_help_group": "👥Send group whisper",
-            "najva_help_broadcast": "⭐️Send public whisper",
-            "najva_help_noid": "⚡️Whisper without user ID",
-            "najva_help_short_set": "⚙️Settings shortcut",
-            "najva_help_prob": "❗️Fix whispering problems",
-            "najva_help_examp": "🔹Examples",
-            "back_help_najva": "Guide page⬇️",
+            "whisper_settings_block": "⛔️Direct special whisper blacklist ({} user)",
+            "whisper_settings_del_all": "💢Delete all sent whisper💢",
+            "back_whisper": "Whisper page⬇️",
+            "whisper_help_send": "💬Send Whisper",
+            "whisper_help_media": "🎁Send media(special whisper)",
+            "whisper_help_group": "👥Send group whisper",
+            "whisper_help_broadcast": "⭐️Send public whisper",
+            "whisper_help_noid": "⚡️Whisper without user ID",
+            "whisper_help_short_set": "⚙️Settings shortcut",
+            "whisper_help_prob": "❗️Fix whispering problems",
+            "whisper_help_examp": "🔹Examples",
+            "back_help_whisper": "Guide page⬇️",
             "example": "Sample🔹",
             "helper_video": "Video guide🎥",
             "helper_reply": "Reply guide🎥",
             "helper_install": "Install bot guide🎥",
-            "example_najva": "💬Whisper",
+            "example_whisper": "💬Whisper",
             "example_group": "👥group whisper",
             "example_special": "🎁special whisper",
             "example_myid": "🆔My numbericID",
             "example_set_shcut": "⚙️Settings shortcut",
             "help_comp": "Full guide💡",
-            "najva_to": "Whisper to ({})",
-            "show_najva": "show💬",
+            "whisper_to": "Whisper to ({})",
+            "show_whisper": "show💬",
             "quick_set": "Quick set⚙️",
             "back_nset": "Whisper settings page ⬇️",
             "autodel_status": "🗑delete after {} minute(s)",
             "delete": "delete❌",
             "anti_save": "🧨Anti-Save: {}",
             "send_pv": "🎁Send to users's PV",
-            "reg_najva": "🔹Set to whisper",
-            "reg2_najva": "🔻Set hide in whisper",
-            "special_najva": "#special_whisper",
+            "reg_whisper": "🔹Set to whisper",
+            "reg2_whisper": "🔻Set hide in whisper",
+            "special_whisper": "#special_whisper",
             "report": "Report⚠️",
             "ban_user": "Ban User⛔️",
             "unban_user": "Unban User⭕️",
@@ -922,8 +922,8 @@ t.me/{}?start={}
         "new_message": "📮پیام جدید! /inbox\nشناسه پیام: #id_{}",
         "user_blocked": "کاربر بلاک شد🚫",
         "user_unblocked": "کاربر آنبلاک شد⭕️",
-        "user_blocked_najva": "کاربر بلاک شد🚫\nاز حالا به بعد این کاربر دیگه نمیتونه به شما نجوا ارسال کنه",
-        "user_unblocked_najva": "کاربر آنبلاک شد⭕️",
+        "user_blocked_whisper": "کاربر بلاک شد🚫\nاز حالا به بعد این کاربر دیگه نمیتونه به شما نجوا ارسال کنه",
+        "user_unblocked_whisper": "کاربر آنبلاک شد⭕️",
         "help_reply_anon": "برای پاسخ روی این پیام ریپلای کنید و پیام خود را بنویسید و ارسال کنید",
         "receive_anon_deactive": """
 دریافت پیام ناشناس غیرفعال شد❌
@@ -937,13 +937,13 @@ t.me/{}?start={}
 ⚠️از الان به بعد وقتی پیام ناشناس به کاربری ارسال میکنی، دیگه نمیتونه از پیامت اسکرین شات بگیره یا پیامت رو کپی یا فوروارد کنه
 """,
         "lock_anon_deactive": "ضد ذخیره پیام ناشناس غیرفعال شد❌",
-        "najva_seton_antisave": """
+        "whisper_seton_antisave": """
 ضد ذخیره پیام نجوا فعال شد✅
         
         
 ⚠️از الان به بعد وقتی پیام نجوای ویژه به کاربری ارسال میکنی، دیگه نمیتونه از پیامت اسکرین شات بگیره یا پیامت رو کپی یا فوروارد کنه
 """,
-        "najva_setoff_antisave": "ضد ذخیره پیام نجوا غیرفعال شد❌",
+        "whisper_setoff_antisave": "ضد ذخیره پیام نجوا غیرفعال شد❌",
         "besure_del_all_blocks": "آیا از پاک کردن تمام لیست بلاک مطمئنید؟",
         "blocks_clear_anon": "لیست بلاک پاکسازی شد♨️",
         "blocks_empty_anon": "⚠️لیست بلاک خالی است",
@@ -964,7 +964,7 @@ t.me/{}?start={}
         "anonymous": "#ناشناس",
         "inbox_empty": "⚠️صندوق پیامهای دریافتی ناشناس شما خالی است\nاگر پیامهای قدیمی را میخواهید، روی /old_inbox بزنید",
         "notice_old_inbox": "در حال بارگذاری پیامهای قدیمی صندوق پیام ناشناس...\n⚠️توجه داشته باشید که پیامهای قدیمی صندوق ابتدای هرماه پاک میشه پس مطلع باشید که تا ابد نگهداری نمیشود",
-        "najva": """
+        "whisper": """
 میتونید با این ربات توی گروه به هرکی دلتون خواست پیام مخفی(نجوا) بدید و هیچکس جز شما و کاربر مقصد نمیتونه اون پیام رو بخونه 😁
 
 ربات بصورت اینلاین(از راه دور) کارمیکنه، یعنی نیاز نیست ربات رو به گروه ببرید! فقط کافیه آیدی (@{}) رو هرجا نیازش داشتید تایپ کنید 🤩
@@ -979,7 +979,7 @@ t.me/{}?start={}
 و...
 
 💡 <b>باید به بخش <u>راهنما</u> بری تا بتونی ازین قابلیت‌ها استفاده کنی</b>""",
-        "najva_settings": """
+        "whisper_settings": """
 <b>🔄 لیست کاربران اخیر چیه؟</b>
 کاربرانی که نجوای شمارو میخونن یا نجوای اون هارو میخونید، به لیست اخیر اضافه میشن که نیاز نباشه آیدیشون رو از اول تایپ کنید.
 
@@ -1003,40 +1003,40 @@ t.me/{}?start={}
 
 <b>⛔️ بلاک‌های نجوای ویژه چیه؟</b>
 کاربرانی که به شما نجوای ویژه‌ی مستقیم ارسال میکنن، درصورتی که بلاکشون کنید توی این لیست قرار میگیرن""",
-        "najva_help": "<b>💡 راهنما و آموزش‌های بخش نجوا:</b>",
-        "najva_seton_seen": """
+        "whisper_help": "<b>💡 راهنما و آموزش‌های بخش نجوا:</b>",
+        "whisper_seton_seen": """
 اعلان خونده شدن نجواهای ارسال فعال شد✅
 
 🔹از این به بعد در صورت خونده شدن نجوای شما، به شما اطلاع داده میشه
 """,
-        "najva_setoff_seen": "اعلان خونده شدن نجواهای ارسال غیرفعال شد❌",
-        "najva_seton_recv": """
+        "whisper_setoff_seen": "اعلان خونده شدن نجواهای ارسال غیرفعال شد❌",
+        "whisper_seton_recv": """
 اعلان دریافت نجواها فعال شد✅
 
 🔹از این به بعد اگر کسی از طریق لیست اخیر یا آیدی‌عددی برای شما نجوا ارسال کنه، ربات به شما اطلاع میده
 """,
-        "najva_setoff_recv": "اعلان دریافت نجواها غیرفعال شد❌",
-        "najva_seton_encrypt": """
+        "whisper_setoff_recv": "اعلان دریافت نجواها غیرفعال شد❌",
+        "whisper_seton_encrypt": """
 تبدیل به نجوای رمزی فعال شد✅
 
 🔹از این به بعد متن نجواهای شما به صورت رمزی توی چت نمایش داده میشن!
 """,
-        "najva_setoff_encrypt": "نجوای رمزی غیرفعال شد❌",
-        "najva_seton_noname": """
+        "whisper_setoff_encrypt": "نجوای رمزی غیرفعال شد❌",
+        "whisper_seton_noname": """
 مخفی شدن نام کاربر مقصد در نجواهای ارسال فعال شد✅
 
 🔹از این به بعد نام کاربر مقصد در نجواهایی که ارسال میکنید نمایش داده نمیشه
 """,
-        "najva_setoff_noname": "مخفی شدن نام کاربر مقصد در نجواهای ارسال غیرفعال شد❌",
-        "najva_seton_dispo": """
+        "whisper_setoff_noname": "مخفی شدن نام کاربر مقصد در نجواهای ارسال غیرفعال شد❌",
+        "whisper_seton_dispo": """
 نجوای یکبار مصرف فعال شد✅
 
 🔹از این به بعد نجوای ارسال شما بعد از یکبار خونده شدن، حذف میشه
 """,
-        "najva_setoff_dispo": "نجوای یکبار مصرف غیرفعال شد❌",
-        "najva_seton_autodel": "حذف خودکار نجوا فعال شد✅",
-        "najva_setoff_autodel": "حذف خودکار نجوا غیرفعال شد❌",
-        "najva_help_send": """
+        "whisper_setoff_dispo": "نجوای یکبار مصرف غیرفعال شد❌",
+        "whisper_seton_autodel": "حذف خودکار نجوا فعال شد✅",
+        "whisper_setoff_autodel": "حذف خودکار نجوا غیرفعال شد❌",
+        "whisper_help_send": """
 💬 برای ارسال نجوا، مانند عکس بالا اول آیدی ربات رو تایپ کنید بعد پیام خودتون رو بنویسید و در آخر یوزرنیم یا آیدی‌عددی کاربر مورد نظر
 مثال :
 👉 <code>@{0} @username سلام‎</code>
@@ -1050,7 +1050,7 @@ t.me/{}?start={}
 
 🔥 برای ارسال نجوا بدون نیاز به وارد کردن آیدی و آیدی عددی، از دکمه زیر استفاده کن 👇
 """,
-        "najva_help_media": """
+        "whisper_help_media": """
 🎁 با نجوای ویژه میتونید هر نوع فایل و رسانه (مثل فیلم، ویس، عکس) و حتی متن طولانی ارسال کنید 😁
 
 👈 برای ارسال نجوای ویژه همونطور که از عکس بالا هم مشخصه، دو راه دارید :
@@ -1070,7 +1070,7 @@ t.me/{}?start={}
 🤔 چجوری آیدی‌عددی کاربر رو ببینم؟
 فقط کافیه یه پیام ازش فروارد کنی همینجا
 """,
-        "najva_help_group": """
+        "whisper_help_group": """
 👥 با نجوای چندنفره میتونید یک نجوا رو همزمان برای چند نفر ارسال کنید!
 ❕ فرقی نمیکنه از آیدی استفاده کنید یا آیدی‌عددی
 
@@ -1085,7 +1085,7 @@ t.me/{}?start={}
 🤔 چجوری آیدی‌عددی کاربر رو ببینم؟
 فقط کافیه یه پیام ازش فروارد کنی همینجا
 """,
-        "najva_help_bd": """
+        "whisper_help_bd": """
 ♾ با این روش میتونید یک نجوا رو برای همه ارسال کنید (نجوای همگانی)
 
 👈 بعد از نوشتن آیدی {0}، متن نجوا رو بنویسید و بعد آیدی all رو مانند تصویر بالا قرار بدید و به بخش نجوای همگانی رو منتقل شید
@@ -1099,7 +1099,7 @@ t.me/{}?start={}
 🤩 نکته طلایی:
 با ارسال نجوای همگانی، کنجکاوی کاربران کانال یا گروهتون رو افزایش میدید که متن شمارو بخونن (خصوصا اگه نجوای همگانی رو پین کنید)
 """,
-        "najva_help_noid": """
+        "whisper_help_noid": """
 💬 برای ارسال نجوا با ریپلای و بدون وارد کردن آیدی، مانند تصویر بالا مراحل زیر رو انجام بده:
 ربات رو بصورت اضافه کردن ادمین ببر تو گروهت و با دسترسی حذف پیام ادمینش کن ( اگه بقیه دسترسی هارو بهش ندادی اشکال نداره ولی دسترسی حذف پیام رو حتما باید داشته باشه )
 
@@ -1119,13 +1119,13 @@ unlock inline
 
 برای طریقه ارسال نجوا با این قابلیت، آموزش زیر رو ببین 👇
 """,
-        "najva_help_shset": """
+        "whisper_help_shset": """
 ⚙️ با میانبر تنظیمات میتونید بدون مراجعه کردن به پیوی {0}، برخی از قابلیت‌هارو هرجا که باشید فعال یا غیرفعال کنید
 
 👈 بعد از نوشتن نوشتن آیدی {0}، کلمه (set) رو بنویسید تا لیست تنظیمات براتون باز بشه
 سپس با کلیک روی قابلیت‌ها میتونید اونها رو فعال یا غیرفعال کنید
 """,
-        "najva_help_prob": """
+        "whisper_help_prob": """
 🎥 آموزش تصویری رفع تمامی مشکلات ارسال نجوا در گروه
 
 این آموزش مخصوص کاربرانی هست که موارد زیر واسشون اتفاق میوفته 👇
@@ -1142,10 +1142,10 @@ unlock inline
 
 اگه کار های گفته شده رو انجام دادید و هنوز مشکل داشتید، به بخش پشتیبانی مراجعه کنید
 """,
-        "najva_help_examp": "💡 مثال‌ها و نمونه‌ها:",
-        "najva_vid-1": "🎥 آموزش ویدیویی ارسال نجوا",
-        "najva_vid-2": "🎥 آموزش ویدیویی ارسال نجوای ویژه",
-        "najva_vid-5": """
+        "whisper_help_examp": "💡 مثال‌ها و نمونه‌ها:",
+        "whisper_vid-1": "🎥 آموزش ویدیویی ارسال نجوا",
+        "whisper_vid-2": "🎥 آموزش ویدیویی ارسال نجوای ویژه",
+        "whisper_vid-5": """
 🎥 آموزش تصویری ارسال نجوا با ریپلای
 
 👈 برای نجوا دادن کافیه فقط روی پیام کاربرِ مورد نظرت ریپلای کنی، بعد آیدی ربات رو تایپ کنی و پیام خودتو بنویسی
@@ -1154,7 +1154,7 @@ unlock inline
 
 ❕ مراحل دقیقا مثل ارسال کردن نجوای معمولیه با این تفاوت که تا وقتی ربات توی گروهتون نصب باشه، شما دیگه نیاز نیست آیدی یا آیدی عددی کاربر رو وارد کنید
 """,
-        "najva_vid-6": """
+        "whisper_vid-6": """
 💬 برای ارسال نجوا با ریپلای و بدون وارد کردن آیدی، مانند تصویر بالا مراحل زیر رو انجام بده:
 ربات رو بصورت اضافه کردن ادمین ببر تو گروهت و با دسترسی حذف پیام ادمینش کن ( اگه بقیه دسترسی هارو بهش ندادی اشکال نداره ولی دسترسی حذف پیام رو حتما باید داشته باشه )
 
@@ -1174,45 +1174,45 @@ unlock inline
 
 برای طریقه ارسال نجوا با این قابلیت، آموزش زیر رو ببین 👇
 """,
-        "you_recv_najva": "🔔💬 یک نجوا از ({}) برای شما ارسال شد",
+        "you_recv_whisper": "🔔💬 یک نجوا از ({}) برای شما ارسال شد",
         "is_power_on": "روشن✅",
         "is_power_off": "خاموش❌",
         "autodel": "🔹 با فعال کردن این قابلیت وقتی نجوای شما خونده میشه بعد از زمانی که تنظیم کردید حذف میشه\n(قابل استفاده در نجوا و نجوای ویژه)",
         "autodel_must_1": "زمان باید بیشتر از 1 دقیقه باشد",
         "didnt_enter_user": "آیدی یا یوزرنیم کاربر را وارد نکردید!",
-        "najva_not_for_you": "متاسفانه برای شما ارسال نشده😶",
-        "najva_seened": "👁‍🗨 نجوای ({}) خونده شد",
-        "najva_deleted": "نجوا حذف شد🗑",
-        "must_be_owner_najva": "⚠️باید فرستنده نجوا باشید",
+        "whisper_not_for_you": "متاسفانه برای شما ارسال نشده😶",
+        "whisper_seened": "👁‍🗨 نجوای ({}) خونده شد",
+        "whisper_deleted": "نجوا حذف شد🗑",
+        "must_be_owner_whisper": "⚠️باید فرستنده نجوا باشید",
         "no_one_seen": "⚠️هنوز کسی نخونده",
         "nobody_nosy": "هیچکس",
         "nosies": "فضولها:\n{}",
-        "seen_najva_person": "اولین بازدید:\n{}\n{} بار توسط ({}) دیده شد\n{}",
-        "seen_najva_group": "تعداد بازدید: {}\n{} نفر خونده:\n{}\n{}",
-        "seen_najva_all": "بازدید شده توسط {} کاربر❗️",
-        "new_najva": "↪️💬 یک نجوا از ({}) در گروه ({}) برای شما ریپلای شد",
-        "send_special_najva": "☑️ یک پیام/رسانه ارسال یا فروارد کنید\nیا روی یک پیام کلمه 'این' رو ریپلای کنید (حداکثر تا 48 ساعت قبل)",
+        "seen_whisper_person": "اولین بازدید:\n{}\n{} بار توسط ({}) دیده شد\n{}",
+        "seen_whisper_group": "تعداد بازدید: {}\n{} نفر خونده:\n{}\n{}",
+        "seen_whisper_all": "بازدید شده توسط {} کاربر❗️",
+        "new_whisper": "↪️💬 یک نجوا از ({}) در گروه ({}) برای شما ریپلای شد",
+        "send_special_whisper": "☑️ یک پیام/رسانه ارسال یا فروارد کنید\nیا روی یک پیام کلمه 'این' رو ریپلای کنید (حداکثر تا 48 ساعت قبل)",
         "canceled": "کنسل شد❌",
-        "special_najva_cancel": "❌ ارسال نجوای ویژه توسط فرستنده لغو شد",
+        "special_whisper_cancel": "❌ ارسال نجوای ویژه توسط فرستنده لغو شد",
         "now_allow_type": "❗️مجاز نیست. فقط مجاز برای متن طولانی، استیکر، ویس، آهنگ، گیف، ویدیو، ویدیومسیج، عکس، فایل، مخاطب، لوکشین",
         "register_special": "کاربرد مقصد: {}\n\nاگه پیامتو اشتباه نوشتی یا میخوای پیامتو تغییر بدی، کافیه دوباره بفرستی یا همین ویرایش کنی😁",
         "anti_save": "این بخش فعال نیست. بزودی فعال میشه و از طریق ربات بهت اطلاع رسانی میشه.",
-        "reg_najva": "در نجوا ثبت شد✅",
-        "reg2_najva": "در نجوای مخفی ثبت شد✅",
-        "error_reg_najva": "به هنگام ثبت خطایی رخ داد. پیام موردنظر را پاک کردید!⚠️",
-        "special_najva_registered": "📬یک نجوای ویژه برای {} ارسال شد",
+        "reg_whisper": "در نجوا ثبت شد✅",
+        "reg2_whisper": "در نجوای مخفی ثبت شد✅",
+        "error_reg_whisper": "به هنگام ثبت خطایی رخ داد. پیام موردنظر را پاک کردید!⚠️",
+        "special_whisper_registered": "📬یک نجوای ویژه برای {} ارسال شد",
         "cant_hide": "❗️فقط موارد زیر رو میتونی در نجوا مخفی کنی: گیف/ویدیو/ویس/عکس/استیکر",
-        "sent_najva_pv": "✅به پیوی ({}) ارسال شد",
-        "receive_new_najva_pv": "🎁 یک نجوای ویژه از ({}) دریافت کردی",
-        "speical_najva_seen": "☝️ این نجوای ویژه توسط ({}) مشاهده شد",
-        "speical_najva_seen2": "📭 نجوای ویژه‌ی ({}) مشاهده شد",
+        "sent_whisper_pv": "✅به پیوی ({}) ارسال شد",
+        "receive_new_whisper_pv": "🎁 یک نجوای ویژه از ({}) دریافت کردی",
+        "speical_whisper_seen": "☝️ این نجوای ویژه توسط ({}) مشاهده شد",
+        "speical_whisper_seen2": "📭 نجوای ویژه‌ی ({}) مشاهده شد",
         "cant_send_hide": "⚠️ این نجوای ویژه بصورت مخفی ارسال شده و نمیتونی اون رو توی چت ببینی یا ذخیرش کنی!",
-        "cant_sent_najva_pv": "❗️کاربر موردنظر رو ربات نمیشناسه! از آیدی عددی برای ارسال به پیوی استفاده کن.",
-        "report_special_najva": """
+        "cant_sent_whisper_pv": "❗️کاربر موردنظر رو ربات نمیشناسه! از آیدی عددی برای ارسال به پیوی استفاده کن.",
+        "report_special_whisper": """
 🔹 اگر این پیام شامل محتوای غیراخلاقی یا پورن هست، حتما گزارش کن!
 👈 با ارسال گزارش، پیام برای پشتیبانی ربات ارسال میشه و مورد بررسی قرار میگیره و درصورتی که محتوای نامناسبی داشته باشه، کاربر از ربات محدود میشه
 """,
-        "reported_special_najva": "پیام گزارش شد ✅",
+        "reported_special_whisper": "پیام گزارش شد ✅",
         "reported_this_user": "❗️کاربر ({}) این پیام را که از ({}) برایش فرستاده شده بود، گزارش کرده است. کاربر را میتوانید با تایید خود از ربات محدود کنید",
         "user_banned": "کاربر از استفاده ربات محروم شد🔴",
         "user_unbanned": "کاربر از استفاده ربات آزاد شد🟢",
@@ -1260,13 +1260,13 @@ unlock inline
 💡 آموزش تبدیل گروه معمولی به سوپرگروه:
 فقط کافیه تاریخچه گفتگو برای اعضای جدید(Chat history for new members) رو فعال کنید و گروه شما بصورت خودکار به سوپرگروه تبدیل میشه
         """,
-        "error_reply_najva": "خطایی به هنگام ثبت نجوای ریپلای رخ داد. پیشنهاد میشود خود را از ادمین نامحسوس خارج کنید",
-        "najva_user_blocked_you": "کاربر {} شما را در لیست بلاک نجوای خود قرار داده و نمیتوانید به او نجوا ارسال کنید",
-        "najvas_sent_is_zero": "شما هیچ نجوایی ارسال نکردید",
+        "error_reply_whisper": "خطایی به هنگام ثبت نجوای ریپلای رخ داد. پیشنهاد میشود خود را از ادمین نامحسوس خارج کنید",
+        "whisper_user_blocked_you": "کاربر {} شما را در لیست بلاک نجوای خود قرار داده و نمیتوانید به او نجوا ارسال کنید",
+        "whispers_sent_is_zero": "شما هیچ نجوایی ارسال نکردید",
         "wait_delall": "ربات در حال حذف {} نجوای ارسال شده از شماست.\nزمان تقریبی حذف: {}",
-        "delall_najva_result": "ربات {} نجوا را حذف کرد.\nشما این کار را هر 1 ساعت یکبار میتوانید انجام دهید",
+        "delall_whisper_result": "ربات {} نجوا را حذف کرد.\nشما این کار را هر 1 ساعت یکبار میتوانید انجام دهید",
         "you_are_on_limit": "شما این کار را هر 1 ساعت یکبار میتوانید انجام دهید. زمان مجاز بعدی برای انجام: {}",
-        "najva_404": "⚠️نجوا پیدا نشد. یا نجوا یکبار دیده شده است یا توسط فرستنده نجوا حذف شده است",
+        "whisper_404": "⚠️نجوا پیدا نشد. یا نجوا یکبار دیده شده است یا توسط فرستنده نجوا حذف شده است",
         "is_for_show": "این دکمه نمایشی است",
         "force_join_active": "روشن شد✅. از این پس کاربران برای استفاده از ربات مجبور به عضویت در کانال میشوند",
         "force_join_deactive": "خاموش شد❌",
@@ -1274,33 +1274,33 @@ unlock inline
             "title": {
                 "help_send": "آموزش ارسال نجوا",
                 "my_id": "ارسال آیدی عددی من",
-                "najva_person": "نجوا به {}",
-                "najva_group": "نجوای چندنفره ({} نفر)",
-                "najva_all": "همگانی",
+                "whisper_person": "نجوا به {}",
+                "whisper_group": "نجوای چندنفره ({} نفر)",
+                "whisper_all": "همگانی",
                 "all_set": "⚙️تنظیمات کامل",
                 "power_on": "روشن بشه",
                 "power_off": "خاموش بشه",
-                "najva_reply": "نجوا با ریپلای(بدون آیدی)",
-                "najva_havn_text": "⚠️خطا",
-                "najva_special": "نجوای ویژه به {}",
+                "whisper_reply": "نجوا با ریپلای(بدون آیدی)",
+                "whisper_havn_text": "⚠️خطا",
+                "whisper_special": "نجوای ویژه به {}",
                 "special_404": "⚠️خطا",
             },
             "desc": {
                 "help_send": "💡اگه بلد نیستی اینجارو بزن تا یادت بدم",
                 "my_id": "🆔آیدی عددی شما: {}",
-                "najva_person": "💬ارسال نجوا به فرد\n{} از 200",
-                "najva_group": "👥ارسال نجوای چند نفره\n{} از 200",
-                "najva_all": "💬ارسال نجوا\n{} از 200",
-                "najva_all2": "🔑ارسال نجوای رمزی\n{} از 200",
-                "najva_seen": "👁‍🗨اعلان خواندن نجوا: {}",
-                "najva_recv": "🔔اعلان دریافت نجوا: {}",
-                "najva_encrypt": "🔑نجوای رمزی: {}",
-                "najva_noname": "❔نجوای بی نام: {}",
-                "najva_dispo": "🗑نجوای یکبار مصرف: {}",
-                "najva_antisave": "🧨ضد ذخیره نجوا: {}",
-                "najva_reply": "روی پیام فرد موردنظر ریپلای کرده باشید و اینجا کلیک کنید",
-                "najva_havn_text": "⚠️فاقد متن",
-                "najva_special": "🎁ارسال نجوای ویژه",
+                "whisper_person": "💬ارسال نجوا به فرد\n{} از 200",
+                "whisper_group": "👥ارسال نجوای چند نفره\n{} از 200",
+                "whisper_all": "💬ارسال نجوا\n{} از 200",
+                "whisper_all2": "🔑ارسال نجوای رمزی\n{} از 200",
+                "whisper_seen": "👁‍🗨اعلان خواندن نجوا: {}",
+                "whisper_recv": "🔔اعلان دریافت نجوا: {}",
+                "whisper_encrypt": "🔑نجوای رمزی: {}",
+                "whisper_noname": "❔نجوای بی نام: {}",
+                "whisper_dispo": "🗑نجوای یکبار مصرف: {}",
+                "whisper_antisave": "🧨ضد ذخیره نجوا: {}",
+                "whisper_reply": "روی پیام فرد موردنظر ریپلای کرده باشید و اینجا کلیک کنید",
+                "whisper_havn_text": "⚠️فاقد متن",
+                "whisper_special": "🎁ارسال نجوای ویژه",
                 "special_404": "⚠️نجوا پیدا نشد",
             },
             "text": {
@@ -1319,14 +1319,14 @@ unlock inline
 👥 برای اینکه بخوای همزمان یه نجوا رو برای چندنفر ارسال کنی، <a href='t.me/{0}?start=multi'>اینجارو بزن</a> و ربات رو استارت کن
 """,
                 "my_id": "🆔 آیدی‌عددی من: {}",
-                "najva_person": "یک نجوا برای {} ارسال شد",
-                "najva_group": "یک نجوای چندنفره برای {} نفر ارسال شد\n{}",
-                "najva_all": "یک نجوای همگانی ارسال شد",
-                "najva_all2": "یک نجوای رمزی همگانی ارسال شد",
+                "whisper_person": "یک نجوا برای {} ارسال شد",
+                "whisper_group": "یک نجوای چندنفره برای {} نفر ارسال شد\n{}",
+                "whisper_all": "یک نجوای همگانی ارسال شد",
+                "whisper_all2": "یک نجوای رمزی همگانی ارسال شد",
                 "setting_changed": "تغییرات اعمال شد",
-                "najva_reply": "📭",
-                "najva_havn_text": "⚠️ به نظر میرسه متنی برای نجوا وارد نکردی",
-                "najva_special": """
+                "whisper_reply": "📭",
+                "whisper_havn_text": "⚠️ به نظر میرسه متنی برای نجوا وارد نکردی",
+                "whisper_special": """
 🎁 یک نجوای ویژه برای ارسال به ({}) تنظیم شد
 
 🔹 <b>مجاز برای ارسال: متن طولانی، استیکر، ویس، آهنگ، گیف، ویدیو، ویدیومسیج، عکس، فایل، مخاطب، لوکیشن</b>
@@ -1337,7 +1337,7 @@ unlock inline
             },
         },
         "buttuns": {
-            "najva_section": "بخش نجوا💬",
+            "whisper_section": "بخش نجوا💬",
             "anon_section": "💌بخش پیام‌ناشناس",
             "language": "🌎 زبان | Language",
             "adsfree": "📣 تبلیغ رایگان گروه و کانال 📣",
@@ -1374,51 +1374,51 @@ unlock inline
             "from_who2": "🖋فرستنده: کاربر ناشناس",
             "settings": "تنظیمات🔧",
             "help": "💡راهنما",
-            "help_najva": "راهنمای نجوا💬",
+            "help_whisper": "راهنمای نجوا💬",
             "sent_time": "⏰زمان ارسال",
-            "najva_settings_recents": "🔄لیست کاربران اخیر ({} نفر)",
-            "najva_settings_notif_seen": "👁‍🗨اعلان خونده شدن نجوا ({})",
-            "najva_settings_notif_recv": "🔔اعلان دریافت نجوا ({})",
-            "najva_settings_encrypt": "🔑نجوای رمزی ({})",
-            "najva_settings_no_name": "🧩نجوای بی نام ({})",
-            "najva_settings_disposable": "✨نجوای یکبار مصرف ({})",
-            "najva_settings_auto_del": "⏳حذف خودکار نجوا ({})",
-            "najva_settings_antisave": "🧨ضد ذخیره نجوا ({})",
+            "whisper_settings_recents": "🔄لیست کاربران اخیر ({} نفر)",
+            "whisper_settings_notif_seen": "👁‍🗨اعلان خونده شدن نجوا ({})",
+            "whisper_settings_notif_recv": "🔔اعلان دریافت نجوا ({})",
+            "whisper_settings_encrypt": "🔑نجوای رمزی ({})",
+            "whisper_settings_no_name": "🧩نجوای بی نام ({})",
+            "whisper_settings_disposable": "✨نجوای یکبار مصرف ({})",
+            "whisper_settings_auto_del": "⏳حذف خودکار نجوا ({})",
+            "whisper_settings_antisave": "🧨ضد ذخیره نجوا ({})",
             "minute": "{} دقیقه",
             "seconds": "{} ثانیه",
-            "najva_settings_block": "⛔️بلاک های نجوا ویژه مستقیم ({} نفر)",
-            "najva_settings_del_all": "💢حذف کل نجواهای ارسال شده💢",
-            "back_najva": "صفحه نجوا⬇️",
-            "najva_help_send": "💬ارسال نجوا",
-            "najva_help_media": "🎁ارسال رسانه با نجوا",
-            "najva_help_group": "👥ارسال نجوای چندنفره",
-            "najva_help_broadcast": "⭐️ارسال نجوای همگانی",
-            "najva_help_noid": "⚡️ارسال نجوا بدون نیاز به آیدی",
-            "najva_help_short_set": "⚙️آموزش میانبر تنظیمات",
-            "najva_help_prob": "❗️رفع مشکلات ارسال نجوا",
-            "najva_help_examp": "🔹مثال‌ها و نمونه‌ها",
-            "back_help_najva": "صفحه راهنمای نجوا⬇️",
+            "whisper_settings_block": "⛔️بلاک های نجوا ویژه مستقیم ({} نفر)",
+            "whisper_settings_del_all": "💢حذف کل نجواهای ارسال شده💢",
+            "back_whisper": "صفحه نجوا⬇️",
+            "whisper_help_send": "💬ارسال نجوا",
+            "whisper_help_media": "🎁ارسال رسانه با نجوا",
+            "whisper_help_group": "👥ارسال نجوای چندنفره",
+            "whisper_help_broadcast": "⭐️ارسال نجوای همگانی",
+            "whisper_help_noid": "⚡️ارسال نجوا بدون نیاز به آیدی",
+            "whisper_help_short_set": "⚙️آموزش میانبر تنظیمات",
+            "whisper_help_prob": "❗️رفع مشکلات ارسال نجوا",
+            "whisper_help_examp": "🔹مثال‌ها و نمونه‌ها",
+            "back_help_whisper": "صفحه راهنمای نجوا⬇️",
             "example": "نمونه🔹",
             "helper_video": "فیلم آموزشی🎥",
             "helper_reply": "آموزش ریپلای🎥",
             "helper_install": "آموزش نصب در گروه🎥",
-            "example_najva": "💬نجوا",
+            "example_whisper": "💬نجوا",
             "example_group": "👥نجوای چندنفره",
             "example_special": "🎁نجوای ویژه",
             "example_myid": "🆔آیدی عددی من",
             "example_set_shcut": "⚙️میانبر تنظیمات",
             "help_comp": "راهنمای کامل💡",
-            "najva_to": "نجوا به ({})",
-            "show_najva": "نمایش💬",
+            "whisper_to": "نجوا به ({})",
+            "show_whisper": "نمایش💬",
             "quick_set": "تنظیم سریع⚙️",
             "back_nset": "صفحه تنظیمات نجوا⬇️",
             "autodel_status": "🗑حذف بعد از {} دقیقه",
             "delete": "حذف❌",
             "anti_save": "🧨ضدذخیره: {}",
             "send_pv": "ارسال به پیویش🎁",
-            "reg_najva": "ثبت در نجوا🔹",
-            "reg2_najva": "ثبت مخفی در نجوا🔻",
-            "special_najva": "#نجوای_ویژه",
+            "reg_whisper": "ثبت در نجوا🔹",
+            "reg2_whisper": "ثبت مخفی در نجوا🔻",
+            "special_whisper": "#نجوای_ویژه",
             "report": "گزارش⚠️",
             "ban_user": "محدود کردن کاربر⛔️",
             "unban_user": "آزاد کردن کاربر⭕️",

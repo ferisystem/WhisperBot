@@ -119,15 +119,15 @@ def lang_user(UserID):
 
 
 async def main():
-    autodels = DataBase.smembers("najva_autodel")
+    autodels = DataBase.smembers("whisper_autodel")
     for i in autodels:
         now_time = int(time())
         from_user, time_data, inline_msg_id = i.split(":")
         langU = lang[lang_user(from_user)]
         buttuns = langU["buttuns"]
         time_to_del = int(DataBase.get("autodel_time:{}".format(from_user)) or 0) * 60
-        time_seen = DataBase.get("najva_seen_time:{}:{}".format(from_user, time_data))
-        seen_id = DataBase.hget("najva:{}:{}".format(from_user, time_data), "seen_id")
+        time_seen = DataBase.get("whisper_seen_time:{}:{}".format(from_user, time_data))
+        seen_id = DataBase.hget("whisper:{}:{}".format(from_user, time_data), "seen_id")
         if seen_id and time_seen:
             time_seen = int(time_seen)
             if now_time > (time_seen + time_to_del):
@@ -137,9 +137,9 @@ async def main():
                     await client.delete_messages(int(chat_id), int(msg_id))
                 except:
                     pass
-                DataBase.srem("najva_autodel", i)
-                DataBase.delete("najva:{}:{}".format(from_user, time_data))
-                DataBase.delete("najva_special:{}".format(from_user))
+                DataBase.srem("whisper_autodel", i)
+                DataBase.delete("whisper:{}:{}".format(from_user, time_data))
+                DataBase.delete("whisper_special:{}".format(from_user))
         if time_seen:
             time_seen = int(time_seen)
             if now_time > (time_seen + time_to_del):
@@ -162,9 +162,9 @@ async def main():
                         },
                     },
                 ).json()
-                DataBase.srem("najva_autodel", i)
-                DataBase.delete("najva:{}:{}".format(from_user, time_data))
-                DataBase.delete("najva_special:{}".format(from_user))
+                DataBase.srem("whisper_autodel", i)
+                DataBase.delete("whisper:{}:{}".format(from_user, time_data))
+                DataBase.delete("whisper_special:{}".format(from_user))
 
 
 with client:

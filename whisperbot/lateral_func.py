@@ -118,8 +118,8 @@ def setupUserSteps(msg, user_id):
         action = "nothing"
     try:
         if not DataBase.get("link_anon:{}".format(user_id)):
-            DataBase.hset(f"setting_najva:{user_id}", "seen", 1)
-            DataBase.hset(f"setting_najva:{user_id}", "recv", 1)
+            DataBase.hset(f"setting_whisper:{user_id}", "seen", 1)
+            DataBase.hset(f"setting_whisper:{user_id}", "recv", 1)
             text = generate_link()
             while True:
                 if not DataBase.sismember("links_anon", text):
