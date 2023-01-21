@@ -21,8 +21,8 @@ lang = {
                 },
                 "desc": {
                         "help_send": "💡Wenn Sie nicht wissen, wie man sendet. Klicke hier",
-                        "my_id": "🆔Meine Nummern-ID: {}",
-                        "whisper_person": "💬Flüstern per Nummern-ID/Benutzername Senden\n{} von 200",
+                        "my_id": "🆔Meine numerische-ID: {}",
+                        "whisper_person": "💬Flüstern per numerische-ID/Benutzername Senden\n{} von 200",
                         "whisper_group": "👥Gruppenflüstern senden\n{} von 200",
                         "whisper_all": "💬Flüstern senden\n{} von 200",
                         "whisper_all2": "🔑Verschlüsseltes Flüstern senden\n{} von 200",
@@ -38,7 +38,36 @@ lang = {
                         "special_404": "⚠️Flüstern nicht gefunden",
                 },
                 "text": {
-                        "keys": "values",
+                        "help_send": """
+💬 Wie senden Flüstern:‌
+1️⃣ Geben Sie die ID {0} ein
+2️⃣ Platz
+3️⃣ Schreiben Sie den Text Ihres Flustern
+4️⃣ Platz
+5️⃣ Geben Sie den Benutzernamen oder die numerische ID des Zielbenutzers ein
+
+🤩 Um zu lernen, wie man Flüstern ohne ID oder numerische ID sendet, <a href='t.me/{0}?start=reply'>Klicke hier</a> und starten sie den bot
+
+🎁 Um zu lernen, wie man eine Datei oder ein Medium flüstert, <a href='t.me/{0}?start=special'>Klicke hier</a> und starten sie den bot
+
+👥 Um ein Flüstern an mehrere Personen gleichzeitig zu senden, <a href='t.me/{0}?start=multi'>Klicke hier</a> und starten sie den bot
+        """,
+                "my_id": "🆔 Meine numerische-ID: {}",
+                "whisper_person": "📬 Ein Flüstern für ({}) gesendet",
+                "whisper_group": "📬 Ein Gruppflüstern für ({}) person gesendet\n{}",
+                "whisper_all": "⭐️ Ein öffentliches Flüstern gesendet",
+                "whisper_all2": "⭐️ Ein öffentliches verschlüsseltes Flüstern gesendet:\n▓▓",
+                "setting_changed": "Änderungen wurden übernommen ✅",
+                "whisper_reply": "📭",
+                "whisper_havn_text": "⚠️ Anscheinend haben Sie keinen Text für Flüstern eingegeben",
+                "whisper_special": """
+🎁 Ein spezielles Flüstern, das an ({}) gesendet werden soll, wurde eingestellt
+
+🔹 <b>Senden erlaubt: Langer Text, Aufkleber, Sprache, Musik, Gif, Video, Videonachricht, Foto, Datei, Kontakt, Standort</b>
+
+Gehen Sie zu Bot und senden Sie Ihre Medien oder Nachricht 👇
+        """,
+                "special_404": "⚠️Flüstern nicht gefunden. Entweder wurde das Flüstern einmal gesehen oder es wurde vom Absender des Flüsterns gelöscht",
                 },
         },
         "buttuns": {
