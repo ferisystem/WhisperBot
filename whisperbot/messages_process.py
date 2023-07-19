@@ -298,7 +298,7 @@ async def message_process(msg: types.Message):
                         chat_id, msg, 1, langU["rules_cus_name_anon"], "md"
                     )
                 else:
-                    DataBase.set("name_anon:{}".format(user_id), msg.text)
+                    DataBase.set("name_anon2:{}".format(user_id), msg.text)
                     DataBase.delete("ready_to_change_name:{}".format(user_id))
                     await delete_previous_message(user_id)
                     await sendText(

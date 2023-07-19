@@ -505,7 +505,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 msg_id,
                 0,
                 langU["name_anon"].format(
-                    DataBase.get("name_anon:{}".format(user_id))
+                    DataBase.get("name_anon2:{}".format(user_id))
                     or msg.from_user.first_name
                 ),
                 None,
@@ -527,7 +527,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 anonymous_cus_name_keys(user_id),
             )
         if re.match(r"^anon:default_name:@(\d+)$", input):
-            DataBase.delete("name_anon:{}".format(user_id))
+            DataBase.delete("name_anon2:{}".format(user_id))
             await answerCallbackQuery(
                 msg, langU["changed_name_anon"], show_alert=True, cache_time=90
             )
@@ -536,7 +536,7 @@ async def callback_query_process(msg: types.CallbackQuery):
                 msg_id,
                 0,
                 langU["name_anon"].format(
-                    DataBase.get("name_anon:{}".format(user_id))
+                    DataBase.get("name_anon2:{}".format(user_id))
                     or msg.from_user.first_name
                 ),
                 None,
